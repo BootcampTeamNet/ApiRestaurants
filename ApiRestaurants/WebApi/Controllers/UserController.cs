@@ -47,7 +47,7 @@ namespace WebApi.Controllers
 
             if (response == "NoUser")
             {
-                return BadRequest(new CodeErrorResponse(400, $"Error, usuario no existe..."));
+                return NotFound(new CodeErrorResponse(400, $"Error, usuario no existe..."));
             }
             if (response == "WrongPassword")
             {
@@ -56,13 +56,7 @@ namespace WebApi.Controllers
 
             var obj = new { Token=response, Message="Autenticación exitosa"};
 
-            //List<string>  responses= new List<string>()
-            //{ 
-            //  response,
-            //  "Autenticación exitosa"
-            //};
-           
-            //return Ok(responses);
+            
             return Ok(obj);
 
         }
