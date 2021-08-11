@@ -7,7 +7,8 @@ namespace DataAccess
     public class RestaurantsDbContext : DbContext
     {
         public RestaurantsDbContext(DbContextOptions<RestaurantsDbContext> options) : base(options) { }
-        public DbSet<Dishe> Dishes { get; set; }
+        public DbSet<DishCategory> DishCategories { get; set; }
+        public DbSet<Dish> Dishes { get; set; }
         public DbSet<Restaurant> Restaurants { get; set; }
         public DbSet<UserRestaurant> UserRestaurants { get; set; }
         public DbSet<User> Users { get; set; }

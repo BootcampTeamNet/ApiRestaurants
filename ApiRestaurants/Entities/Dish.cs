@@ -2,9 +2,9 @@
 
 namespace Entities
 {
-    public class Dishe : BaseClass
+    public class Dish : BaseClass
     {
-        public Dishe() 
+        public Dish() 
         {
             CreationDate = DateTime.Now;
             IsActive = true;
@@ -28,7 +28,7 @@ namespace Entities
         public bool IsActive { get; set; }
         public DateTime CreationDate { get; set; }
         public int DishCategoryId { get; set; }
-
+        public DishCategory DishCategory { get; set; }
         public virtual Restaurant Restaurant { get; set; }
         public int RestaurantId { get; set; }
 
