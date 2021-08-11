@@ -29,8 +29,15 @@ namespace Services.Implementations.Dishes
         }
 
 
-        public Task<int> Update(DishRequestDto dishRequestDto)
+        public async Task<int> Update(DishRequestDto dishRequestDto)
         {
+            Dish dish = await _genericRepository.GetByIdAsync(dishRequestDto.RestaurantId);
+            if (dish ==null) {
+                throw new System.Exception("El plato no existe ");
+            }
+            Dish dishUpdate = new Dish();
+
+            await _genericRepository.Update(dishUpdate);
             throw new System.NotImplementedException();
         }
 
