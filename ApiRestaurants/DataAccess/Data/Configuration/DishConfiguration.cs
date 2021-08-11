@@ -9,9 +9,9 @@ namespace DataAccess.Data.Configuration
         public void Configure(EntityTypeBuilder<Dish> builder)
         {
             builder.Property(d => d.Name).IsRequired().HasMaxLength(250);
-            builder.Property(d => d.Ingredients).IsRequired().HasMaxLength(1000);
+            builder.Property(d => d.Description).IsRequired().HasMaxLength(1000);
             builder.Property(d => d.PathImage).HasMaxLength(256);
-            builder.Property(p => p.Price).HasColumnType("decimal(10,2)");
+            builder.Property(p => p.Price).HasColumnType("decimal(10,2)").HasDefaultValue(0.00);
             builder.Property(d => d.CaloriesMinimun).HasDefaultValue(0);
             builder.Property(d => d.CaloriesMaximun).HasDefaultValue(0);
             builder.Property(d => d.Proteins).HasDefaultValue(0);

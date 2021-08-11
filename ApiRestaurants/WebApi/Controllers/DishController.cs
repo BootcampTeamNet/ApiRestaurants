@@ -32,10 +32,10 @@ namespace WebApi.Controllers
             throw new System.NotImplementedException();
         }
 
-        [HttpPut]
-        public Task<int> Update(DishRequestDto dishRequestDto)
+        [HttpPut("{id}")]
+        public Task<int> Update(DishRequestDto dishRequestDto, int id)
         {
-            throw new System.NotImplementedException();
+            return _dishService.Update(dishRequestDto, id);
         }
     }
 }

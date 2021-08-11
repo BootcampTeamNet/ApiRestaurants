@@ -2,6 +2,7 @@
 using DTOs.Dish;
 using Entities;
 using Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -29,16 +30,30 @@ namespace Services.Implementations.Dishes
         }
 
 
-        public async Task<int> Update(DishRequestDto dishRequestDto)
+        public async Task<int> Update(DishRequestDto dishRequestDto, int id)
         {
-            Dish dish = await _genericRepository.GetByIdAsync(dishRequestDto.RestaurantId);
+            Dish dish = await _genericRepository.GetByIdAsync(id);
             if (dish ==null) {
-                throw new System.Exception("El plato no existe ");
+                throw new Exception("El plato con el id "+ id +" no existe");
             }
-            Dish dishUpdate = new Dish();
 
-            await _genericRepository.Update(dishUpdate);
-            throw new System.NotImplementedException();
+            Dish dishUpdate = new Dish
+            {
+                Id = id,
+                Name = dishRequestDto.Name,
+                Description = dishRequestDto.Description,
+                Price = dishRequestDto.Price,
+                PathImage=dishRequestDto.PathImage,
+                CaloriesMinimun = dishRequestDto.CaloriesMinimun,
+                CaloriesMaximun = dishRequestDto.CaloriesMaximun,
+                Proteins = dishRequestDto.Proteins,
+                Fats = dishRequestDto.Fats,
+                Sugars = dishRequestDto.Sugars,
+                DishCategoryId = dishRequestDto.DishCategoryId,
+                RestaurantId = dishRequestDto.RestaurantId
+            };
+
+            return await _genericRepository.Update(dishUpdate);
         }
 
     }
