@@ -32,28 +32,40 @@ namespace Services.Implementations.Dishes
 
         public async Task<int> Update(DishRequestDto dishRequestDto, int id)
         {
+            if (string.IsNullOrEmpty(dishRequestDto.Name)) {
+                throw new Exception("El campo Name no puede estar vacío");
+            }
+            if (string.IsNullOrEmpty(dishRequestDto.Description))
+            {
+                throw new Exception("El campo Description no puede ser nulo");
+            }
+            if (dishRequestDto.DishCategoryId<=0)
+            {
+                throw new Exception("El campo DishCategoryId no puede ser cero");
+            }
+            if (dishRequestDto.RestaurantId <= 0)
+            {
+                throw new Exception("El campo RestaurantId no puede ser cero");
+            }
+
             Dish dish = await _genericRepository.GetByIdAsync(id);
             if (dish ==null) {
                 throw new Exception("El plato con el id "+ id +" no existe");
             }
 
-            Dish dishUpdate = new Dish
-            {
-                Id = id,
-                Name = dishRequestDto.Name,
-                Description = dishRequestDto.Description,
-                Price = dishRequestDto.Price,
-                PathImage=dishRequestDto.PathImage,
-                CaloriesMinimun = dishRequestDto.CaloriesMinimun,
-                CaloriesMaximun = dishRequestDto.CaloriesMaximun,
-                Proteins = dishRequestDto.Proteins,
-                Fats = dishRequestDto.Fats,
-                Sugars = dishRequestDto.Sugars,
-                DishCategoryId = dishRequestDto.DishCategoryId,
-                RestaurantId = dishRequestDto.RestaurantId
-            };
+            dish.Name = dishRequestDto.Name;
+            dish.Description = dishRequestDto.Description;
+            dish.Price = dishRequestDto.Price;
+            dish.PathImage = dishRequestDto.PathImage;
+            dish.CaloriesMinimun = dishRequestDto.CaloriesMinimun;
+            dish.CaloriesMaximun = dishRequestDto.CaloriesMaximun;
+            dish.Proteins = dishRequestDto.Proteins;
+            dish.Fats = dishRequestDto.Fats;
+            dish.Sugars = dishRequestDto.Sugars;
+            dish.DishCategoryId = dishRequestDto.DishCategoryId;
+            dish.RestaurantId = dishRequestDto.RestaurantId;
 
-            return await _genericRepository.Update(dishUpdate);
+            return await _genericRepository.Update(dish);
         }
 
     }
