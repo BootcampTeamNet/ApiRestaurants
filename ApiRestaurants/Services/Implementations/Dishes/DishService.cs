@@ -1,4 +1,5 @@
-﻿using DataAccess.Interfaces;
+﻿using AutoMapper;
+using DataAccess.Interfaces;
 using DTOs.Dish;
 using Entities;
 using Services.Interfaces;
@@ -11,9 +12,11 @@ namespace Services.Implementations.Dishes
     public class DishService : IDishService
     {
         private readonly IGenericRepository<Dish> _genericRepository;
-        public DishService(IGenericRepository<Dish> genericRepository)
+        private readonly IMapper _mapper;
+        public DishService(IGenericRepository<Dish> genericRepository, IMapper mapper)
         {
             _genericRepository = genericRepository;
+            _mapper = mapper;
         }
         public Task<List<DishRequestDto>> GetAll()
         {
@@ -24,9 +27,10 @@ namespace Services.Implementations.Dishes
             throw new System.NotImplementedException();
         }
 
-        public Task<int> Create(DishRequestDto dishRequestDto)
+        public async Task<int> Create(DishRequestDto dishRequestDto)
         {
-            throw new System.NotImplementedException();
+            var data = _mapper.Map<Dish>(dishRequestDto);
+            return await _genericRepository.Add(data);
         }
 
 

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DTOs.Dish;
 using Entities;
 
 namespace WebApi.Dtos
@@ -7,9 +8,7 @@ namespace WebApi.Dtos
     {
        public MappingProfiles() 
         {
-//            CreateMap<Product, ProductDto>()
-//                .ForMember(pd => pd.CategoryName, f => f.MapFrom(pr => pr.Category.Name))
-//                .ForMember(pd => pd.MarkName, f => f.MapFrom(pr => pr.Mark.Name));
+            CreateMap<Dish, DishRequestDto>().ReverseMap();
         }
     }
 }

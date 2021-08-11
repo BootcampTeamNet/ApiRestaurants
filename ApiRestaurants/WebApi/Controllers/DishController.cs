@@ -29,7 +29,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public Task<int> Create(DishRequestDto dishRequestDto)
         {
-            throw new System.NotImplementedException();
+            return _dishService.Create(dishRequestDto);
         }
 
         [HttpPut("{id}")]
