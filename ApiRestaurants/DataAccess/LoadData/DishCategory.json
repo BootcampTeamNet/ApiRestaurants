@@ -1,0 +1,106 @@
+[
+  {
+    "Name": "Hamburguesas",
+    "PathImage":  ""
+  },
+  {
+    "Name": "Pizza",
+    "PathImage": ""
+  },
+  {
+    "Name": "Pollo",
+    "PathImage": ""
+  },
+  {
+    "Name": "Saludable",
+    "PathImage": ""
+  },
+  {
+    "Name": "Desayunos",
+    "PathImage": ""
+  },
+  {
+    "Name": "Sánduches",
+    "PathImage": ""
+  },
+  {
+    "Name": "Mexicana",
+    "PathImage": ""
+  },
+  {
+    "Name": "Asiática",
+    "PathImage": ""
+  },
+  {
+    "Name": "Colombiana",
+    "PathImage": ""
+  },
+  {
+    "Name": "Parrilla",
+    "PathImage": ""
+  },
+  {
+    "Name": "Comidas Rápidas",
+    "PathImage": ""
+  },
+  {
+    "Name": "Jugos y Batidos",
+    "PathImage": ""
+  },
+  {
+    "Name": "Empanadas",
+    "PathImage": ""
+  },
+  {
+    "Name": "Panadería",
+    "PathImage": ""
+  },
+  {
+    "Name": "Italiana",
+    "PathImage": ""
+  },
+  {
+    "Name": "Café",
+    "PathImage": ""
+  },
+  {
+    "Name": "Vegetariana",
+    "PathImage": ""
+  },
+  {
+    "Name": "Vegetariana",
+    "PathImage": ""
+  },
+  {
+    "Name": "Pescados y Mariscos",
+    "PathImage": ""
+  },
+  {
+    "Name": "Ecuatoriana",
+    "PathImage": ""
+  },
+  {
+    "Name": "Peruana",
+    "PathImage": ""
+  },
+  {
+    "Name": "Fusion",
+    "PathImage": ""
+  },
+  {
+    "Name": "Brasileña",
+    "PathImage": ""
+  },
+  {
+    "Name": "Turca",
+    "PathImage": ""
+  },
+  {
+    "Name": "Arabe",
+    "PathImage": ""
+  },
+  {
+    "Name": "Postres",
+    "PathImage": ""
+  }
+]
