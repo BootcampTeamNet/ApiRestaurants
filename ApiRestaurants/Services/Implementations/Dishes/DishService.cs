@@ -12,11 +12,19 @@ namespace Services.Implementations.Dishes
     public class DishService : IDishService
     {
         private readonly IGenericRepository<Dish> _genericRepository;
+        private readonly IDishRepository _iDishRepository;
         private readonly IMapper _mapper;
-        public DishService(IGenericRepository<Dish> genericRepository, IMapper mapper)
+        public DishService(IGenericRepository<Dish> genericRepository, IMapper mapper, IDishRepository iDishRepository)
         {
             _genericRepository = genericRepository;
             _mapper = mapper;
+            _iDishRepository = iDishRepository;
+        }
+
+
+        public async Task<bool> ExistsDish(int id)
+        {
+            return await _iDishRepository.ExistDish(id);
         }
         public Task<List<DishRequestDto>> GetAll()
         {
@@ -72,22 +80,16 @@ namespace Services.Implementations.Dishes
                 throw new Exception("El Id del restaurante debe ser mayor a cero");
             }
 
-            Dish dish = await _genericRepository.GetByIdAsync(id);
-            if (dish ==null) {
+            var exist = await _iDishRepository.ExistDish(id);
+
+
+            if (!exist) {
                 throw new Exception("El plato con el id "+ id +" no existe");
             }
 
-            dish.Name = dishRequestDto.Name;
-            dish.Description = dishRequestDto.Description;
-            dish.Price = dishRequestDto.Price;
-            dish.PathImage = dishRequestDto.PathImage;
-            dish.CaloriesMinimun = dishRequestDto.CaloriesMinimun;
-            dish.CaloriesMaximun = dishRequestDto.CaloriesMaximun;
-            dish.Proteins = dishRequestDto.Proteins;
-            dish.Fats = dishRequestDto.Fats;
-            dish.Sugars = dishRequestDto.Sugars;
-            dish.DishCategoryId = dishRequestDto.DishCategoryId;
-            dish.RestaurantId = dishRequestDto.RestaurantId;
+
+            var dish = _mapper.Map<Dish>(dishRequestDto);
+            dish.Id = id;
 
             return await _genericRepository.Update(dish);
         }
