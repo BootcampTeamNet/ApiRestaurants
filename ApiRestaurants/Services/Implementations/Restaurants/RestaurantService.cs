@@ -53,5 +53,12 @@ namespace Services.Implementations
 
             return await _restaurantRepository.Add(userRestaurant);
         }
+
+        public async Task<RestaurantIdDto> GetById(int id)
+        {
+            RestaurantIdDto restId = new RestaurantIdDto();
+            restId = await _restaurantRepository.GetById(int id);
+            return restId;
+        }   
     }
 }

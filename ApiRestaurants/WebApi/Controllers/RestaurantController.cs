@@ -14,6 +14,12 @@ namespace WebApi.Controllers
         {
             _restaurantService = restaurantService;
         }
+        
+        [HttpGet{"id"}]
+        public async Task<ActionResult> GetById(int id) 
+        {
+        var response = await _restaurantService.GetById(int id);
+        }
 
         [HttpPost("Register")]
         public async Task<IActionResult> Create(RestaurantRequestDto restaurantRequestDto)
