@@ -73,7 +73,7 @@ namespace Services.Implementations.Dishes
             }
             if (dishRequestDto.DishCategoryId<=0)
             {
-                throw new Exception("El Id de la categoriía debe ser mayor a cero ");
+                throw new Exception("El Id de la categoría debe ser mayor a cero ");
             }
             if (dishRequestDto.RestaurantId <= 0)
             {
@@ -82,16 +82,15 @@ namespace Services.Implementations.Dishes
 
             var exist = await _iDishRepository.ExistDish(id);
 
-
             if (!exist) {
                 throw new Exception("El plato con el id "+ id +" no existe");
             }
 
-
             var dish = _mapper.Map<Dish>(dishRequestDto);
             dish.Id = id;
 
-            return await _genericRepository.Update(dish);
+            await _genericRepository.Update(dish);
+            return dish.Id;
         }
 
     }
