@@ -29,8 +29,28 @@ namespace Services.Implementations.Dishes
 
         public async Task<int> Create(DishRequestDto dishRequestDto)
         {
+            if (string.IsNullOrEmpty(dishRequestDto.Name))
+            {
+                throw new Exception("El campo Nombre no puede estar vacío");
+            }
+            if (string.IsNullOrEmpty(dishRequestDto.Description))
+            {
+                throw new Exception("El campo Description no puede ser nulo");
+            }
+            if (dishRequestDto.DishCategoryId <= 0)
+            {
+                throw new Exception("El Id de la categoria debe ser mayor a cero");
+            }
+            if (dishRequestDto.RestaurantId <= 0)
+            {
+                throw new Exception("El Id del restaurante debe ser mayor a cero");
+            }
+
             var data = _mapper.Map<Dish>(dishRequestDto);
-            return await _genericRepository.Add(data);
+            await _genericRepository.Add(data);
+            var dishId = data.Id;
+
+            return dishId;
         }
 
 
@@ -45,11 +65,11 @@ namespace Services.Implementations.Dishes
             }
             if (dishRequestDto.DishCategoryId<=0)
             {
-                throw new Exception("El campo DishCategoryId no puede ser cero");
+                throw new Exception("El Id de la categoriía debe ser mayor a cero ");
             }
             if (dishRequestDto.RestaurantId <= 0)
             {
-                throw new Exception("El campo RestaurantId no puede ser cero");
+                throw new Exception("El Id del restaurante debe ser mayor a cero");
             }
 
             Dish dish = await _genericRepository.GetByIdAsync(id);
