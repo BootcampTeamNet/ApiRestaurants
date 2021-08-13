@@ -10,6 +10,7 @@ namespace WebApi.Configuration
         {
             services.AddScoped(typeof(IGenericRepository<>), (typeof(GenericRepository<>)));
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IDishRepository, DishRepository>();
             services.AddScoped<IRestaurantRepository, RestaurantRepository>();
         }
     }
