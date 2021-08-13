@@ -57,10 +57,10 @@ namespace Services.Implementations
             return await _restaurantRepository.Add(userRestaurant);
         }
 
-        public async Task<RestaurantIdDto> GetById(int id)
+        public async Task<RestaurantResponseDto> GetById(int id)
         {   
             var restId = await _restaurantRepository.GetById(id);
-            var restMap = _mapper.Map<RestaurantIdDto>(restId);
+            var restMap = _mapper.Map<RestaurantResponseDto>(restId);
             Console.WriteLine(restMap);
             return restMap;
         }   

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DTOs.Restaurant
 {
-    public class RestaurantIdDto
+    public class RestaurantResponseDto
     {   
         public string Name { get; set; }
         public string Address { get; set; }

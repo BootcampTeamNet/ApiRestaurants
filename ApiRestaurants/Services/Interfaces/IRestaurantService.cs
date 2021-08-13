@@ -6,7 +6,7 @@ namespace Services.Interfaces
     public interface IRestaurantService
     {
         Task<int> Create(RestaurantRequestDto restaurantRequestDto);
-        Task<RestaurantIdDto> GetById(int id);
+        Task<RestaurantResponseDto> GetById(int id);
     }
 
 }
