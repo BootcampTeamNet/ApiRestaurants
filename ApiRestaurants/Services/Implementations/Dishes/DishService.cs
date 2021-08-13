@@ -30,10 +30,6 @@ namespace Services.Implementations.Dishes
         {
             throw new System.NotImplementedException();
         }
-        public Task<DishRequestDto> GetById(int id)
-        {
-            throw new System.NotImplementedException();
-        }
 
         public async Task<int> Create(DishRequestDto dishRequestDto)
         {
@@ -92,6 +88,18 @@ namespace Services.Implementations.Dishes
             await _genericRepository.Update(dish);
             return dish.Id;
         }
+        public async Task<DishRequestDto> GetById(int id)
+        {
+            var dishData = await _iDishRepository.GetById(id);
+            if (dishData == null)
+            {
+                var ex = new ArgumentNullException("NotFound");
+                throw ex;
+            }
 
+            var dishMap =  _mapper.Map<DishRequestDto>(dishData);
+
+            return dishMap;
+        }
     }
 }

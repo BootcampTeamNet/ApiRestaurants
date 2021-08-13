@@ -37,5 +37,21 @@ namespace WebApi.Controllers
         {
             return _dishService.Update(dishRequestDto, id);
         }
+
+        [HttpGet("id")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            try
+            {
+                var responseDish = await _dishService.GetById(id);
+                return Ok(responseDish);
+            }
+            catch
+            {
+                return NotFound("El id ingresado no coincide con algun plato registrado.");
+            }
+
+            
+        }
     }
 }
