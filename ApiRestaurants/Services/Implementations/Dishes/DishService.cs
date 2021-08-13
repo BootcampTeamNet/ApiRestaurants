@@ -37,22 +37,7 @@ namespace Services.Implementations.Dishes
 
         public async Task<int> Create(DishRequestDto dishRequestDto)
         {
-            if (string.IsNullOrEmpty(dishRequestDto.Name))
-            {
-                throw new Exception("El campo Nombre no puede estar vacío");
-            }
-            if (string.IsNullOrEmpty(dishRequestDto.Description))
-            {
-                throw new Exception("El campo Description no puede ser nulo");
-            }
-            if (dishRequestDto.DishCategoryId <= 0)
-            {
-                throw new Exception("El Id de la categoria debe ser mayor a cero");
-            }
-            if (dishRequestDto.RestaurantId <= 0)
-            {
-                throw new Exception("El Id del restaurante debe ser mayor a cero");
-            }
+            Validation(dishRequestDto);
 
             var data = _mapper.Map<Dish>(dishRequestDto);
             await _genericRepository.Add(data);
@@ -61,29 +46,15 @@ namespace Services.Implementations.Dishes
             return dishId;
         }
 
-
         public async Task<int> Update(DishRequestDto dishRequestDto, int id)
         {
-            if (string.IsNullOrEmpty(dishRequestDto.Name)) {
-                throw new Exception("El campo Name no puede estar vacío");
-            }
-            if (string.IsNullOrEmpty(dishRequestDto.Description))
-            {
-                throw new Exception("El campo Description no puede ser nulo");
-            }
-            if (dishRequestDto.DishCategoryId<=0)
-            {
-                throw new Exception("El Id de la categoría debe ser mayor a cero ");
-            }
-            if (dishRequestDto.RestaurantId <= 0)
-            {
-                throw new Exception("El Id del restaurante debe ser mayor a cero");
-            }
+            Validation(dishRequestDto);
 
             var exist = await _iDishRepository.ExistDish(id);
 
-            if (!exist) {
-                throw new Exception("El plato con el id "+ id +" no existe");
+            if (!exist)
+            {
+                throw new Exception("El plato con el id " + id + " no existe");
             }
 
             var dish = _mapper.Map<Dish>(dishRequestDto);
@@ -93,5 +64,24 @@ namespace Services.Implementations.Dishes
             return dish.Id;
         }
 
+        private static void Validation(DishRequestDto dishRequestDto)
+        {
+            if (string.IsNullOrEmpty(dishRequestDto.Name))
+            {
+                throw new Exception("El campo Name no puede estar vacío");
+            }
+            if (string.IsNullOrEmpty(dishRequestDto.Description))
+            {
+                throw new Exception("El campo Description no puede ser nulo");
+            }
+            if (dishRequestDto.DishCategoryId <= 0)
+            {
+                throw new Exception("El Id de la categoría debe ser mayor a cero ");
+            }
+            if (dishRequestDto.RestaurantId <= 0)
+            {
+                throw new Exception("El Id del restaurante debe ser mayor a cero");
+            }
+        }
     }
 }
