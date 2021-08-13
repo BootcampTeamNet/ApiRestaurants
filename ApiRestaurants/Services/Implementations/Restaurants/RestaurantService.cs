@@ -14,14 +14,12 @@ namespace Services.Implementations
         private readonly IRestaurantRepository _restaurantRepository;
         private readonly IUserService _userService;
         private readonly IPasswordService _passwordService;
-        private readonly IGenericRepository<RestaurantCategory> _genericRepository;
         private readonly IMapper _mapper;
-        public RestaurantService(IRestaurantRepository restaurantRepository, IUserService userService, IPasswordService passwordService, IGenericRepository<RestaurantCategory> genericRepository, IMapper mapper)
+        public RestaurantService(IRestaurantRepository restaurantRepository, IUserService userService, IPasswordService passwordService,  IMapper mapper)
         {
             _restaurantRepository = restaurantRepository;
             _userService = userService;
             _passwordService = passwordService;
-            _genericRepository = genericRepository;
             _mapper = mapper;
 
         }
@@ -72,6 +70,8 @@ namespace Services.Implementations
             var restaurantResponseDto = _mapper.Map<RestaurantResponseDto>(restaurant);
             return restaurantResponseDto;
         }   
+
+        /*
         public async Task<List<RestaurantCategoryRequestDto>> GetList()
         {
             var responseRestaurantCategory = await _genericRepository.GetAllAsync();
@@ -81,8 +81,8 @@ namespace Services.Implementations
             {
  
                 ListaMachetada.Add(prop.Name);
-            }*/
+            }
             return response;
-        }
+        }*/
     }
 }

@@ -40,13 +40,14 @@ namespace WebApi.Controllers
             return Ok(response);
         }
 
-
+        /*
         [HttpGet("ListCategory")]
         public async Task<IActionResult> GetList()
         {
             var responseRestaurantCategory = await _restaurantService.GetList();
             return Ok(responseRestaurantCategory);
         }
+        */
 
     }
 }
