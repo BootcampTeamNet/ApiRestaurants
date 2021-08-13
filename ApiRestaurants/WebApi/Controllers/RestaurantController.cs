@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using System.Threading.Tasks;
+using WebApi.Errors;
 
 namespace WebApi.Controllers
 {
@@ -23,9 +24,8 @@ namespace WebApi.Controllers
                 var response = await _restaurantService.GetById(id);
                 return Ok(response);
             }
-            
             catch  {
-                return NotFound("No existe el restaurante por este id");
+                return NotFound(new CodeErrorResponse(400, $"No existe el restaurante de id {id}"));
             }
             
         }
