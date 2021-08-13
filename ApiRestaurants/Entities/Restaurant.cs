@@ -1,5 +1,4 @@
-﻿using DTOs.Users;
-using System;
+﻿using System;
 
 namespace Entities
 {
@@ -19,5 +18,8 @@ namespace Entities
         public string Email { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreationDate { get; set; }
+        public int RestaurantCategoryId { get; set; }
+        public RestaurantCategory RestaurantCategory { get; set; }
+
     }
 }

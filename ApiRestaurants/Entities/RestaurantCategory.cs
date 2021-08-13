@@ -1,6 +1,6 @@
-﻿using Entities;
+﻿using System;
 
-namespace DTOs.Users
+namespace Entities
 {
     public class RestaurantCategory : BaseClass
     {
