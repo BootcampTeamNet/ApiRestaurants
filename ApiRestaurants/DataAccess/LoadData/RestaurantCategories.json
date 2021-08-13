@@ -1,0 +1,34 @@
+[
+  {
+    "Name": "Ninguna",
+    "PathImage": ""
+  },
+  {
+    "Name": "Comida Italiana",
+    "PathImage": ""
+  },
+  {
+    "Name": "Comida China",
+    "PathImage": ""
+  },
+  {
+    "Name": "Cómida Mexicana",
+    "PathImage": ""
+  },
+  {
+    "Name": "Comida de Mar",
+    "PathImage": ""
+  },
+  {
+    "Name": "Carnes",
+    "PathImage": ""
+  },
+  {
+    "Name": "Comida Española",
+    "PathImage": ""
+  },
+  {
+    "Name": "Comida Colombiana",
+    "PathImage": "Sopa"
+  }
+]
