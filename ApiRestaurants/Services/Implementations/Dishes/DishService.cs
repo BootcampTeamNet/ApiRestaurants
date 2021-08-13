@@ -90,14 +90,13 @@ namespace Services.Implementations.Dishes
         }
         public async Task<DishRequestDto> GetById(int id)
         {
-            var dishData = await _iDishRepository.GetById(id);
-            if (dishData == null)
+            var dish = await _iDishRepository.GetById(id);
+            if (dish == null)
             {
-                var ex = new ArgumentNullException("NotFound");
-                throw ex;
+                throw new ArgumentNullException("NotFound");
             }
 
-            var dishMap =  _mapper.Map<DishRequestDto>(dishData);
+            var dishMap =  _mapper.Map<DishRequestDto>(dish);
 
             return dishMap;
         }
