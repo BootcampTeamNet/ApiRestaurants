@@ -17,19 +17,19 @@ namespace WebApi.Controllers
         {
             _restaurantService = restaurantService;
         }
-        
+
         [HttpGet("id")]
         public async Task<IActionResult> GetById(int id)
         {
-            try 
+            try
             {
                 var response = await _restaurantService.GetById(id);
                 return Ok(response);
             }
-            catch  {
+            catch {
                 return NotFound(new CodeErrorResponse(400, $"No existe el restaurante de id {id}"));
             }
-            
+
         }
 
         [HttpPost("Register")]
@@ -41,7 +41,7 @@ namespace WebApi.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("ListCategory")]
         public async Task<IActionResult> GetList()
         {
             var responseRestaurantCategory = await _restaurantService.GetList();
