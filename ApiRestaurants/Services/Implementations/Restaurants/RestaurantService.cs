@@ -60,6 +60,13 @@ namespace Services.Implementations
         public async Task<RestaurantResponseDto> GetById(int id)
         {   
             var restId = await _restaurantRepository.GetById(id);
+            if(restId == null) 
+            { 
+                var ex = new ArgumentNullException("NotFound");
+                throw ex;
+            }
+            
+            
             var restMap = _mapper.Map<RestaurantResponseDto>(restId);
             Console.WriteLine(restMap);
             return restMap;

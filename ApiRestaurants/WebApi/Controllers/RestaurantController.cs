@@ -18,8 +18,16 @@ namespace WebApi.Controllers
         [HttpGet("id")]
         public async Task<IActionResult> GetById(int id)
         {
-            var response = await _restaurantService.GetById(id);
-            return Ok(response);
+            try 
+            {
+                var response = await _restaurantService.GetById(id);
+                return Ok(response);
+            }
+            
+            catch  {
+                return NotFound("No existe el restaurante por este id");
+            }
+            
         }
 
         [HttpPost("Register")]
