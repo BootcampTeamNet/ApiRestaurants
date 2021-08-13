@@ -3,7 +3,6 @@ using DataAccess.Interfaces;
 using DTOs.Dish;
 using Entities;
 using Services.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -26,8 +25,6 @@ namespace Services.Implementations.Dishes
            
             var dishCategoryResponseDto = _mapper.Map<List<DishCategoryRequestDto>>(dishesCategories);
           
-           
-            
             return dishCategoryResponseDto;
         }
     }
