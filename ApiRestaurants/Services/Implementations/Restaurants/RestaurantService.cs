@@ -70,19 +70,5 @@ namespace Services.Implementations
             var restaurantResponseDto = _mapper.Map<RestaurantResponseDto>(restaurant);
             return restaurantResponseDto;
         }   
-
-        /*
-        public async Task<List<RestaurantCategoryRequestDto>> GetList()
-        {
-            var responseRestaurantCategory = await _genericRepository.GetAllAsync();
-            var response = _mapper.Map<List<RestaurantCategoryRequestDto>>(responseRestaurantCategory);
-           /* List<string> ListaMachetada = new List<string>();
-            foreach ( RestaurantCategory prop in responseRestaurantCategory)
-            {
- 
-                ListaMachetada.Add(prop.Name);
-            }
-            return response;
-        }*/
     }
 }

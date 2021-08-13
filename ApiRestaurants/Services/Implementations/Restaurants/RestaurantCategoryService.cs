@@ -22,7 +22,7 @@ namespace Services.Implementations
 
         }
 
-        public async Task<List<RestaurantCategoryRequestDto>> GetList()
+        public async Task<List<RestaurantCategoryRequestDto>> GetAll()
         {
             var responseRestaurantCategory = await _genericRepository.GetAllAsync();
             var response = _mapper.Map<List<RestaurantCategoryRequestDto>>(responseRestaurantCategory);

@@ -19,10 +19,10 @@ namespace WebApi.Controllers
             _restaurantCategoryService = restaurantCategoryService;
         }
 
-        [HttpGet("ListCategory")]
-        public async Task<IActionResult> GetList()
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
         {
-            var responseRestaurantCategory = await _restaurantCategoryService.GetList();
+            var responseRestaurantCategory = await _restaurantCategoryService.GetAll();
             return Ok(responseRestaurantCategory);
         }
 
