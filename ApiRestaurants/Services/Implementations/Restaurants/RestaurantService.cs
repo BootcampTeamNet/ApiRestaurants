@@ -1,8 +1,10 @@
-﻿using DataAccess.Interfaces;
+﻿using AutoMapper;
+using DataAccess.Interfaces;
 using DTOs.Restaurant;
 using Entities;
 using Services.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Services.Implementations
@@ -12,11 +14,16 @@ namespace Services.Implementations
         private readonly IRestaurantRepository _restaurantRepository;
         private readonly IUserService _userService;
         private readonly IPasswordService _passwordService;
-        public RestaurantService(IRestaurantRepository restaurantRepository, IUserService userService, IPasswordService passwordService)
+        private readonly IGenericRepository<RestaurantCategory> _genericRepository;
+        private readonly IMapper _mapper;
+        public RestaurantService(IRestaurantRepository restaurantRepository, IUserService userService, IPasswordService passwordService, IGenericRepository<RestaurantCategory> genericRepository, IMapper mapper)
         {
             _restaurantRepository = restaurantRepository;
             _userService = userService;
             _passwordService = passwordService;
+            _genericRepository = genericRepository;
+            _mapper = mapper;
+
         }
         public async Task<int> Create(RestaurantRequestDto restaurantRequestDto)
         {
@@ -52,6 +59,19 @@ namespace Services.Implementations
             };
 
             return await _restaurantRepository.Add(userRestaurant);
+        }
+        public async Task<List<string>> GetList()
+        {
+
+            var responseRestaurantCategory = await _genericRepository.GetAllAsync();
+            List<string> ListaMachetada = new List<string>();
+
+            foreach ( RestaurantCategory prop in responseRestaurantCategory)
+            {
+ 
+                ListaMachetada.Add(prop.Name);
+            }
+            return ListaMachetada;
         }
     }
 }

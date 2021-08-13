@@ -12,6 +12,7 @@ namespace DataAccess
         public DbSet<Restaurant> Restaurants { get; set; }
         public DbSet<UserRestaurant> UserRestaurants { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<RestaurantCategory> RestaurantCategories{ get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

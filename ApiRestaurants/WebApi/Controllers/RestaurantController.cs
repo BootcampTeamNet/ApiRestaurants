@@ -1,6 +1,8 @@
 ﻿using DTOs.Restaurant;
+using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace WebApi.Controllers
@@ -21,6 +23,14 @@ namespace WebApi.Controllers
             var response = await _restaurantService.Create(restaurantRequestDto);
 
             return Ok(response);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetList()
+        {
+            var responseRestaurantCategory = await _restaurantService.GetList();
+            return Ok(responseRestaurantCategory);
         }
 
     }
