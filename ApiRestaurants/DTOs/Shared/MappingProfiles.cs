@@ -10,7 +10,7 @@ namespace WebApi.Dtos
        public MappingProfiles() 
         {
             CreateMap<Dish, DishRequestDto>().ReverseMap();
-            CreateMap<Restaurant, RestaurantRequestDto>().ReverseMap();
+            CreateMap<Restaurant, RestaurantIdDto>().ReverseMap();
         }
 
     }
