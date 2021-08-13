@@ -1,4 +1,5 @@
-﻿using DataAccess.Interfaces;
+﻿using AutoMapper;
+using DataAccess.Interfaces;
 using DTOs.Restaurant;
 using Entities;
 using Services.Interfaces;
@@ -12,11 +13,13 @@ namespace Services.Implementations
         private readonly IRestaurantRepository _restaurantRepository;
         private readonly IUserService _userService;
         private readonly IPasswordService _passwordService;
-        public RestaurantService(IRestaurantRepository restaurantRepository, IUserService userService, IPasswordService passwordService)
+        private readonly IMapper _mapper;
+        public RestaurantService(IRestaurantRepository restaurantRepository, IUserService userService, IPasswordService passwordService, IMapper mapper)
         {
             _restaurantRepository = restaurantRepository;
             _userService = userService;
             _passwordService = passwordService;
+            _mapper = mapper;
         }
         public async Task<int> Create(RestaurantRequestDto restaurantRequestDto)
         {
@@ -55,10 +58,11 @@ namespace Services.Implementations
         }
 
         public async Task<RestaurantIdDto> GetById(int id)
-        {
-            RestaurantIdDto restId = new RestaurantIdDto();
-            restId = await _restaurantRepository.GetById(int id);
-            return restId;
+        {   
+            var restId = await _restaurantRepository.GetById(id);
+            var restMap = _mapper.Map<RestaurantIdDto>(restId);
+            Console.WriteLine(restMap);
+            return restMap;
         }   
     }
 }

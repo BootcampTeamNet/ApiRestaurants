@@ -15,10 +15,11 @@ namespace WebApi.Controllers
             _restaurantService = restaurantService;
         }
         
-        [HttpGet{"id"}]
-        public async Task<ActionResult> GetById(int id) 
+        [HttpGet("id")]
+        public async Task<IActionResult> GetById(int id)
         {
-        var response = await _restaurantService.GetById(int id);
+            var response = await _restaurantService.GetById(id);
+            return Ok(response);
         }
 
         [HttpPost("Register")]

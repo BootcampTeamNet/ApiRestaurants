@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DTOs.Dish;
+using DTOs.Restaurant;
 using Entities;
 
 namespace WebApi.Dtos
@@ -9,6 +10,8 @@ namespace WebApi.Dtos
        public MappingProfiles() 
         {
             CreateMap<Dish, DishRequestDto>().ReverseMap();
+            CreateMap<Restaurant, RestaurantRequestDto>().ReverseMap();
         }
+
     }
 }

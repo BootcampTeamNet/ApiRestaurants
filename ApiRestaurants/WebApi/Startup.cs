@@ -1,3 +1,4 @@
+using AutoMapper;
 using DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,6 +29,7 @@ namespace WebApi
                 opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            //Mapper
             services.AddAutoMapper(typeof(MappingProfiles));
 
             services.AddServices();
