@@ -26,6 +26,8 @@ namespace WebApi
                     var context = services.GetRequiredService<RestaurantsDbContext>();
                     await context.Database.MigrateAsync();
 
+                    await RestaurantsDbContextData.LoadDataAsync(context, loggerFactory);
+
                 }
                 catch (Exception e)
                 {

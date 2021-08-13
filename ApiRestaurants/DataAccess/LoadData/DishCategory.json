@@ -1,0 +1,34 @@
+[
+  {
+    "Name": "Aperitivo",
+    "PathImage": ""
+  },
+  {
+    "Name": "Bebida",
+    "PathImage": ""
+  },
+  {
+    "Name": "Botana",
+    "PathImage": ""
+  },
+  {
+    "Name": "Ensalada",
+    "PathImage": ""
+  },
+  {
+    "Name": "Entrada",
+    "PathImage": ""
+  },
+  {
+    "Name": "Plato Principal",
+    "PathImage": ""
+  },
+  {
+    "Name": "Postre",
+    "PathImage": ""
+  },
+  {
+    "Name": "Sopa",
+    "PathImage": ""
+  }
+]
