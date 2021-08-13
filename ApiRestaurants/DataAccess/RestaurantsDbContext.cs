@@ -10,6 +10,7 @@ namespace DataAccess
         public DbSet<DishCategory> DishCategories { get; set; }
         public DbSet<Dish> Dishes { get; set; }
         public DbSet<Restaurant> Restaurants { get; set; }
+        public DbSet<RestaurantCategory> RestaurantCategories { get; set; }
         public DbSet<UserRestaurant> UserRestaurants { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<RestaurantCategory> RestaurantCategories{ get; set; }

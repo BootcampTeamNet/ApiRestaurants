@@ -60,6 +60,18 @@ namespace Services.Implementations
 
             return await _restaurantRepository.Add(userRestaurant);
         }
+
+        public async Task<RestaurantResponseDto> GetById(int id)
+        {   
+            var restaurant = await _restaurantRepository.GetById(id);
+            if(restaurant == null) 
+            { 
+                throw new ArgumentNullException("NotFound");
+            }
+            
+            var restaurantResponseDto = _mapper.Map<RestaurantResponseDto>(restaurant);
+            return restaurantResponseDto;
+        }   
         public async Task<List<RestaurantCategoryRequestDto>> GetList()
         {
             var responseRestaurantCategory = await _genericRepository.GetAllAsync();
