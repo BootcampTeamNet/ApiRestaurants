@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using System.Threading.Tasks;
+using WebApi.Errors;
 
 namespace WebApi.Controllers
 {
@@ -13,6 +14,20 @@ namespace WebApi.Controllers
         public RestaurantController(IRestaurantService restaurantService)
         {
             _restaurantService = restaurantService;
+        }
+        
+        [HttpGet("id")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            try 
+            {
+                var response = await _restaurantService.GetById(id);
+                return Ok(response);
+            }
+            catch  {
+                return NotFound(new CodeErrorResponse(400, $"No existe el restaurante de id {id}"));
+            }
+            
         }
 
         [HttpPost("Register")]
