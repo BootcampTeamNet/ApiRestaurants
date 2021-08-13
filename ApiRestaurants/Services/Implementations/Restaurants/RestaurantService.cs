@@ -60,18 +60,17 @@ namespace Services.Implementations
 
             return await _restaurantRepository.Add(userRestaurant);
         }
-        public async Task<List<string>> GetList()
+        public async Task<List<RestaurantCategoryRequestDto>> GetList()
         {
-
             var responseRestaurantCategory = await _genericRepository.GetAllAsync();
-            List<string> ListaMachetada = new List<string>();
-
+            var response = _mapper.Map<List<RestaurantCategoryRequestDto>>(responseRestaurantCategory);
+           /* List<string> ListaMachetada = new List<string>();
             foreach ( RestaurantCategory prop in responseRestaurantCategory)
             {
  
                 ListaMachetada.Add(prop.Name);
-            }
-            return ListaMachetada;
+            }*/
+            return response;
         }
     }
 }

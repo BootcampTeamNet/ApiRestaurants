@@ -9,6 +9,7 @@ namespace DTOs.Restaurant
 {
     public class RestaurantCategoryRequestDto 
     {
-        public List<string> Name { get; set; }
+        public string Name { get; set; }
+        public int Id { get; set; }
     }
 }
