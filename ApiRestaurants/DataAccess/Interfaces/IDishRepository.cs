@@ -7,5 +7,6 @@ namespace DataAccess.Interfaces
     {
         Task<bool> ExistDish(int id);
         Task<Dish> GetDish(string id);
+        Task<Dish> GetById(int id);
     }
 }

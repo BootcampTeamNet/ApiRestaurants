@@ -9,8 +9,8 @@ namespace Services.Interfaces
     {
 
         Task<List<DishRequestDto>> GetAll();
-        Task<DishRequestDto> GetById(int id);
         Task<int> Create(DishRequestDto dishRequestDto);
         Task<int> Update(DishRequestDto dishRequestDto, int id);
+        Task<DishRequestDto> GetById(int id);
     }
 }

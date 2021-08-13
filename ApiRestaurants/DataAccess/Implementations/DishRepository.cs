@@ -28,5 +28,11 @@ namespace DataAccess.Implementations
                 x => x.Name.Equals(name.ToLower()));
             return dish;
         }
+        public async Task<Dish> GetById(int id)
+        {
+            Dish dishData = new Dish();
+            dishData = await _restaurantsDbContext.Dishes.FirstOrDefaultAsync(d => d.Id == id);
+            return dishData;
+        }
     }
 }

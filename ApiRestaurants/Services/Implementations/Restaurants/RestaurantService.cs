@@ -4,6 +4,7 @@ using DTOs.Restaurant;
 using Entities;
 using Services.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Services.Implementations
@@ -14,12 +15,13 @@ namespace Services.Implementations
         private readonly IUserService _userService;
         private readonly IPasswordService _passwordService;
         private readonly IMapper _mapper;
-        public RestaurantService(IRestaurantRepository restaurantRepository, IUserService userService, IPasswordService passwordService, IMapper mapper)
+        public RestaurantService(IRestaurantRepository restaurantRepository, IUserService userService, IPasswordService passwordService,  IMapper mapper)
         {
             _restaurantRepository = restaurantRepository;
             _userService = userService;
             _passwordService = passwordService;
             _mapper = mapper;
+
         }
         public async Task<int> Create(RestaurantRequestDto restaurantRequestDto)
         {
