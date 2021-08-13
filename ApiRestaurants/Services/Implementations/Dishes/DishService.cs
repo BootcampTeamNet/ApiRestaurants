@@ -96,9 +96,9 @@ namespace Services.Implementations.Dishes
                 throw new ArgumentNullException("NotFound");
             }
 
-            var dishMap =  _mapper.Map<DishRequestDto>(dish);
+            var dishRequestDto =  _mapper.Map<DishRequestDto>(dish);
 
-            return dishMap;
+            return dishRequestDto;
         }
     }
 }
