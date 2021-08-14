@@ -41,24 +41,10 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<ActionResult> Login(LoginDto user)
+        public async Task<IActionResult> Login(LoginDto user)
         {
             var response = await _userService.Login(user.Email, user.Password);
-
-            if (response == "NoUser")
-            {
-                return NotFound(new CodeErrorResponse(400, $"Error, usuario no existe..."));
-            }
-            if (response == "WrongPassword")
-            {
-                return BadRequest(new CodeErrorResponse(404, $"Error, ingresó clave de acceso incorrecta..."));
-            }
-
-            var obj = new { Token=response, Message="Autenticación exitosa"};
-
-            
-            return Ok(obj);
-
+            return Ok(response);
         }
     }
 

@@ -14,25 +14,29 @@ namespace Services.Inplementations.Users
 {
     public class UserService : IUserService
     {
-        private readonly IGenericRepository<User> _userRepository;
-        private readonly IUserRepository _iUserRepository;
+        private readonly IGenericRepository<User> _genericRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IGenericRepository<UserRestaurant> _userRestaurantRepository;
+        private readonly IGenericRepository<Restaurant> _restaurantRepository;
         private readonly IPasswordService _passwordService;
         private readonly IConfiguration _configuration;
-        public UserService(IGenericRepository<User> userRepository,
-            IUserRepository iUserRepository, IPasswordService passwordService, IConfiguration configuration)
+        public UserService(IGenericRepository<User> genericRepository, IUserRepository userRepository, 
+            IGenericRepository<UserRestaurant> userRestaurantRepository, IGenericRepository<Restaurant> restaurantRepository,  IPasswordService passwordService, IConfiguration configuration)
         {
+            _genericRepository = genericRepository;
             _userRepository = userRepository;
-            _iUserRepository = iUserRepository;
+            _userRestaurantRepository = userRestaurantRepository;
+            _restaurantRepository = restaurantRepository;
             _passwordService = passwordService;
             _configuration = configuration;
         }
 
         public async Task<bool> ExistsUser(string email)
         {
-            return await _iUserRepository.ExistsUser(email);
+            return await _userRepository.ExistsUser(email);
         }
 
-        public async Task<string> Login(string email, string password)
+        public async Task<LoginResponseDto> Login(string email, string password)
         {
             if (string.IsNullOrEmpty(email))
             {
@@ -44,20 +48,45 @@ namespace Services.Inplementations.Users
                 throw new Exception("Por favor ingresar el password que registró");
             }
 
-            var user = await _iUserRepository.GetUser(email);
-
+            var user = await _userRepository.GetUser(email);
             if (user == null)
             {
-                return "NoUser";
+                throw new Exception("Error, usuario no existe...");
             }
-            else if (!_passwordService.VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+            if (!_passwordService.VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             {
-                return "WrongPassword";
+                throw new Exception("Error, password incorrecta....");
             }
-            else
+
+            LoginResponseDto loginResponseDto = new LoginResponseDto();
+            //revisar se debe buscar el por id de usuario
+            UserRestaurant userRestaurant = await _userRestaurantRepository.GetByIdAsync(user.Id);
+            if (userRestaurant != null)
             {
-                return CreateToken(user);
+                Restaurant restaurant = await _restaurantRepository.GetByIdAsync(userRestaurant.RestaurantId);
+                loginResponseDto.Restaurant = new RestaurantLoginResponseDto
+                {
+                    Id = restaurant.Id,
+                    Name = restaurant.Name,
+                    User = new UserLoginResponseDto
+                    {
+                        Id = user.Id,
+                        Name = user.FirstName,
+                        Email = user.Email
+                    }
+                };
             }
+            else {
+                loginResponseDto.User = new UserLoginResponseDto
+                {
+                    Id = user.Id,
+                    Name = user.FirstName,
+                    Email = user.Email
+                };
+            }
+
+            loginResponseDto.Token = CreateToken(user);
+            return loginResponseDto;
         }
 
         public async Task<int> Register(UserDto userDto)
@@ -108,7 +137,7 @@ namespace Services.Inplementations.Users
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
-            var result = await _userRepository.Add(user);
+            var result = await _genericRepository.Add(user);
 
             return user.Id;
         }
