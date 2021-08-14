@@ -1,8 +1,6 @@
 ﻿using DTOs.Restaurant;
-using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebApi.Errors;
 
@@ -40,14 +38,12 @@ namespace WebApi.Controllers
             return Ok(response);
         }
 
-        /*
-        [HttpGet("ListCategory")]
-        public async Task<IActionResult> GetList()
+        [HttpGet("GetAllByCoordinates")]
+        public async Task<IActionResult> GetAllByCoordinates(double customerLatitude, double customerLongitude)
         {
-            var responseRestaurantCategory = await _restaurantService.GetList();
-            return Ok(responseRestaurantCategory);
-        }
-        */
+            var response = await _restaurantService.GetAllByCoordinates(customerLatitude, customerLongitude);
 
+            return Ok(response);
+        }
     }
 }
