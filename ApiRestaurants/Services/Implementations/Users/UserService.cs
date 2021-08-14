@@ -63,11 +63,11 @@ namespace Services.Inplementations.Users
             UserRestaurant userRestaurant = await _userRestaurantRepository.GetByUserId(user.Id);
             if (userRestaurant != null)
             {
-                loginResponseDto.Restaurant = new RestaurantLoginResponseDto
+                loginResponseDto.Restaurant = new LoginRestaurantResponseDto
                 {
                     Id = userRestaurant.Restaurant.Id,
                     Name = userRestaurant.Restaurant.Name,
-                    User = new UserLoginResponseDto
+                    User = new LoginUserResponseDto
                     {
                         Id = user.Id,
                         Name = user.FirstName,
@@ -76,7 +76,7 @@ namespace Services.Inplementations.Users
                 };
             }
             else {
-                loginResponseDto.User = new UserLoginResponseDto
+                loginResponseDto.User = new LoginUserResponseDto
                 {
                     Id = user.Id,
                     Name = user.FirstName,
