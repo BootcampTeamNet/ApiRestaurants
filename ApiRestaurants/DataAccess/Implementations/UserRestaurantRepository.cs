@@ -19,12 +19,14 @@ namespace DataAccess.Implementations
 
         public async Task<UserRestaurant> GetByUserId(int id)
         {
-            UserRestaurant response = await (from userRestaurant in _context.UserRestaurants
-                                             join restaurant in _context.Restaurants on userRestaurant.Id equals restaurant.Id
+            UserRestaurant response = await (from restaurant in _context.Restaurants
+                                             join userRestaurant in _context.UserRestaurants on restaurant.Id equals userRestaurant.RestaurantId
+                                             join user in _context.Users on userRestaurant.UserId equals user.Id
                                              where userRestaurant.UserId == id
                                              select new UserRestaurant
                                              {
                                                  UserId = userRestaurant.Id,
+                                                 User = user,
                                                  RestaurantId = userRestaurant.RestaurantId,
                                                  Restaurant = restaurant,
                                              }).FirstOrDefaultAsync();
