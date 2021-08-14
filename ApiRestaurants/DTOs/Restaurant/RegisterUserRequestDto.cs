@@ -1,6 +1,6 @@
 ﻿namespace DTOs.Restaurant
 {
-    public class UserRestaurantRequestDto
+    public class RegisterUserRequestDto
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

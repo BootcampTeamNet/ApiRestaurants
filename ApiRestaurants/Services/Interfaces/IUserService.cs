@@ -7,7 +7,7 @@ namespace Services.Interfaces
     public interface IUserService
     {
         Task<int> Register(UserDto userDto);
-        Task<string> Login(string email, string password);
+        Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto);
         Task<bool> ExistsUser(string email);
     }
 }
