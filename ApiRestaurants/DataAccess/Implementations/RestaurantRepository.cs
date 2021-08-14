@@ -25,13 +25,5 @@ namespace DataAccess.Implementations
                 i => i.Id == id);
             return rest;
         }
-        
-        public async Task<int> Add(UserRestaurant userRestaurant)
-        {
-           await _context.AddAsync(userRestaurant);
-           await _context.SaveChangesAsync();
-           
-           return userRestaurant.Restaurant.Id;
-        }
     }
 }

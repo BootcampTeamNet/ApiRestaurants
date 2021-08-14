@@ -33,7 +33,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Create(RestaurantRequestDto restaurantRequestDto)
+        public async Task<IActionResult> Create(RegisterRestaurantRequestDto restaurantRequestDto)
         {
             var response = await _restaurantService.Create(restaurantRequestDto);
 

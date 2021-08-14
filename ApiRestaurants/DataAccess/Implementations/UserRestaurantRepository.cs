@@ -1,10 +1,8 @@
 ﻿using DataAccess.Interfaces;
 using Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DataAccess.Implementations
@@ -15,6 +13,14 @@ namespace DataAccess.Implementations
         public UserRestaurantRepository(RestaurantsDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<int> Add(UserRestaurant userRestaurant)
+        {
+            await _context.AddAsync(userRestaurant);
+            await _context.SaveChangesAsync();
+
+            return userRestaurant.Restaurant.Id;
         }
 
         public async Task<UserRestaurant> GetByUserId(int id)
