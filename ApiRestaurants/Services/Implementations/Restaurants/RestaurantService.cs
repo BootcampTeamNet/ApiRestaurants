@@ -17,7 +17,7 @@ namespace Services.Implementations
         private readonly IPasswordService _passwordService;
         private readonly IMapper _mapper;
         public RestaurantService(IGenericRepository<Restaurant> genericRepository,
-            IRestaurantRepository restaurantRepository, IUserService userService, IPasswordService passwordService,  IMapper mapper)
+            IRestaurantRepository restaurantRepository, IUserService userService, IPasswordService passwordService, IMapper mapper)
         {
             _genericRepository = genericRepository;
             _restaurantRepository = restaurantRepository;
@@ -64,42 +64,47 @@ namespace Services.Implementations
 
 
         public async Task<RestaurantResponseDto> GetById(int id)
-        {   
+        {
             var restaurant = await _restaurantRepository.GetById(id);
-            if(restaurant == null) 
-            { 
+            if (restaurant == null)
+            {
                 throw new ArgumentNullException("NotFound");
             }
-            
+
             var restaurantResponseDto = _mapper.Map<RestaurantResponseDto>(restaurant);
             return restaurantResponseDto;
-        }   
+        }
         public async Task<List<RestaurantResponseDto>> GetAllByCoordinates(double customerLatitude, double customerLongitude)
         {
+            //1 milla - 1.609344 km
+            //1 grado - 60 min
+            //1 milla náutica =  1.1515 millas terrestres
             int distanceKm = 2;
+            double gradeToRadian = (Math.PI / 180);
+            double radianToGrade = (180 / Math.PI);
+
             List<Restaurant> lNearRestaurant = new List<Restaurant>();
             var listRestaurant = await _genericRepository.GetAllAsync();
-            foreach (var item in listRestaurant)
+
+            foreach (var restaurant in listRestaurant)
             {
-                var distance =
+                var distanceCalculated =
                     (
                         (
                             Math.Acos(
-                                Math.Sin(customerLatitude * (Math.PI / 180)) *
-                                Math.Sin(Convert.ToDouble(item.LocationLatitude) * (Math.PI / 180)) +
-                                Math.Cos(customerLatitude * (Math.PI / 180)) *
-                                Math.Cos(Convert.ToDouble(item.LocationLatitude) * (Math.PI / 180)) *
-                                Math.Cos((customerLongitude - Convert.ToDouble(item.LocationLongitude)) * (Math.PI / 180))
+                                Math.Sin(customerLatitude * gradeToRadian) *
+                                Math.Sin(Convert.ToDouble(restaurant.LocationLatitude) * gradeToRadian) +
+                                Math.Cos(customerLatitude * gradeToRadian) *
+                                Math.Cos(Convert.ToDouble(restaurant.LocationLatitude) * gradeToRadian) *
+                                Math.Cos((customerLongitude - Convert.ToDouble(restaurant.LocationLongitude)) * gradeToRadian)
                             )
-                        ) * (180 / Math.PI)
+                        ) * radianToGrade
                     ) * 60 * 1.1515 * 1.609344;
-                if (distance <= distanceKm)
-                    lNearRestaurant.Add(item);
-
+                if (distanceCalculated <= distanceKm)
+                    lNearRestaurant.Add(restaurant);
             }
 
             var lrestaurantResponseDto = _mapper.Map<List<RestaurantResponseDto>>(lNearRestaurant);
-
             return lrestaurantResponseDto;
         }
     }
