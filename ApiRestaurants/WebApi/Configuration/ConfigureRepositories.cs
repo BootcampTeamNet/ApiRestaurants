@@ -12,6 +12,7 @@ namespace WebApi.Configuration
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IDishRepository, DishRepository>();
             services.AddScoped<IRestaurantRepository, RestaurantRepository>();
+            services.AddScoped<IUserRestaurantRepository, UserRestaurantRepository>();
         }
     }
 }

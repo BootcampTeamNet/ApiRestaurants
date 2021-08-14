@@ -16,17 +16,15 @@ namespace Services.Inplementations.Users
     {
         private readonly IGenericRepository<User> _genericRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IGenericRepository<UserRestaurant> _userRestaurantRepository;
-        private readonly IGenericRepository<Restaurant> _restaurantRepository;
+        private readonly IUserRestaurantRepository _userRestaurantRepository;
         private readonly IPasswordService _passwordService;
         private readonly IConfiguration _configuration;
-        public UserService(IGenericRepository<User> genericRepository, IUserRepository userRepository, 
-            IGenericRepository<UserRestaurant> userRestaurantRepository, IGenericRepository<Restaurant> restaurantRepository,  IPasswordService passwordService, IConfiguration configuration)
+        public UserService(IGenericRepository<User> genericRepository, IUserRepository userRepository,
+            IUserRestaurantRepository userRestaurantRepository,  IPasswordService passwordService, IConfiguration configuration)
         {
             _genericRepository = genericRepository;
             _userRepository = userRepository;
             _userRestaurantRepository = userRestaurantRepository;
-            _restaurantRepository = restaurantRepository;
             _passwordService = passwordService;
             _configuration = configuration;
         }
@@ -36,38 +34,39 @@ namespace Services.Inplementations.Users
             return await _userRepository.ExistsUser(email);
         }
 
-        public async Task<LoginResponseDto> Login(string email, string password)
+        public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
         {
+            string email = loginRequestDto.Email.Trim();
+            string password = loginRequestDto.Password.Trim();
+
             if (string.IsNullOrEmpty(email))
             {
-                throw new Exception("Por favor ingresar el correo electrónico con que se registró");
+                throw new Exception("Error, el email no puede ser vacío");
             }
 
             if (string.IsNullOrEmpty(password))
             {
-                throw new Exception("Por favor ingresar el password que registró");
+                throw new Exception("Error, el password no puede ser vacío");
             }
 
-            var user = await _userRepository.GetUser(email);
+            var user = await _userRepository.GetUserByEmail(email);
             if (user == null)
             {
-                throw new Exception("Error, usuario no existe...");
+                throw new Exception("Error, usuario no existe");
             }
             if (!_passwordService.VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             {
-                throw new Exception("Error, password incorrecta....");
+                throw new Exception("Error, password incorrecto");
             }
 
             LoginResponseDto loginResponseDto = new LoginResponseDto();
-            //revisar se debe buscar el por id de usuario
-            UserRestaurant userRestaurant = await _userRestaurantRepository.GetByIdAsync(user.Id);
+            UserRestaurant userRestaurant = await _userRestaurantRepository.GetByUserId(user.Id);
             if (userRestaurant != null)
             {
-                Restaurant restaurant = await _restaurantRepository.GetByIdAsync(userRestaurant.RestaurantId);
                 loginResponseDto.Restaurant = new RestaurantLoginResponseDto
                 {
-                    Id = restaurant.Id,
-                    Name = restaurant.Name,
+                    Id = userRestaurant.Restaurant.Id,
+                    Name = userRestaurant.Restaurant.Name,
                     User = new UserLoginResponseDto
                     {
                         Id = user.Id,
