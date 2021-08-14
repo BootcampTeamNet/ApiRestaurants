@@ -11,19 +11,19 @@ namespace Services.Implementations.Restaurants
 {
     public class BranchOfficeService: IBranchOfficeService
     {
-        private readonly IBranchOfficeRepository branchOfficeRepository;
-        private readonly IUserService userService;
-        private readonly IPasswordService passwordService;
+        private readonly IRestaurantRepository _restaurantRepository;
+        private readonly IUserService _userService;
+        private readonly IPasswordService _passwordService;
         private readonly IMapper _mapper;
 
         public BranchOfficeService(
-            IBranchOfficeRepository branchOfficeRepository, 
+            IRestaurantRepository restaurantRepository, 
             IUserService userService, 
             IPasswordService passwordService,
             IMapper mapper
             )
         {
-            _brandOfficeRepository = branchOfficeRepository;
+            _restaurantRepository = restaurantRepository;
             _userService = userService;
             _passwordService = passwordService;
             _mapper = mapper;
@@ -38,7 +38,7 @@ namespace Services.Implementations.Restaurants
                 string.IsNullOrEmpty(branchOfficeRequestDto.User?.LastName) ||
                 string.IsNullOrEmpty(branchOfficeRequestDto.User?.Email) ||
                 string.IsNullOrEmpty(branchOfficeRequestDto.User?.Password) ||
-                string.IsNullOrEmpty(branchOfficeRequestDto.MainBranchId)
+                int.Equals(null, branchOfficeRequestDto.MainBranchId)
                 )
             {
                 throw new Exception("Los campos no pueden ser nulos");
@@ -60,7 +60,7 @@ namespace Services.Implementations.Restaurants
                 MainBranchId = branchOfficeRequestDto.MainBranchId
             };
 
-            return await _brandOfficeRepository.Add(UserRestaurant);
+            return await _restaurantRepository.Add(userRestaurant);
         }
 
 
