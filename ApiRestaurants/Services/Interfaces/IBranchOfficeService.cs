@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Services.Interfaces
 {
-    class IBranchOfficeService
+    public interface IBranchOfficeService
     {
     }
 }

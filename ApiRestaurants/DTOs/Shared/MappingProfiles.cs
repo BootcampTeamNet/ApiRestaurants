@@ -13,6 +13,7 @@ namespace WebApi.Dtos
             CreateMap<DishCategory, DishCategoryRequestDto>().ReverseMap();
             CreateMap<Restaurant, RestaurantResponseDto>().ReverseMap();
             CreateMap<RestaurantCategory, RestaurantCategoryRequestDto>().ReverseMap();
+            CreateMap<Restaurant, BranchOfficeRequestDto>().ReverseMap();
 
         }
     }
