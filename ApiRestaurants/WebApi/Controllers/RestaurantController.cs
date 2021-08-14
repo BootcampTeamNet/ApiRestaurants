@@ -1,8 +1,6 @@
 ﻿using DTOs.Restaurant;
-using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebApi.Errors;
 
