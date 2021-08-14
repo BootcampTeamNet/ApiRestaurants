@@ -14,50 +14,64 @@ namespace Services.Inplementations.Users
 {
     public class UserService : IUserService
     {
-        private readonly IGenericRepository<User> _userRepository;
-        private readonly IUserRepository _iUserRepository;
+        private readonly IGenericRepository<User> _genericRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IUserRestaurantService _userRestaurantService;
         private readonly IPasswordService _passwordService;
         private readonly IConfiguration _configuration;
-        public UserService(IGenericRepository<User> userRepository,
-            IUserRepository iUserRepository, IPasswordService passwordService, IConfiguration configuration)
+        public UserService(IGenericRepository<User> genericRepository, IUserRepository userRepository,
+            IUserRestaurantService userRestaurantService,  IPasswordService passwordService, IConfiguration configuration)
         {
+            _genericRepository = genericRepository;
             _userRepository = userRepository;
-            _iUserRepository = iUserRepository;
+            _userRestaurantService = userRestaurantService;
             _passwordService = passwordService;
             _configuration = configuration;
         }
 
         public async Task<bool> ExistsUser(string email)
         {
-            return await _iUserRepository.ExistsUser(email);
+            return await _userRepository.ExistsUser(email);
         }
 
-        public async Task<string> Login(string email, string password)
+        public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
         {
+            string email = loginRequestDto.Email.Trim();
+            string password = loginRequestDto.Password.Trim();
+
             if (string.IsNullOrEmpty(email))
             {
-                throw new Exception("Por favor ingresar el correo electrónico con que se registró");
+                throw new Exception("Error, el email no puede ser vacío");
             }
 
             if (string.IsNullOrEmpty(password))
             {
-                throw new Exception("Por favor ingresar el password que registró");
+                throw new Exception("Error, el password no puede ser vacío");
             }
 
-            var user = await _iUserRepository.GetUser(email);
-
+            var user = await _userRepository.GetUserByEmail(email);
             if (user == null)
             {
-                return "NoUser";
+                throw new Exception("Error, usuario no existe");
             }
-            else if (!_passwordService.VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+            if (!_passwordService.VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             {
-                return "WrongPassword";
+                throw new Exception("Error, password incorrecto");
             }
-            else
-            {
-                return CreateToken(user);
+
+            LoginResponseDto loginResponseDto = new LoginResponseDto();
+            loginResponseDto.Restaurant = await _userRestaurantService.GetByUserId(user.Id);
+            if(loginResponseDto.Restaurant==null) {
+                loginResponseDto.User = new LoginUserResponseDto
+                {
+                    Id = user.Id,
+                    Name = user.FirstName,
+                    Email = user.Email
+                };
             }
+
+            loginResponseDto.Token = CreateToken(user);
+            return loginResponseDto;
         }
 
         public async Task<int> Register(UserDto userDto)
@@ -108,7 +122,7 @@ namespace Services.Inplementations.Users
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
-            var result = await _userRepository.Add(user);
+            var result = await _genericRepository.Add(user);
 
             return user.Id;
         }

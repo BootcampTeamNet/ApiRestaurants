@@ -20,7 +20,7 @@ namespace DataAccess.Implementations
             return response;
         }
 
-        public async Task<User> GetUser(string email)
+        public async Task<User> GetUserByEmail(string email)
         {
             User user = new User();
             user = await _restaurantsDbContext.Users.FirstOrDefaultAsync(
