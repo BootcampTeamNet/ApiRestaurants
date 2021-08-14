@@ -40,14 +40,12 @@ namespace WebApi.Controllers
             return Ok(response);
         }
 
-        /*
-        [HttpGet("ListCategory")]
-        public async Task<IActionResult> GetList()
+        [HttpGet("GetAllByCoordinates")]
+        public async Task<IActionResult> GetAllByCoordinates(double customerLatitude, double customerLongitude)
         {
-            var responseRestaurantCategory = await _restaurantService.GetList();
-            return Ok(responseRestaurantCategory);
-        }
-        */
+            var response = await _restaurantService.GetAllByCoordinates(customerLatitude, customerLongitude);
 
+            return Ok(response);
+        }
     }
 }

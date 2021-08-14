@@ -9,6 +9,7 @@ namespace Services.Interfaces
     {
         Task<int> Create(RestaurantRequestDto restaurantRequestDto);
         Task<RestaurantResponseDto> GetById(int id);
+        Task<List<RestaurantResponseDto>> GetAllByCoordinates(double customerLatitude, double customerLongitude);
     }
 
 }
