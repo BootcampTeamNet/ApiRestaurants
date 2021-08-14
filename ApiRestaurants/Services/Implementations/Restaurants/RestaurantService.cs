@@ -16,7 +16,7 @@ namespace Services.Implementations
         private readonly IUserService _userService;
         private readonly IUserRestaurantService _userRestaurantService;
         private readonly IMapper _mapper;
-        public RestaurantService(IRestaurantRepository restaurantRepository, IUserService userService, IUserRestaurantService userRestaurantService,  IMapper mapper)
+        public RestaurantService(IRestaurantRepository restaurantRepository, IGenericRepository<Restaurant> genericRepository, IUserService userService, IUserRestaurantService userRestaurantService,  IMapper mapper)
         {
             _genericRepository = genericRepository;
             _restaurantRepository = restaurantRepository;
