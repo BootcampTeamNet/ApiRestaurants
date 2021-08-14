@@ -54,7 +54,7 @@ namespace Services.Implementations
             var restaurantResponseDto = _mapper.Map<RestaurantResponseDto>(restaurant);
             return restaurantResponseDto;
         }
-        public async Task<List<RestaurantResponseDto>> GetAllByCoordinates(double customerLatitude, double customerLongitude)
+        public async Task<List<RestaurantMobileResponseDto>> GetAllByCoordinates(double customerLatitude, double customerLongitude)
         {
             //1 milla - 1.609344 km
             //1 grado - 60 min
@@ -84,7 +84,7 @@ namespace Services.Implementations
                     lNearRestaurant.Add(restaurant);
             }
 
-            var lrestaurantResponseDto = _mapper.Map<List<RestaurantResponseDto>>(lNearRestaurant);
+            var lrestaurantResponseDto = _mapper.Map<List<RestaurantMobileResponseDto>>(lNearRestaurant);
             return lrestaurantResponseDto;
         }
     }
