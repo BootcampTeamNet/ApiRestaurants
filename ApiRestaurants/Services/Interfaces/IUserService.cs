@@ -1,5 +1,4 @@
 ﻿using DTOs.Users;
-using Entities;
 using System.Threading.Tasks;
 
 namespace Services.Interfaces
@@ -9,5 +8,6 @@ namespace Services.Interfaces
         Task<int> Register(UserDto userDto);
         Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto);
         Task<bool> ExistsUser(string email);
+        Task UpdatePassword(PasswordUserDto passWordDto);
     }
 }

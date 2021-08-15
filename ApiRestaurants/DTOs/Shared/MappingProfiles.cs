@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DTOs.Dish;
 using DTOs.Restaurant;
+using DTOs.Users;
 using Entities;
 
 namespace WebApi.Dtos
@@ -13,7 +14,7 @@ namespace WebApi.Dtos
             CreateMap<DishCategory, DishCategoryRequestDto>().ReverseMap();
             CreateMap<Restaurant, RestaurantResponseDto>().ReverseMap();
             CreateMap<RestaurantCategory, RestaurantCategoryRequestDto>().ReverseMap();
-
+            CreateMap<UserDto, User>().ReverseMap();
         }
     }
 }

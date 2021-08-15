@@ -13,9 +13,12 @@ namespace WebApi.Controllers
     public class RestaurantController : ControllerBase
     {
         private readonly IRestaurantService _restaurantService;
-        public RestaurantController(IRestaurantService restaurantService)
+        private readonly IPasswordService _passwordService;
+
+        public RestaurantController(IRestaurantService restaurantService, IPasswordService passwordService)
         {
             _restaurantService = restaurantService;
+            _passwordService = passwordService;
         }
 
         [HttpGet("id")]

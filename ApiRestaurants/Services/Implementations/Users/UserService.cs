@@ -1,4 +1,5 @@
-﻿using DataAccess.Interfaces;
+﻿using DataAccess;
+using DataAccess.Interfaces;
 using DTOs.Users;
 using Entities;
 using Microsoft.Extensions.Configuration;
@@ -19,14 +20,17 @@ namespace Services.Inplementations.Users
         private readonly IUserRestaurantService _userRestaurantService;
         private readonly IPasswordService _passwordService;
         private readonly IConfiguration _configuration;
+        private readonly RestaurantsDbContext _restaurantsDbContext;
+
         public UserService(IGenericRepository<User> genericRepository, IUserRepository userRepository,
-            IUserRestaurantService userRestaurantService,  IPasswordService passwordService, IConfiguration configuration)
+            IUserRestaurantService userRestaurantService,  IPasswordService passwordService, IConfiguration configuration, RestaurantsDbContext restaurantsDbContext)
         {
             _genericRepository = genericRepository;
             _userRepository = userRepository;
             _userRestaurantService = userRestaurantService;
             _passwordService = passwordService;
             _configuration = configuration;
+            _restaurantsDbContext = restaurantsDbContext;
         }
 
         public async Task<bool> ExistsUser(string email)
@@ -41,12 +45,12 @@ namespace Services.Inplementations.Users
 
             if (string.IsNullOrEmpty(email))
             {
-                throw new Exception("Error, el email no puede ser vacío");
+                throw new Exception("Error, debe ingresar un correo electrónico");
             }
 
             if (string.IsNullOrEmpty(password))
             {
-                throw new Exception("Error, el password no puede ser vacío");
+                throw new Exception("Error, debe ingresar una contraseña");
             }
 
             var user = await _userRepository.GetUserByEmail(email);
@@ -56,7 +60,7 @@ namespace Services.Inplementations.Users
             }
             if (!_passwordService.VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             {
-                throw new Exception("Error, password incorrecto");
+                throw new Exception("Error, contraseña incorrecta");
             }
 
             LoginResponseDto loginResponseDto = new LoginResponseDto();
@@ -78,32 +82,32 @@ namespace Services.Inplementations.Users
         {
             if (string.IsNullOrEmpty(userDto.Name))
             {
-                throw new Exception("Por favor ingrese su nombre");
+                throw new Exception("Error, debe ingresar su nombre");
             }
 
             if (userDto.Name.Trim().Length == 0)
             {
-                throw new Exception("Por favor ingrese su nombre");
+                throw new Exception("Error, debe ingresar su nombre");
             }
 
             if (string.IsNullOrEmpty(userDto.Mobile))
             {
-                throw new Exception("Por favor ingrese su número de dispositivo móvil");
+                throw new Exception("Error, debe ingresar su número de dispositivo móvil");
             }
 
             if (userDto.Mobile.Trim().Length == 0)
             {
-                throw new Exception("Por favor ingrese su número de dispositivo móvil");
+                throw new Exception("Error, debe ingresar su número de dispositivo móvil");
             }
 
             if (string.IsNullOrEmpty(userDto.Password))
             {
-                throw new Exception("Por favor asigne una contraseña");
+                throw new Exception("Error, debe  asignar una contraseña");
             }
 
             if (userDto.Password.Trim().Length == 0)
             {
-                throw new Exception("Por favor asigne una contraseña");
+                throw new Exception("Error, debe asignar una contraseña");
             }
 
             User user = new User
@@ -117,7 +121,6 @@ namespace Services.Inplementations.Users
             {
                 return -1;
             }
-
             _passwordService.CreatePasswordHash(userDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
@@ -152,6 +155,28 @@ namespace Services.Inplementations.Users
             var token = tokenHandler.CreateToken(tokenDescriptor);
             
             return  tokenHandler.WriteToken(token);
+
+        }
+
+        public async Task UpdatePassword(PasswordUserDto passwordDto)
+        {
+            var user =await _userRepository.GetUserByEmail(passwordDto.Email);
+            if (!await ExistsUser(passwordDto.Email)) 
+            {
+                throw new Exception("Error, no existe el usuario");
+            }
+            if (!String.IsNullOrEmpty(passwordDto.Password))
+            {
+                var verifyPassword = _passwordService.VerifyPasswordHash(passwordDto.Password, user.PasswordHash, user.PasswordSalt);
+                if (!verifyPassword)
+                {
+                    _passwordService.CreatePasswordHash(passwordDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
+                    user.PasswordHash = passwordHash;
+                    user.PasswordSalt = passwordSalt;
+                }
+            }
+            _restaurantsDbContext.Update(user);
+            await _restaurantsDbContext.SaveChangesAsync();
 
         }
     }

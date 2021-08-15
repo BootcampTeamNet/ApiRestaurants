@@ -13,4 +13,8 @@
     <ProjectReference Include="..\DTOs\DTOs.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Implementations\Shared\" />
+  </ItemGroup>
+
 </Project>

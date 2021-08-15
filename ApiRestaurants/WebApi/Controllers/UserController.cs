@@ -1,7 +1,6 @@
 ﻿using DTOs.Users;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebApi.Errors;
 
@@ -46,6 +45,13 @@ namespace WebApi.Controllers
             var response = await _userService.Login(user);
             return Ok(response);
         }
+        [HttpPut("UpdatePassword")]
+        public async Task<ActionResult> UpdatePassword(PasswordUserDto passwordUserDto)
+        {
+            await _userService.UpdatePassword(passwordUserDto);
+            return Ok();
+        }
+
     }
 
 }
