@@ -40,25 +40,5 @@ namespace Services.Implementations.Restaurants
 
             return await _userRestaurantRepository.Add(userRestaurant);
         }
-
-        public async Task<LoginRestaurantResponseDto> GetByUserId(int id)
-        {
-            UserRestaurant userRestaurant = await _userRestaurantRepository.GetByUserId(id);
-            if (userRestaurant != null) {
-                LoginRestaurantResponseDto loginRestaurantResponseDto = new LoginRestaurantResponseDto()
-                {
-                    Id = userRestaurant.Restaurant.Id,
-                    Name = userRestaurant.Restaurant.Name,
-                    User = new LoginUserResponseDto
-                    {
-                        Id = userRestaurant.User.Id,
-                        Name = userRestaurant.User.FirstName,
-                        Email = userRestaurant.User.Email
-                    }
-                };
-                return loginRestaurantResponseDto;
-            }
-            return null;
-        }
     }
 }
