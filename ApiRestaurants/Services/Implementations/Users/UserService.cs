@@ -17,20 +17,18 @@ namespace Services.Inplementations.Users
     {
         private readonly IGenericRepository<User> _genericRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IUserRestaurantService _userRestaurantService;
+        //private readonly IUserRestaurantService _userRestaurantService;
         private readonly IPasswordService _passwordService;
         private readonly IConfiguration _configuration;
-        private readonly RestaurantsDbContext _restaurantsDbContext;
 
         public UserService(IGenericRepository<User> genericRepository, IUserRepository userRepository,
-            IUserRestaurantService userRestaurantService,  IPasswordService passwordService, IConfiguration configuration, RestaurantsDbContext restaurantsDbContext)
+            IPasswordService passwordService, IConfiguration configuration)
         {
             _genericRepository = genericRepository;
             _userRepository = userRepository;
-            _userRestaurantService = userRestaurantService;
+            //_userRestaurantService = userRestaurantService;
             _passwordService = passwordService;
             _configuration = configuration;
-            _restaurantsDbContext = restaurantsDbContext;
         }
 
         public async Task<bool> ExistsUser(string email)
@@ -38,6 +36,15 @@ namespace Services.Inplementations.Users
             return await _userRepository.ExistsUser(email);
         }
 
+        public async Task<User> GetUserByEmail(string email)
+        {
+            return await _userRepository.GetUserByEmail(email);
+        }
+
+        public async Task<User> GetUserById(int id)
+        {
+            return await _genericRepository.GetByIdAsync(id);
+        }
         public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
         {
             string email = loginRequestDto.Email.Trim();
@@ -64,7 +71,7 @@ namespace Services.Inplementations.Users
             }
 
             LoginResponseDto loginResponseDto = new LoginResponseDto();
-            loginResponseDto.Restaurant = await _userRestaurantService.GetByUserId(user.Id);
+            //loginResponseDto.Restaurant = await _userRestaurantService.GetByUserId(user.Id);
             if(loginResponseDto.Restaurant==null) {
                 loginResponseDto.User = new LoginUserResponseDto
                 {
@@ -165,7 +172,7 @@ namespace Services.Inplementations.Users
             {
                 throw new Exception("Error, no existe el usuario");
             }
-            if (!String.IsNullOrEmpty(passwordDto.Password))
+            if (!string.IsNullOrEmpty(passwordDto.Password))
             {
                 var verifyPassword = _passwordService.VerifyPasswordHash(passwordDto.Password, user.PasswordHash, user.PasswordSalt);
                 if (!verifyPassword)
@@ -175,9 +182,8 @@ namespace Services.Inplementations.Users
                     user.PasswordSalt = passwordSalt;
                 }
             }
-            _restaurantsDbContext.Update(user);
-            await _restaurantsDbContext.SaveChangesAsync();
 
+            await _genericRepository.Update(user);
         }
     }
 }

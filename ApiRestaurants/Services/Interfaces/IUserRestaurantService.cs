@@ -1,5 +1,6 @@
 ﻿using DTOs.Restaurant;
 using DTOs.Users;
+using Entities;
 using System.Threading.Tasks;
 
 namespace Services.Interfaces
@@ -8,5 +9,6 @@ namespace Services.Interfaces
     {
         Task<int> Add(RegisterRestaurantRequestDto restaurantRequestDto);
         Task<LoginRestaurantResponseDto> GetByUserId(int id);
+        Task<int> Update(UpdateRestaurantUserRequestDto updateRestaurantUserRequestDto);
     }
 }
