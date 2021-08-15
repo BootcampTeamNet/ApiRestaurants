@@ -19,6 +19,8 @@ namespace WebApi.Configuration
             services.AddScoped<IDishCategoryService, DishCategoryService>();
             services.AddScoped<IRestaurantCategoryService, RestaurantCategoryService>();
             services.AddScoped<IUserRestaurantService, UserRestaurantService>();
+            services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IStringProcess, StringProcess>();
         }
     }
 }

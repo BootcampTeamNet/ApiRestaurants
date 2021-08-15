@@ -24,15 +24,15 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public Task<int> Create(DishRequestDto dishRequestDto)
+        public async Task<IActionResult> Create([FromForm] DishRequestDto dishRequestDto)
         {
-            return _dishService.Create(dishRequestDto);
+            return Ok(await _dishService.Create(dishRequestDto));
         }
 
         [HttpPut("{id}")]
-        public Task<int> Update(DishRequestDto dishRequestDto, int id)
+        public async Task<IActionResult> Update(int id, [FromForm] DishRequestDto dishRequestDto)
         {
-            return _dishService.Update(dishRequestDto, id);
+            return Ok(await _dishService.Update(id, dishRequestDto));
         }
 
         [HttpGet("id")]
