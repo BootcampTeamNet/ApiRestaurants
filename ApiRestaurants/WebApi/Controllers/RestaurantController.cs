@@ -13,12 +13,12 @@ namespace WebApi.Controllers
     public class RestaurantController : ControllerBase
     {
         private readonly IRestaurantService _restaurantService;
-        private readonly IPasswordService _passwordService;
+        private readonly IUserRestaurantService _userRestaurantService;
 
-        public RestaurantController(IRestaurantService restaurantService, IPasswordService passwordService)
+        public RestaurantController(IRestaurantService restaurantService, IUserRestaurantService userRestaurantService)
         {
             _restaurantService = restaurantService;
-            _passwordService = passwordService;
+            _userRestaurantService = userRestaurantService;
         }
 
         [HttpGet("id")]
@@ -43,14 +43,13 @@ namespace WebApi.Controllers
             return Ok(response);
         }
 
-        /*
-        [HttpGet("ListCategory")]
-        public async Task<IActionResult> GetList()
-        {
-            var responseRestaurantCategory = await _restaurantService.GetList();
-            return Ok(responseRestaurantCategory);
-        }
-        */
 
+        [HttpPut]
+        public async Task<IActionResult> Update(UpdateRestaurantUserRequestDto updateRestaurantUserRequestDto)
+        {
+            var response = await _userRestaurantService.Update(updateRestaurantUserRequestDto);
+
+            return Ok(response);
+        }
     }
 }
