@@ -16,15 +16,15 @@ namespace Services.Inplementations.Users
     {
         private readonly IGenericRepository<User> _genericRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IUserRestaurantService _userRestaurantService;
+        private readonly IUserRestaurantRepository _userRestaurantRepository;
         private readonly IPasswordService _passwordService;
         private readonly IConfiguration _configuration;
         public UserService(IGenericRepository<User> genericRepository, IUserRepository userRepository,
-            IUserRestaurantService userRestaurantService,  IPasswordService passwordService, IConfiguration configuration)
+            IUserRestaurantRepository userRestaurantRepository,  IPasswordService passwordService, IConfiguration configuration)
         {
             _genericRepository = genericRepository;
             _userRepository = userRepository;
-            _userRestaurantService = userRestaurantService;
+            _userRestaurantRepository = userRestaurantRepository;
             _passwordService = passwordService;
             _configuration = configuration;
         }
@@ -60,8 +60,23 @@ namespace Services.Inplementations.Users
             }
 
             LoginResponseDto loginResponseDto = new LoginResponseDto();
-            loginResponseDto.Restaurant = await _userRestaurantService.GetByUserId(user.Id);
-            if(loginResponseDto.Restaurant==null) {
+            UserRestaurant userRestaurant = await _userRestaurantRepository.GetByUserId(user.Id);
+            if (userRestaurant != null)
+            {
+                loginResponseDto.Restaurant = new LoginRestaurantResponseDto()
+                {
+                    Id = userRestaurant.Restaurant.Id,
+                    Name = userRestaurant.Restaurant.Name,
+                    User = new LoginUserResponseDto
+                    {
+                        Id = userRestaurant.User.Id,
+                        Name = userRestaurant.User.FirstName,
+                        Email = userRestaurant.User.Email
+                    }
+                };
+            }
+            else
+            {
                 loginResponseDto.User = new LoginUserResponseDto
                 {
                     Id = user.Id,
