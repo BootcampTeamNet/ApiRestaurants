@@ -4,6 +4,7 @@ using Services.Implementations.Dishes;
 using Services.Implementations.Shared;
 using Services.Inplementations.Users;
 using Services.Interfaces;
+using Services.Implementations.Restaurants;
 
 namespace WebApi.Configuration
 {
@@ -17,6 +18,7 @@ namespace WebApi.Configuration
             services.AddScoped<IDishService, DishService>();
             services.AddScoped<IDishCategoryService, DishCategoryService>();
             services.AddScoped<IRestaurantCategoryService, RestaurantCategoryService>();
+            services.AddScoped<IBranchOfficeService, BranchOfficeService>();
         }
     }
 }

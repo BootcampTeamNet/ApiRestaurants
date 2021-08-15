@@ -35,7 +35,7 @@ namespace WebApi.Controllers
         //}
 
         // POST api/<BranchOfficeController>
-        [HttpPost("BranchOffice")]
+        [HttpPost("Register")]
         public async Task<IActionResult> Create(BranchOfficeRequestDto branchOfficeRequestDto)
         {
             var response = await _branchOfficeService.Create(branchOfficeRequestDto);
