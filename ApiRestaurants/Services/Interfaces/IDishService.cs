@@ -10,7 +10,7 @@ namespace Services.Interfaces
 
         Task<List<DishRequestDto>> GetAll();
         Task<int> Create(DishRequestDto dishRequestDto);
-        Task<int> Update(DishRequestDto dishRequestDto, int id);
+        Task<int> Update(int id, UpdateDishRequestDto dishRequestDto);
         Task<DishRequestDto> GetById(int id);
     }
 }

@@ -13,12 +13,14 @@ namespace Services.Implementations.Dishes
     {
         private readonly IGenericRepository<Dish> _genericRepository;
         private readonly IDishRepository _iDishRepository;
+        private readonly IFileService _fileService;
         private readonly IMapper _mapper;
-        public DishService(IGenericRepository<Dish> genericRepository, IMapper mapper, IDishRepository iDishRepository)
+        public DishService(IGenericRepository<Dish> genericRepository, IMapper mapper, IDishRepository iDishRepository, IFileService fileService)
         {
             _genericRepository = genericRepository;
             _mapper = mapper;
             _iDishRepository = iDishRepository;
+            _fileService = fileService;
         }
 
 
@@ -42,21 +44,30 @@ namespace Services.Implementations.Dishes
             return dishId;
         }
 
-        public async Task<int> Update(DishRequestDto dishRequestDto, int id)
+        public async Task<int> Update(int id, UpdateDishRequestDto dishRequestDto)
         {
-            Validation(dishRequestDto);
+            //Validation(dishRequestDto);
 
-            var exist = await _iDishRepository.ExistDish(id);
-
-            if (!exist)
+            Dish dish = await _genericRepository.GetByIdAsync(id);
+            if (dish == null)
             {
-                throw new Exception("El plato con el id " + id + " no existe");
+                throw new Exception($"El plato con el id {id} no existe");
+            }
+            string pathImage = dish.PathImage;
+            if (!string.IsNullOrEmpty(pathImage))
+            {
+                _fileService.DeleteFile(pathImage);
+            }
+            if (dishRequestDto.Image != null)
+            {
+                await _fileService.SaveFile(dishRequestDto.Image, "ejemplo");
             }
 
-            var dish = _mapper.Map<Dish>(dishRequestDto);
-            dish.Id = id;
+            var dishUpate = _mapper.Map<Dish>(dishRequestDto);
+            dishUpate.Id = id;
+            dishUpate.PathImage = "";
 
-            await _genericRepository.Update(dish);
+            await _genericRepository.Update(dishUpate);
             return dish.Id;
         }
 

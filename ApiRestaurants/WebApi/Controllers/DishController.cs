@@ -33,9 +33,9 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public Task<int> Update(int id, [FromForm]DishRequestDto dishRequestDto)
+        public Task<int> Update(int id, [FromForm] UpdateDishRequestDto dishRequestDto)
         {
-            return _dishService.Update(dishRequestDto, id);
+            return _dishService.Update(id, dishRequestDto);
         }
 
         [HttpGet("id")]
