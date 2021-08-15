@@ -63,6 +63,10 @@ namespace Services.Implementations.Dishes
             {
                 throw new Exception($"El plato con el id {id} no existe");
             }
+            //una sucursal solo puede modificar sus propios platos, no platos de la sucursal principal
+            if (dishRequestDto.RestaurantId != dish.RestaurantId) {
+                throw new Exception($"Error, no puede modificar platos de la sucursal principal");
+            }
             if (!string.IsNullOrEmpty(dish.PathImage))
             {
                 _fileService.DeleteFile(dish.PathImage);
@@ -78,6 +82,9 @@ namespace Services.Implementations.Dishes
                 string imageFullPath = $"{_configuration.GetSection("FileServer:path").Value}{filePath}\\{dishRequestDto.Image.FileName}";
                 await _fileService.SaveFile(dishRequestDto.Image, filePath);
                 dishUpate.PathImage = imageFullPath;
+            }
+            else {
+                dishUpate.PathImage = "";
             }
 
             await _genericRepository.Update(dishUpate);
@@ -112,7 +119,6 @@ namespace Services.Implementations.Dishes
             }
 
             var dishRequestDto =  _mapper.Map<DishRequestDto>(dish);
-
             return dishRequestDto;
         }
     }

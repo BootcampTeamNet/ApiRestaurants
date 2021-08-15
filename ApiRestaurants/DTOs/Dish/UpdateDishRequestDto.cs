@@ -1,9 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DTOs.Dish
 {
@@ -19,5 +14,6 @@ namespace DTOs.Dish
         public int? Fats { get; set; }
         public int? Sugars { get; set; }
         public int DishCategoryId { get; set; }
+        public int RestaurantId { get; set; }
     }
 }
