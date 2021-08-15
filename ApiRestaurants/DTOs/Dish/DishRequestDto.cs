@@ -7,6 +7,7 @@ namespace DTOs.Dish
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
+        public IFormFile Image { get; set; }
         public int? CaloriesMinimun { get; set; }
         public int? CaloriesMaximun { get; set; }
         public int? Proteins { get; set; }

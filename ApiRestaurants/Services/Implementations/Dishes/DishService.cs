@@ -6,7 +6,6 @@ using Microsoft.Extensions.Configuration;
 using Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Services.Implementations.Dishes
@@ -14,30 +13,22 @@ namespace Services.Implementations.Dishes
     public class DishService : IDishService
     {
         private readonly IGenericRepository<Dish> _genericRepository;
-        private readonly IDishRepository _iDishRepository;
         private readonly IRestaurantRepository _restaurantRepository;
         private readonly IFileService _fileService;
         private readonly IStringProcess _stringProcess;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
-        public DishService(IGenericRepository<Dish> genericRepository, IMapper mapper,
-            IRestaurantRepository restaurantRepository, IDishRepository iDishRepository, IFileService fileService, 
-            IStringProcess stringProcess, IConfiguration configuration)
+        public DishService(IGenericRepository<Dish> genericRepository, IRestaurantRepository restaurantRepository,
+            IFileService fileService, IStringProcess stringProcess, IMapper mapper, IConfiguration configuration)
         {
             _genericRepository = genericRepository;
             _restaurantRepository = restaurantRepository;
-            _mapper = mapper;
-            _iDishRepository = iDishRepository;
             _fileService = fileService;
             _stringProcess = stringProcess;
+            _mapper = mapper;
             _configuration = configuration;
         }
 
-
-        public async Task<bool> ExistsDish(int id)
-        {
-            return await _iDishRepository.ExistDish(id);
-        }
         public Task<List<DishRequestDto>> GetAll()
         {
             throw new System.NotImplementedException();
@@ -46,17 +37,25 @@ namespace Services.Implementations.Dishes
         public async Task<int> Create(DishRequestDto dishRequestDto)
         {
             Validation(dishRequestDto);
-
             var data = _mapper.Map<Dish>(dishRequestDto);
-            await _genericRepository.Add(data);
-            var dishId = data.Id;
+            //guardar imagen
+            if (dishRequestDto.Image != null)
+            {
+                Restaurant restaurant = await _restaurantRepository.GetById(dishRequestDto.RestaurantId);
+                string filePath = restaurant.Id + _stringProcess.removeSpecialCharacter(restaurant.Name);
+                string imageFullPath = $"{_configuration.GetSection("FileServer:path").Value}{filePath}\\{dishRequestDto.Image.FileName}";
+                await _fileService.SaveFile(dishRequestDto.Image, filePath);
+                data.PathImage = imageFullPath;
+            }
 
-            return dishId;
+            await _genericRepository.Add(data);
+
+            return data.Id;
         }
 
-        public async Task<int> Update(int id, UpdateDishRequestDto dishRequestDto)
+        public async Task<int> Update(int id, DishRequestDto dishRequestDto)
         {
-            //Validation(dishRequestDto);
+            Validation(dishRequestDto);
 
             Dish dish = await _genericRepository.GetByIdAsync(id);
             if (dish == null)
@@ -71,23 +70,31 @@ namespace Services.Implementations.Dishes
             {
                 _fileService.DeleteFile(dish.PathImage);
             }
-
-            var dishUpate = _mapper.Map<Dish>(dishRequestDto);
-            dishUpate.Id = id;
-
+            //guardar imagen
             if (dishRequestDto.Image != null)
             {
                 Restaurant restaurant = await _restaurantRepository.GetById(dish.RestaurantId);
                 string filePath = restaurant.Id + _stringProcess.removeSpecialCharacter(restaurant.Name);
                 string imageFullPath = $"{_configuration.GetSection("FileServer:path").Value}{filePath}\\{dishRequestDto.Image.FileName}";
                 await _fileService.SaveFile(dishRequestDto.Image, filePath);
-                dishUpate.PathImage = imageFullPath;
+                dish.PathImage = imageFullPath;
             }
             else {
-                dishUpate.PathImage = "";
+                dish.PathImage = null;
             }
 
-            await _genericRepository.Update(dishUpate);
+            dish.Name = dishRequestDto.Name;
+            dish.Description = dishRequestDto.Description;
+            dish.Price = dishRequestDto.Price;
+            dish.CaloriesMinimun = dishRequestDto.CaloriesMinimun??0;
+            dish.CaloriesMaximun = dishRequestDto.CaloriesMaximun??0;
+            dish.Proteins = dishRequestDto.Proteins??0;
+            dish.Fats = dishRequestDto.Fats??0;
+            dish.Sugars = dishRequestDto.Sugars??0;
+            dish.DishCategoryId = dishRequestDto.DishCategoryId;
+            
+            await _genericRepository.Update(dish);
+
             return dish.Id;
         }
 
@@ -110,15 +117,15 @@ namespace Services.Implementations.Dishes
                 throw new Exception("El Id del restaurante debe ser mayor a cero");
             }
         }
-        public async Task<DishRequestDto> GetById(int id)
+        public async Task<DishResponseDto> GetById(int id)
         {
-            var dish = await _iDishRepository.GetById(id);
+            var dish = await _genericRepository.GetByIdAsync(id);
             if (dish == null)
             {
                 throw new ArgumentNullException("NotFound");
             }
 
-            var dishRequestDto =  _mapper.Map<DishRequestDto>(dish);
+            var dishRequestDto =  _mapper.Map<DishResponseDto>(dish);
             return dishRequestDto;
         }
     }

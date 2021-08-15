@@ -17,7 +17,6 @@ namespace Services.Implementations.Shared
         public async Task SaveFile(IFormFile file, string subDirectory)
         {
             subDirectory = subDirectory ?? string.Empty;
-            //var target = Path.Combine("C:\\Desktop\\Restaurants\\", subDirectory);
             var target = Path.Combine($"{_configuration.GetSection("FileServer:path").Value}", subDirectory);
 
             Directory.CreateDirectory(target);
@@ -32,7 +31,10 @@ namespace Services.Implementations.Shared
 
         public void DeleteFile(string path)
         {
-            Directory.Delete(path, true);
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
         }
     }
 }
