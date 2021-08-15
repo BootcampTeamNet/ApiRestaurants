@@ -42,14 +42,16 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("GetAllByCoordinates")]
-        public async Task<IActionResult> GetAllByCoordinates(double customerLatitude, double customerLongitude)
+        public async Task<IActionResult> GetAllByCoordinates(double customerLatitude, double customerLongitude) 
+        {
+            var response = await _restaurantService.GetAllByCoordinates(customerLatitude, customerLongitude);
+            return Ok(response);
+        }
 
         [HttpPut]
         public async Task<IActionResult> Update(UpdateRestaurantUserRequestDto updateRestaurantUserRequestDto)
         {
-            var response = await _restaurantService.GetAllByCoordinates(customerLatitude, customerLongitude);
 
-            return Ok(response);
             var response = await _userRestaurantService.Update(updateRestaurantUserRequestDto);
 
             return Ok(response);
