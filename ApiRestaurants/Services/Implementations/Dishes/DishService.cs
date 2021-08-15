@@ -2,9 +2,11 @@
 using DataAccess.Interfaces;
 using DTOs.Dish;
 using Entities;
+using Microsoft.Extensions.Configuration;
 using Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Services.Implementations.Dishes
@@ -13,14 +15,22 @@ namespace Services.Implementations.Dishes
     {
         private readonly IGenericRepository<Dish> _genericRepository;
         private readonly IDishRepository _iDishRepository;
+        private readonly IRestaurantRepository _restaurantRepository;
         private readonly IFileService _fileService;
+        private readonly IStringProcess _stringProcess;
         private readonly IMapper _mapper;
-        public DishService(IGenericRepository<Dish> genericRepository, IMapper mapper, IDishRepository iDishRepository, IFileService fileService)
+        private readonly IConfiguration _configuration;
+        public DishService(IGenericRepository<Dish> genericRepository, IMapper mapper,
+            IRestaurantRepository restaurantRepository, IDishRepository iDishRepository, IFileService fileService, 
+            IStringProcess stringProcess, IConfiguration configuration)
         {
             _genericRepository = genericRepository;
+            _restaurantRepository = restaurantRepository;
             _mapper = mapper;
             _iDishRepository = iDishRepository;
             _fileService = fileService;
+            _stringProcess = stringProcess;
+            _configuration = configuration;
         }
 
 
@@ -53,19 +63,22 @@ namespace Services.Implementations.Dishes
             {
                 throw new Exception($"El plato con el id {id} no existe");
             }
-            string pathImage = dish.PathImage;
-            if (!string.IsNullOrEmpty(pathImage))
+            if (!string.IsNullOrEmpty(dish.PathImage))
             {
-                _fileService.DeleteFile(pathImage);
-            }
-            if (dishRequestDto.Image != null)
-            {
-                await _fileService.SaveFile(dishRequestDto.Image, "ejemplo");
+                _fileService.DeleteFile(dish.PathImage);
             }
 
             var dishUpate = _mapper.Map<Dish>(dishRequestDto);
             dishUpate.Id = id;
-            dishUpate.PathImage = "";
+
+            if (dishRequestDto.Image != null)
+            {
+                Restaurant restaurant = await _restaurantRepository.GetById(dish.RestaurantId);
+                string filePath = restaurant.Id + _stringProcess.removeSpecialCharacter(restaurant.Name);
+                string imageFullPath = $"{_configuration.GetSection("FileServer:path").Value}{filePath}\\{dishRequestDto.Image.FileName}";
+                await _fileService.SaveFile(dishRequestDto.Image, filePath);
+                dishUpate.PathImage = imageFullPath;
+            }
 
             await _genericRepository.Update(dishUpate);
             return dish.Id;
