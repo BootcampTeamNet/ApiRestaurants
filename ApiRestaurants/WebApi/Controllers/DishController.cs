@@ -1,8 +1,10 @@
 ﻿using DTOs.Dish;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using WebApi.Errors;
 
 namespace WebApi.Controllers
 {
@@ -41,14 +43,13 @@ namespace WebApi.Controllers
             try
             {
                 var responseDish = await _dishService.GetById(id);
+
                 return Ok(responseDish);
             }
-            catch
+            catch(Exception)
             {
-                return NotFound("El id ingresado no coincide con algun plato registrado.");
-            }
-
-            
+                return NotFound(new CodeErrorResponse(404, $"No existe el plato de id {id}"));
+            }            
         }
     }
 }

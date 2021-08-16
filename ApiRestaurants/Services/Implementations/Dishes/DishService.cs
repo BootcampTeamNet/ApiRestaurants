@@ -80,6 +80,7 @@ namespace Services.Implementations.Dishes
 
             if (!exist) {
                 throw new Exception("El plato con el id "+ id +" no existe");
+                throw new ArgumentNullException("NotFound");
             }
 
             var dish = _mapper.Map<Dish>(dishRequestDto);
