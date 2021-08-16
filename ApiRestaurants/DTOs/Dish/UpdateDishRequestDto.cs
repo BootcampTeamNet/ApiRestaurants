@@ -2,7 +2,7 @@
 
 namespace DTOs.Dish
 {
-    public class DishRequestDto
+    public class UpdateDishRequestDto
     {
         public string Name { get; set; }
         public string Description { get; set; }
