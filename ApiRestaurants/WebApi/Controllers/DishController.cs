@@ -50,8 +50,12 @@ namespace WebApi.Controllers
             {
                 return NotFound("El id ingresado no coincide con algun plato registrado.");
             }
+        } 
 
-            
+        [HttpGet("{id}/restaurants")]
+         public async Task<IActionResult> GetDishesByResutaurants(int id) {
+            var response = await _dishService.GetListByIdRestaurant(id);
+            return Ok(response);
         }
     }
 }

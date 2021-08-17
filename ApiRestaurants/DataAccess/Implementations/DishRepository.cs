@@ -34,5 +34,11 @@ namespace DataAccess.Implementations
             dishData = await _restaurantsDbContext.Dishes.FirstOrDefaultAsync(d => d.Id == id);
             return dishData;
         }
+
+        public async Task<Dish> GetListByIdRestaurant(int id)
+        {
+            var dishesByRestaurant = await _restaurantsDbContext.Dishes.FirstOrDefaultAsync(i => i.RestaurantId == id);
+            return dishesByRestaurant;
+        }
     }
 }
