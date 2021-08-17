@@ -88,8 +88,19 @@ namespace WebApi.Controllers
         [HttpGet("active/restaurant/{restaurantId}")]
         public async Task<IActionResult> GetAllActive(int restaurantId)
         {
-            var activeDishes = await _dishService.GetActiveDishList(restaurantId);
-            return Ok(activeDishes);
+            try
+            {
+                var activeDishes = await _dishService.GetActiveDishList(restaurantId);
+                return Ok(activeDishes);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return StatusCode(404, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpGet("id")]

@@ -125,7 +125,7 @@ namespace Services.Implementations.Dishes
 
             if (restaurant == null)
             {
-                throw new Exception($"Error, no se ha encontrado la sucursal");
+                throw new EntityNotFoundException($"Error, no se encuentra el restaurante con {restaurantId}");
             }
             var dishes = await _dishRepository.GetActiveDishList(restaurantId);
             var response = _mapper.Map<List<DishResponseDto>>(dishes);
