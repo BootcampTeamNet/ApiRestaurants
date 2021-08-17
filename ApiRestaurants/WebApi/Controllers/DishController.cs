@@ -1,6 +1,8 @@
 ﻿using DTOs.Dish;
 using Microsoft.AspNetCore.Mvc;
+using Services.Implementations.Dishes;
 using Services.Interfaces;
+using Services.Interfaces.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -34,7 +36,26 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromForm] DishRequestDto dishRequestDto)
         {
-            return Ok(await _dishService.Update(id, dishRequestDto));
+            try
+            {
+                int response = await _dishService.Update(id, dishRequestDto);
+                return Ok(response);
+            }
+            catch (EntityNotFoundException ex)
+            {
+
+                return StatusCode(404, ex);
+            }
+            catch (InaccessibleResourceException ex)
+            {
+
+                return StatusCode(401, ex);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+
         }
 
         [HttpGet("id")]

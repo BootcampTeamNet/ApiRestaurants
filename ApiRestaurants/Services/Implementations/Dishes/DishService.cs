@@ -4,6 +4,7 @@ using DTOs.Dish;
 using Entities;
 using Microsoft.Extensions.Configuration;
 using Services.Interfaces;
+using Services.Interfaces.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -60,11 +61,11 @@ namespace Services.Implementations.Dishes
             Dish dish = await _genericRepository.GetByIdAsync(id);
             if (dish == null)
             {
-                throw new Exception($"El plato con el id {id} no existe");
+                throw new EntityNotFoundException($"El plato con el id {id} no existe");
             }
             //una sucursal solo puede modificar sus propios platos, no platos de la sucursal principal
             if (dishRequestDto.RestaurantId != dish.RestaurantId) {
-                throw new Exception($"Error, no puede modificar platos de la sucursal principal");
+                throw new InaccessibleResourceException($"Error, no puede modificar platos de la sucursal principal");
             }
             if (!string.IsNullOrEmpty(dish.PathImage))
             {
@@ -102,7 +103,7 @@ namespace Services.Implementations.Dishes
         {
             if (string.IsNullOrEmpty(dishRequestDto.Name))
             {
-                throw new Exception("El campo nombrre del plato no puede estar vacío");
+                throw new Exception("El campo nombre del plato no puede estar vacío");
             }
             if (string.IsNullOrEmpty(dishRequestDto.Description))
             {
