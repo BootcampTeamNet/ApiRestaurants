@@ -100,6 +100,30 @@ namespace Services.Implementations.Dishes
 
             return dish.Id;
         }
+        public async Task<int> Status(int id, int restaurantId)
+        {
+            Dish dish = await _genericRepository.GetByIdAsync(id);
+            if (dish == null)
+            {
+                throw new Exception($"El plato con el id {id} no existe");
+            }
+            if (restaurantId != dish.RestaurantId)
+            {
+                throw new Exception($"Error, no puede modificar platos de la sucursal principal");
+            }
+
+            if (dish.IsActive)
+            {
+                dish.IsActive = false;
+            }
+            else
+            {
+                dish.IsActive = true;
+            }
+            await _genericRepository.Update(dish);
+            return dish.Id;
+        }
+
 
         private static void Validation(DishRequestDto dishRequestDto)
         {

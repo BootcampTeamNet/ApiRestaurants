@@ -56,6 +56,13 @@ namespace WebApi.Controllers
 
         }
 
+        [HttpPut("ChangeStatus/{id}")]
+        public async Task<IActionResult> ChangeStatus(int id, UpdateStatusDishRequestDto updateStatusDishRequestDto)
+        {
+            int response = await _dishService.Status(id, updateStatusDishRequestDto.RestaurantId);
+            return Ok(response);
+        }
+
         [HttpGet("id")]
         public async Task<IActionResult> GetById(int id)
         {
