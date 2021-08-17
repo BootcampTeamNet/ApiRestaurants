@@ -1,6 +1,8 @@
 ﻿using DataAccess.Interfaces;
 using Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DataAccess.Implementations
@@ -33,6 +35,12 @@ namespace DataAccess.Implementations
             Dish dishData = new Dish();
             dishData = await _restaurantsDbContext.Dishes.FirstOrDefaultAsync(d => d.Id == id);
             return dishData;
+        }
+
+        public async Task<List<Dish>> GetListByIdRestaurant(int id)
+        {
+            var dishesByRestaurant = await _restaurantsDbContext.Dishes.Where(i => i.RestaurantId == id).ToListAsync();
+            return dishesByRestaurant;
         }
     }
 }

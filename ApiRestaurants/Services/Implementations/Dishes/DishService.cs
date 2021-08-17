@@ -18,8 +18,9 @@ namespace Services.Implementations.Dishes
         private readonly IStringProcess _stringProcess;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
+        private readonly IDishRepository _iDishRepository;
         public DishService(IGenericRepository<Dish> genericRepository, IRestaurantRepository restaurantRepository,
-            IFileService fileService, IStringProcess stringProcess, IMapper mapper, IConfiguration configuration)
+            IFileService fileService, IStringProcess stringProcess, IMapper mapper, IConfiguration configuration, IDishRepository dishRepository)
         {
             _genericRepository = genericRepository;
             _restaurantRepository = restaurantRepository;
@@ -27,6 +28,7 @@ namespace Services.Implementations.Dishes
             _stringProcess = stringProcess;
             _mapper = mapper;
             _configuration = configuration;
+            _iDishRepository = dishRepository;
         }
 
         public Task<List<DishRequestDto>> GetAll()
@@ -151,6 +153,15 @@ namespace Services.Implementations.Dishes
 
             var dishRequestDto =  _mapper.Map<DishResponseDto>(dish);
             return dishRequestDto;
+        }
+        public async Task<List<DishesByRestaurantResponseDto>> GetListByIdRestaurant(int id)
+        {
+            var responseListByIdRestaurant = await _iDishRepository.GetListByIdRestaurant(id);
+            if (responseListByIdRestaurant == null) {
+                throw new ArgumentNullException();
+            }
+            var response = _mapper.Map<List<DishesByRestaurantResponseDto>>(responseListByIdRestaurant);
+            return response;
         }
     }
 }
