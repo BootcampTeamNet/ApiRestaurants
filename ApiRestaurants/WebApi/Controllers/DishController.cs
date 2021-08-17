@@ -104,10 +104,10 @@ namespace WebApi.Controllers
         } 
 
         [HttpGet("Restaurant/{id}")]
-        public async Task<IActionResult> GetDishesByResutaurants(int id) {
+        public async Task<IActionResult> GetAllByRestaurantId(int id) {
             try
             {
-                var response = await _dishService.GetListByIdRestaurant(id);
+                var response = await _dishService.GetAllByRestaurantId(id);
                 return Ok(response);
             }
             catch (EntityNotFoundException ex)

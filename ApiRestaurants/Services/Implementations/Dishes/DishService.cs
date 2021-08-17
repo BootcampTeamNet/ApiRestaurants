@@ -150,7 +150,7 @@ namespace Services.Implementations.Dishes
             var dishRequestDto =  _mapper.Map<DishResponseDto>(dish);
             return dishRequestDto;
         }
-        public async Task<List<DishesByRestaurantResponseDto>> GetListByIdRestaurant(int id)
+        public async Task<List<DishesByRestaurantResponseDto>> GetAllByRestaurantId(int id)
         {
             Restaurant restaurant = await _restaurantRepository.GetByIdAsync(id);
             if (restaurant == null) {
