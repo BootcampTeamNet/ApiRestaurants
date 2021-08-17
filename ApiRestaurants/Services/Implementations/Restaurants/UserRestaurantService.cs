@@ -3,6 +3,7 @@ using DTOs.Restaurant;
 using DTOs.Users;
 using Entities;
 using Services.Interfaces;
+using Services.Interfaces.Exceptions;
 using System;
 using System.Threading.Tasks;
 
@@ -50,7 +51,7 @@ namespace Services.Implementations.Restaurants
             {
                 if (await _userRepository.ExistsUser(updateRestaurantUserRequestDto.User.Email))
                 {
-                    throw new Exception($"Error, ya existe un usuario con el correo electrónico {updateRestaurantUserRequestDto.User.Email}");
+                    throw new EntityBadRequestException($"Error, ya existe un usuario con el correo electrónico {updateRestaurantUserRequestDto.User.Email}");
                 }
                 userRestaurant.User.Email = updateRestaurantUserRequestDto.User.Email;
             }

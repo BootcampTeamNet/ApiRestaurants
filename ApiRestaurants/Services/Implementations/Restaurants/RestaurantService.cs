@@ -3,6 +3,7 @@ using DataAccess.Interfaces;
 using DTOs.Restaurant;
 using Entities;
 using Services.Interfaces;
+using Services.Interfaces.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -30,13 +31,13 @@ namespace Services.Implementations
             if (string.IsNullOrEmpty(restaurantRequestDto.Name) || string.IsNullOrEmpty(restaurantRequestDto.Address)
                 || string.IsNullOrEmpty(restaurantRequestDto.User?.FirstName) || string.IsNullOrEmpty(restaurantRequestDto.User?.LastName)
                 || string.IsNullOrEmpty(restaurantRequestDto.User?.Email) || string.IsNullOrEmpty(restaurantRequestDto.User?.Password)) {
-                throw new Exception("Error, todos los campos son requeridos");
+                throw new EntityBadRequestException("Error, todos los campos son requeridos");
             }
 
             bool exist = await _userService.ExistsUser(restaurantRequestDto.User.Email);
             if (exist)
             {
-                throw new Exception($"Ya existe un usuario registrado con el email {restaurantRequestDto.User.Email}");
+                throw new EntityBadRequestException($"Ya existe un usuario registrado con el email {restaurantRequestDto.User.Email}");
             }
 
             return await _userRestaurantService.Add(restaurantRequestDto);
@@ -48,7 +49,7 @@ namespace Services.Implementations
             var restaurant = await _restaurantRepository.GetById(id);
             if (restaurant == null)
             {
-                throw new ArgumentNullException("NotFound");
+                throw new EntityNotFoundException($"No existe el restaurante de id { id }");
             }
 
             var restaurantResponseDto = _mapper.Map<RestaurantResponseDto>(restaurant);

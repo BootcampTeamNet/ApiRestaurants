@@ -7,8 +7,6 @@ namespace Services.Interfaces
 {
     public interface IDishService
     {
-
-        Task<List<DishRequestDto>> GetAll();
         Task<int> Create(DishRequestDto dishRequestDto);
         Task<int> Update(int id, DishRequestDto dishRequestDto);
         Task<int> Status(int id, int restaurantId);

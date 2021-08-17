@@ -19,7 +19,7 @@ namespace Services.Implementations.Dishes
         private readonly IStringProcess _stringProcess;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
-        private readonly IDishRepository _iDishRepository;
+        private readonly IDishRepository _dishRepository;
         public DishService(IGenericRepository<Dish> genericRepository, IRestaurantRepository restaurantRepository,
             IFileService fileService, IStringProcess stringProcess, IMapper mapper, IConfiguration configuration, IDishRepository dishRepository)
         {
@@ -29,12 +29,7 @@ namespace Services.Implementations.Dishes
             _stringProcess = stringProcess;
             _mapper = mapper;
             _configuration = configuration;
-            _iDishRepository = dishRepository;
-        }
-
-        public Task<List<DishRequestDto>> GetAll()
-        {
-            throw new System.NotImplementedException();
+            _dishRepository = dishRepository;
         }
 
         public async Task<int> Create(DishRequestDto dishRequestDto)
@@ -105,11 +100,11 @@ namespace Services.Implementations.Dishes
             Dish dish = await _genericRepository.GetByIdAsync(id);
             if (dish == null)
             {
-                throw new Exception($"El plato con el id {id} no existe");
+                throw new EntityNotFoundException($"El plato con el id {id} no existe");
             }
             if (restaurantId != dish.RestaurantId)
             {
-                throw new Exception($"Error, no puede modificar platos de la sucursal principal");
+                throw new InaccessibleResourceException($"Error, no puede modificar platos de la sucursal principal");
             }
 
             if (dish.IsActive)
@@ -129,19 +124,19 @@ namespace Services.Implementations.Dishes
         {
             if (string.IsNullOrEmpty(dishRequestDto.Name))
             {
-                throw new Exception("El campo nombre del plato no puede estar vacío");
+                throw new EntityBadRequestException("El campo nombre del plato no puede estar vacío");
             }
             if (string.IsNullOrEmpty(dishRequestDto.Description))
             {
-                throw new Exception("Debe ingresar una descripción del plato");
+                throw new EntityBadRequestException("Debe ingresar una descripción del plato");
             }
             if (dishRequestDto.DishCategoryId <= 0)
             {
-                throw new Exception("Seleccione un Id categoría restaurante que exista");
+                throw new EntityNotFoundException("Seleccione un Id categoría restaurante que exista");
             }
             if (dishRequestDto.RestaurantId <= 0)
             {
-                throw new Exception("Seleccione un Id de restaurante que exista");
+                throw new EntityNotFoundException("Seleccione un Id de restaurante que exista");
             }
         }
         public async Task<DishResponseDto> GetById(int id)
@@ -149,7 +144,7 @@ namespace Services.Implementations.Dishes
             var dish = await _genericRepository.GetByIdAsync(id);
             if (dish == null)
             {
-                throw new ArgumentNullException("NotFound");
+                throw new EntityNotFoundException($"El plato con el id {id} no existe");
             }
 
             var dishRequestDto =  _mapper.Map<DishResponseDto>(dish);
@@ -157,10 +152,11 @@ namespace Services.Implementations.Dishes
         }
         public async Task<List<DishesByRestaurantResponseDto>> GetListByIdRestaurant(int id)
         {
-            var responseListByIdRestaurant = await _iDishRepository.GetListByIdRestaurant(id);
-            if (responseListByIdRestaurant == null) {
-                throw new ArgumentNullException();
+            Restaurant restaurant = await _restaurantRepository.GetById(id);
+            if (restaurant == null) {
+                throw new EntityNotFoundException($"No existe el restaurante de id {id}");
             }
+            var responseListByIdRestaurant = await _dishRepository.GetListByIdRestaurant(id);
             var response = _mapper.Map<List<DishesByRestaurantResponseDto>>(responseListByIdRestaurant);
             return response;
         }

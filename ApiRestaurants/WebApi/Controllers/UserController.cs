@@ -55,7 +55,7 @@ namespace WebApi.Controllers
             }
             catch (EntityNotFoundException  ex)
             {
-                return StatusCode(400, ex.Message);
+                return StatusCode(404, ex.Message);
             }
             catch (EntityBadRequestException ex)
             {
@@ -76,7 +76,7 @@ namespace WebApi.Controllers
             }
             catch (EntityNotFoundException ex)
             {
-                return StatusCode(400, ex.Message);
+                return StatusCode(404, ex.Message);
             }
             catch (Exception ex)
             {

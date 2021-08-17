@@ -1,6 +1,8 @@
 ﻿using DTOs.Restaurant;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
+using Services.Interfaces.Exceptions;
+using System;
 using System.Threading.Tasks;
 using WebApi.Errors;
 
@@ -27,17 +29,36 @@ namespace WebApi.Controllers
                 var response = await _restaurantService.GetById(id);
                 return Ok(response);
             }
-            catch {
-                return NotFound(new CodeErrorResponse(404, $"No existe el restaurante de id {id}"));
+            catch (EntityNotFoundException ex)
+            {
+                return StatusCode(404, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
         }
 
         [HttpPost("Register")]
         public async Task<IActionResult> Create(RegisterRestaurantRequestDto restaurantRequestDto)
         {
-            var response = await _restaurantService.Create(restaurantRequestDto);
-
-            return Ok(response);
+            try
+            {
+                var response = await _restaurantService.Create(restaurantRequestDto);
+                return Ok(response);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return StatusCode(404, ex.Message);
+            }
+            catch (EntityBadRequestException ex)
+            {
+                return StatusCode(400, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpGet("GetAllByCoordinates")]
@@ -50,10 +71,24 @@ namespace WebApi.Controllers
         [HttpPut]
         public async Task<IActionResult> Update(UpdateRestaurantUserRequestDto updateRestaurantUserRequestDto)
         {
+            try
+            {
+                var response = await _userRestaurantService.Update(updateRestaurantUserRequestDto);
 
-            var response = await _userRestaurantService.Update(updateRestaurantUserRequestDto);
-
-            return Ok(response);
+                return Ok(response);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return StatusCode(404, ex.Message);
+            }
+            catch (EntityBadRequestException ex)
+            {
+                return StatusCode(400, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }
