@@ -5,6 +5,7 @@ using Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Services.Interfaces;
+using Services.Interfaces.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -52,22 +53,22 @@ namespace Services.Inplementations.Users
 
             if (string.IsNullOrEmpty(email))
             {
-                throw new Exception("Error, debe ingresar un correo electrónico");
+                throw new EntityBadRequestException("Error, debe ingresar un correo electrónico");
             }
 
             if (string.IsNullOrEmpty(password))
             {
-                throw new Exception("Error, debe ingresar una contraseña");
+                throw new EntityBadRequestException("Error, debe ingresar una contraseña");
             }
 
             var user = await _userRepository.GetUserByEmail(email);
             if (user == null)
             {
-                throw new Exception("Error, usuario no existe");
+                throw new EntityNotFoundException("Error, usuario no existe");
             }
             if (!_passwordService.VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             {
-                throw new Exception("Error, contraseña incorrecta");
+                throw new EntityBadRequestException("Error, contraseña incorrecta");
             }
 
             LoginResponseDto loginResponseDto = new LoginResponseDto();
@@ -102,34 +103,19 @@ namespace Services.Inplementations.Users
 
         public async Task<int> Register(UserDto userDto)
         {
-            if (string.IsNullOrEmpty(userDto.Name))
+            if (string.IsNullOrEmpty(userDto.Name) || userDto.Name.Trim().Length == 0)
             {
-                throw new Exception("Error, debe ingresar su nombre");
+                throw new EntityBadRequestException("Error, debe ingresar su nombre");
             }
 
-            if (userDto.Name.Trim().Length == 0)
+            if (string.IsNullOrEmpty(userDto.Mobile) || userDto.Mobile.Trim().Length == 0)
             {
-                throw new Exception("Error, debe ingresar su nombre");
+                throw new EntityBadRequestException("Error, debe ingresar su número de dispositivo móvil");
             }
 
-            if (string.IsNullOrEmpty(userDto.Mobile))
+            if (string.IsNullOrEmpty(userDto.Password) || userDto.Password.Trim().Length == 0)
             {
-                throw new Exception("Error, debe ingresar su número de dispositivo móvil");
-            }
-
-            if (userDto.Mobile.Trim().Length == 0)
-            {
-                throw new Exception("Error, debe ingresar su número de dispositivo móvil");
-            }
-
-            if (string.IsNullOrEmpty(userDto.Password))
-            {
-                throw new Exception("Error, debe  asignar una contraseña");
-            }
-
-            if (userDto.Password.Trim().Length == 0)
-            {
-                throw new Exception("Error, debe asignar una contraseña");
+                throw new EntityBadRequestException("Error, debe  asignar una contraseña");
             }
 
             User user = new User
@@ -141,7 +127,7 @@ namespace Services.Inplementations.Users
 
             if (await ExistsUser(userDto.Email.ToLower()))
             {
-                return -1;
+                throw new EntityBadRequestException($"Ya existe un usuario registrado con el email {user.Email}");
             }
             _passwordService.CreatePasswordHash(userDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
             user.PasswordHash = passwordHash;
@@ -185,7 +171,7 @@ namespace Services.Inplementations.Users
             var user =await _userRepository.GetUserByEmail(passwordDto.Email);
             if (!await ExistsUser(passwordDto.Email)) 
             {
-                throw new Exception("Error, no existe el usuario");
+                throw new EntityNotFoundException("Error, no existe el usuario");
             }
             if (!string.IsNullOrEmpty(passwordDto.Password))
             {
