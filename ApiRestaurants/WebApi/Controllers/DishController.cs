@@ -3,12 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using Services.Interfaces.Exceptions;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/dishes")]
     [ApiController]
     public class DishController : ControllerBase
     {
@@ -63,7 +62,7 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpPut("ChangeStatus/{id}")]
+        [HttpPut("change-status/{id}")]
         public async Task<IActionResult> ChangeStatus(int id, UpdateStatusDishRequestDto updateStatusDishRequestDto)
         {
             try
@@ -85,7 +84,7 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpGet("active/restaurant/{id}")]
+        [HttpGet("active/restaurants/{id}")]
         public async Task<IActionResult> GetAllActive(int id)
         {
             try
@@ -121,7 +120,7 @@ namespace WebApi.Controllers
             }
         } 
 
-        [HttpGet("Restaurant/{id}")]
+        [HttpGet("restaurants/{id}")]
         public async Task<IActionResult> GetAllByRestaurantId(int id) {
             try
             {

@@ -1,14 +1,10 @@
-﻿using DTOs.Restaurant;
-using Entities;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using WebApi.Errors;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/restaurant-categories")]
     [ApiController]
     public class RestaurantCategoryController : ControllerBase
     {

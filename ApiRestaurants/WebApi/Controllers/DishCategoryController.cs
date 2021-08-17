@@ -9,7 +9,7 @@ using WebApi.Errors;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/dish-categories")]
     [ApiController]
     public class DishCategoryController : ControllerBase
     {

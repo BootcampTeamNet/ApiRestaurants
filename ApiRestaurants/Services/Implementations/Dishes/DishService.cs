@@ -132,7 +132,7 @@ namespace Services.Implementations.Dishes
             return response;
         }
 
-        private static void Validation(DishRequestDto dishRequestDto)
+        private void Validation(DishRequestDto dishRequestDto)
         {
             if (string.IsNullOrEmpty(dishRequestDto.Name))
             {

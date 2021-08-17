@@ -4,11 +4,10 @@ using Services.Interfaces;
 using Services.Interfaces.Exceptions;
 using System;
 using System.Threading.Tasks;
-using WebApi.Errors;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/users")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -19,15 +18,7 @@ namespace WebApi.Controllers
             _userService = userService;
         }
 
-        [HttpGet("{email}")]
-        public async Task<ActionResult<bool>> ExistUser(string email)
-        {
-            var response = await _userService.ExistsUser(email);
-
-            return response;
-        }
-
-        [HttpPost("Register")]
+        [HttpPost("register")]
         public async Task<IActionResult> Register(UserDto user)
         {
             try
@@ -45,7 +36,7 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpPost("Login")]
+        [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequestDto user)
         {
             try
@@ -66,7 +57,7 @@ namespace WebApi.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        [HttpPut("UpdatePassword")]
+        [HttpPut("modify-password")]
         public async Task<ActionResult> UpdatePassword(PasswordUserDto passwordUserDto)
         {
             try
@@ -82,6 +73,14 @@ namespace WebApi.Controllers
             {
                 return StatusCode(500, ex.Message);
             }
+        }
+
+        [HttpGet("{email}")]
+        public async Task<ActionResult<bool>> ExistUser(string email)
+        {
+            var response = await _userService.ExistsUser(email);
+
+            return response;
         }
 
     }

@@ -4,11 +4,10 @@ using Services.Interfaces;
 using Services.Interfaces.Exceptions;
 using System;
 using System.Threading.Tasks;
-using WebApi.Errors;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/restaurants")]
     [ApiController]
     public class RestaurantController : ControllerBase
     {
@@ -21,25 +20,7 @@ namespace WebApi.Controllers
             _userRestaurantService = userRestaurantService;
         }
 
-        [HttpGet("id")]
-        public async Task<IActionResult> GetById(int id)
-        {
-            try
-            {
-                var response = await _restaurantService.GetById(id);
-                return Ok(response);
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return StatusCode(404, ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-        [HttpPost("Register")]
+        [HttpPost("register")]
         public async Task<IActionResult> Create(RegisterRestaurantRequestDto restaurantRequestDto)
         {
             try
@@ -59,13 +40,6 @@ namespace WebApi.Controllers
             {
                 return StatusCode(500, ex.Message);
             }
-        }
-
-        [HttpGet("GetAllByCoordinates")]
-        public async Task<IActionResult> GetAllByCoordinates(double customerLatitude, double customerLongitude) 
-        {
-            var response = await _restaurantService.GetAllByCoordinates(customerLatitude, customerLongitude);
-            return Ok(response);
         }
 
         [HttpPut]
@@ -90,5 +64,32 @@ namespace WebApi.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpGet("id")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            try
+            {
+                var response = await _restaurantService.GetById(id);
+                return Ok(response);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return StatusCode(404, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("by-coordinates")]
+        public async Task<IActionResult> GetAllByCoordinates(double customerLatitude, double customerLongitude) 
+        {
+            var response = await _restaurantService.GetAllByCoordinates(customerLatitude, customerLongitude);
+            return Ok(response);
+        }
+
+
     }
 }
