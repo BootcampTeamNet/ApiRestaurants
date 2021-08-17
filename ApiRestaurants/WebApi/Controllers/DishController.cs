@@ -52,10 +52,17 @@ namespace WebApi.Controllers
             }
         } 
 
-        [HttpGet("{id}/restaurants")]
-         public async Task<IActionResult> GetDishesByResutaurants(int id) {
-            var response = await _dishService.GetListByIdRestaurant(id);
-            return Ok(response);
+        [HttpGet("restaurants/{id}")]
+        public async Task<IActionResult> GetDishesByResutaurants(int id) {
+            try 
+            {
+                var response = await _dishService.GetListByIdRestaurant(id);
+                return Ok(response);
+            }
+            catch 
+            { 
+                return NotFound("No existe el restaurante de id {id} o platos asociados a ese restaurante");
+            }
         }
     }
 }

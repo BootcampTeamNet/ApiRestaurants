@@ -130,10 +130,13 @@ namespace Services.Implementations.Dishes
             var dishRequestDto =  _mapper.Map<DishResponseDto>(dish);
             return dishRequestDto;
         }
-        public async Task<List<DishesByResutaurantRequestDto>> GetListByIdRestaurant(int id)
+        public async Task<List<DishesByRestaurantResponseDto>> GetListByIdRestaurant(int id)
         {
             var responseListByIdRestaurant = await _iDishRepository.GetListByIdRestaurant(id);
-            var response = _mapper.Map<List<DishesByResutaurantRequestDto>>(responseListByIdRestaurant);
+            if (responseListByIdRestaurant == null) {
+                throw new ArgumentNullException();
+            }
+            var response = _mapper.Map<List<DishesByRestaurantResponseDto>>(responseListByIdRestaurant);
             return response;
         }
     }
