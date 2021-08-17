@@ -121,13 +121,13 @@ namespace Services.Implementations.Dishes
 
         public async Task<List<DishResponseDto>> GetActiveDishList(int restaurantId)
         {
-            Restaurant restaurant = await _restaurantRepository.GetById(restaurantId);
+            Restaurant restaurant = await _restaurantRepository.GetByIdAsync(restaurantId);
 
             if (restaurant == null)
             {
                 throw new Exception($"Error, no se ha encontrado la sucursal");
             }
-            var dishes = await _iDishRepository.GetActiveDishList(restaurantId);
+            var dishes = await _dishRepository.GetActiveDishList(restaurantId);
             var response = _mapper.Map<List<DishResponseDto>>(dishes);
             return response;
         }
