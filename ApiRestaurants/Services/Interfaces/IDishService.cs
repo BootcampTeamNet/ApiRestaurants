@@ -12,6 +12,7 @@ namespace Services.Interfaces
         Task<int> Create(DishRequestDto dishRequestDto);
         Task<int> Update(int id, DishRequestDto dishRequestDto);
         Task<int> Status(int id, int restaurantId);
+        Task<List<DishResponseDto>> GetActiveDishList(int id);
         Task<DishResponseDto> GetById(int id);
         Task<List<DishesByRestaurantResponseDto>> GetListByIdRestaurant(int id);
     }

@@ -42,6 +42,13 @@ namespace WebApi.Controllers
             return Ok(response);
         }
 
+        [HttpGet("active/restaurant/{restaurantId}")]
+        public async Task<IActionResult> GetAllActive(int restaurantId)
+        {
+            var activeDishes = await _dishService.GetActiveDishList(restaurantId);
+            return Ok(activeDishes);
+        }
+
         [HttpGet("id")]
         public async Task<IActionResult> GetById(int id)
         {

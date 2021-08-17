@@ -123,6 +123,18 @@ namespace Services.Implementations.Dishes
             return dish.Id;
         }
 
+        public async Task<List<DishResponseDto>> GetActiveDishList(int restaurantId)
+        {
+            Restaurant restaurant = await _restaurantRepository.GetById(restaurantId);
+
+            if (restaurant == null)
+            {
+                throw new Exception($"Error, no se ha encontrado la sucursal");
+            }
+            var dishes = await _iDishRepository.GetActiveDishList(restaurantId);
+            var response = _mapper.Map<List<DishResponseDto>>(dishes);
+            return response;
+        }
 
         private static void Validation(DishRequestDto dishRequestDto)
         {

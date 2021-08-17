@@ -10,5 +10,6 @@ namespace DataAccess.Interfaces
         Task<Dish> GetDish(string id);
         Task<Dish> GetById(int id);
         Task<List<Dish>> GetListByIdRestaurant(int id);
+        Task<List<Dish>> GetActiveDishList(int id);
     }
 }
