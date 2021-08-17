@@ -96,8 +96,6 @@ namespace WebApi
 
             app.UseMiddleware<ExceptionMiddleware>();
 
-            app.UseStatusCodePagesWithReExecute("/errors", "?code={0}");
-
             app.UseRouting();
 
             app.UseCors("CorsRule");

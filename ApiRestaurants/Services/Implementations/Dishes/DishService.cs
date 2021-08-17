@@ -102,19 +102,19 @@ namespace Services.Implementations.Dishes
         {
             if (string.IsNullOrEmpty(dishRequestDto.Name))
             {
-                throw new Exception("El campo Name no puede estar vacío");
+                throw new Exception("El campo nombrre del plato no puede estar vacío");
             }
             if (string.IsNullOrEmpty(dishRequestDto.Description))
             {
-                throw new Exception("El campo Description no puede ser nulo");
+                throw new Exception("Debe ingresar una descripción del plato");
             }
             if (dishRequestDto.DishCategoryId <= 0)
             {
-                throw new Exception("El Id de la categoría debe ser mayor a cero ");
+                throw new Exception("Seleccione un Id categoría restaurante que exista");
             }
             if (dishRequestDto.RestaurantId <= 0)
             {
-                throw new Exception("El Id del restaurante debe ser mayor a cero");
+                throw new Exception("Seleccione un Id de restaurante que exista");
             }
         }
         public async Task<DishResponseDto> GetById(int id)
