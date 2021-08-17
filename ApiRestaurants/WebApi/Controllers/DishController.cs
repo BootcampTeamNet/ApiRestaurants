@@ -62,7 +62,7 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpPut("change-status/{id}")]
+        [HttpPut("{id}/change-status")]
         public async Task<IActionResult> ChangeStatus(int id, UpdateStatusDishRequestDto updateStatusDishRequestDto)
         {
             try
