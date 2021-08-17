@@ -23,20 +23,6 @@ namespace DataAccess.Implementations
 
         }
 
-        public async Task<Dish> GetDish(string name)
-        {
-            var dish = new Dish();
-            dish = await _restaurantsDbContext.Dishes.FirstOrDefaultAsync(
-                x => x.Name.Equals(name.ToLower()));
-            return dish;
-        }
-        public async Task<Dish> GetById(int id)
-        {
-            Dish dishData = new Dish();
-            dishData = await _restaurantsDbContext.Dishes.FirstOrDefaultAsync(d => d.Id == id);
-            return dishData;
-        }
-
         public async Task<List<Dish>> GetListByIdRestaurant(int id)
         {
             var dishesByRestaurant = await _restaurantsDbContext.Dishes.Where(i => i.RestaurantId == id).ToListAsync();

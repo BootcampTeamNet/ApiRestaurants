@@ -14,13 +14,13 @@ namespace Services.Implementations.Dishes
     public class DishService : IDishService
     {
         private readonly IGenericRepository<Dish> _genericRepository;
-        private readonly IRestaurantRepository _restaurantRepository;
+        private readonly IGenericRepository<Restaurant> _restaurantRepository;
         private readonly IFileService _fileService;
         private readonly IStringProcess _stringProcess;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
         private readonly IDishRepository _dishRepository;
-        public DishService(IGenericRepository<Dish> genericRepository, IRestaurantRepository restaurantRepository,
+        public DishService(IGenericRepository<Dish> genericRepository, IGenericRepository<Restaurant> restaurantRepository,
             IFileService fileService, IStringProcess stringProcess, IMapper mapper, IConfiguration configuration, IDishRepository dishRepository)
         {
             _genericRepository = genericRepository;
@@ -39,7 +39,7 @@ namespace Services.Implementations.Dishes
             //guardar imagen
             if (dishRequestDto.Image != null)
             {
-                Restaurant restaurant = await _restaurantRepository.GetById(dishRequestDto.RestaurantId);
+                Restaurant restaurant = await _restaurantRepository.GetByIdAsync(dishRequestDto.RestaurantId);
                 string filePath = restaurant.Id + _stringProcess.removeSpecialCharacter(restaurant.Name);
                 string imageFullPath = $"{_configuration.GetSection("FileServer:path").Value}{filePath}\\{dishRequestDto.Image.FileName}";
                 await _fileService.SaveFile(dishRequestDto.Image, filePath);
@@ -71,7 +71,7 @@ namespace Services.Implementations.Dishes
             //guardar imagen
             if (dishRequestDto.Image != null)
             {
-                Restaurant restaurant = await _restaurantRepository.GetById(dish.RestaurantId);
+                Restaurant restaurant = await _restaurantRepository.GetByIdAsync(dish.RestaurantId);
                 string filePath = restaurant.Id + _stringProcess.removeSpecialCharacter(restaurant.Name);
                 string imageFullPath = $"{_configuration.GetSection("FileServer:path").Value}{filePath}\\{dishRequestDto.Image.FileName}";
                 await _fileService.SaveFile(dishRequestDto.Image, filePath);
@@ -152,7 +152,7 @@ namespace Services.Implementations.Dishes
         }
         public async Task<List<DishesByRestaurantResponseDto>> GetListByIdRestaurant(int id)
         {
-            Restaurant restaurant = await _restaurantRepository.GetById(id);
+            Restaurant restaurant = await _restaurantRepository.GetByIdAsync(id);
             if (restaurant == null) {
                 throw new EntityNotFoundException($"No existe el restaurante de id {id}");
             }

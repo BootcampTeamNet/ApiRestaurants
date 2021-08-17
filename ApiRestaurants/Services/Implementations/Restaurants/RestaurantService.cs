@@ -12,15 +12,13 @@ namespace Services.Implementations
 {
     public class RestaurantService : IRestaurantService
     {
-        private readonly IRestaurantRepository _restaurantRepository;
         private readonly IGenericRepository<Restaurant> _genericRepository;
         private readonly IUserService _userService;
         private readonly IUserRestaurantService _userRestaurantService;
         private readonly IMapper _mapper;
-        public RestaurantService(IRestaurantRepository restaurantRepository, IGenericRepository<Restaurant> genericRepository, IUserService userService, IUserRestaurantService userRestaurantService,  IMapper mapper)
+        public RestaurantService(IGenericRepository<Restaurant> genericRepository, IUserService userService, IUserRestaurantService userRestaurantService,  IMapper mapper)
         {
             _genericRepository = genericRepository;
-            _restaurantRepository = restaurantRepository;
             _userService = userService;
             _userRestaurantService = userRestaurantService;
             _mapper = mapper;
@@ -46,7 +44,7 @@ namespace Services.Implementations
 
         public async Task<RestaurantResponseDto> GetById(int id)
         {
-            var restaurant = await _restaurantRepository.GetById(id);
+            var restaurant = await _genericRepository.GetByIdAsync(id);
             if (restaurant == null)
             {
                 throw new EntityNotFoundException($"No existe el restaurante de id { id }");

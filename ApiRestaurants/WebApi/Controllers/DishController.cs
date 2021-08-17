@@ -103,7 +103,7 @@ namespace WebApi.Controllers
             }
         } 
 
-        [HttpGet("restaurants/{id}")]
+        [HttpGet("Restaurant/{id}")]
         public async Task<IActionResult> GetDishesByResutaurants(int id) {
             try
             {
