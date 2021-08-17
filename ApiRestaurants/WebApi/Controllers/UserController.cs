@@ -1,7 +1,8 @@
 ﻿using DTOs.Users;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
-using System.Collections.Generic;
+using Services.Interfaces.Exceptions;
+using System;
 using System.Threading.Tasks;
 using WebApi.Errors;
 
@@ -27,25 +28,62 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<ActionResult> Register(UserDto user)
+        public async Task<IActionResult> Register(UserDto user)
         {
-            var response = await _userService.Register(user);
-
-            if (response == -1)
+            try
             {
-                return BadRequest(new CodeErrorResponse(404, $"Ya existe un usuario registrado con el email {user.Email}"));
+                var response = await _userService.Register(user);
+                return Ok(response);
             }
-            var result = response;
-
-            return Ok(response);
+            catch (EntityBadRequestException ex)
+            {
+                return StatusCode(400, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginRequestDto user)
         {
-            var response = await _userService.Login(user);
-            return Ok(response);
+            try
+            {
+                var response = await _userService.Login(user);
+                return Ok(response);
+            }
+            catch (EntityNotFoundException  ex)
+            {
+                return StatusCode(404, ex.Message);
+            }
+            catch (EntityBadRequestException ex)
+            {
+                return StatusCode(400, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
+        [HttpPut("UpdatePassword")]
+        public async Task<ActionResult> UpdatePassword(PasswordUserDto passwordUserDto)
+        {
+            try
+            {
+                await _userService.UpdatePassword(passwordUserDto);
+                return Ok();
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return StatusCode(404, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
     }
 
 }

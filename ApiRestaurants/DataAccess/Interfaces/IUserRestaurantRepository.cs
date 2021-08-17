@@ -5,7 +5,8 @@ namespace DataAccess.Interfaces
 {
     public interface IUserRestaurantRepository
     {
-        Task<UserRestaurant> GetByUserId(int id);
         Task<int> Add(UserRestaurant userRestaurant);
+        Task<UserRestaurant> GetByUserId(int id);
+        Task<int> Update(UserRestaurant userRestaurant);
     }
 }

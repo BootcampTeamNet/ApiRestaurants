@@ -23,6 +23,15 @@ namespace DataAccess.Implementations
             return userRestaurant.Restaurant.Id;
         }
 
+        public async Task<int> Update(UserRestaurant userRestaurant)
+        {
+            _context.Update(userRestaurant.User);
+            _context.Update(userRestaurant.Restaurant);
+            await _context.SaveChangesAsync();
+
+            return userRestaurant.Restaurant.Id;
+        }
+
         public async Task<UserRestaurant> GetByUserId(int id)
         {
             UserRestaurant response = await (from restaurant in _context.Restaurants

@@ -5,7 +5,6 @@ namespace DataAccess.Interfaces
 {
     public interface IRestaurantRepository
     {
-        Task<Restaurant> GetById(int id);
     }
 
 }
