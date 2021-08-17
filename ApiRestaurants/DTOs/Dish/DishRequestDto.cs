@@ -15,5 +15,6 @@ namespace DTOs.Dish
         public int? Sugars { get; set; }
         public int DishCategoryId { get; set; }
         public int RestaurantId { get; set; }
+
     }
 }

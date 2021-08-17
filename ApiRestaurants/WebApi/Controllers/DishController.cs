@@ -38,6 +38,12 @@ namespace WebApi.Controllers
             return Ok(await _dishService.Update(id, dishRequestDto));
         }
 
+        [HttpPut("status/{id}")]
+        public async Task<IActionResult> Status(int id, int restaurantId)
+        {
+            return Ok(await _dishService.Status(id, restaurantId));
+        }
+
         [HttpGet("id")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -50,8 +56,6 @@ namespace WebApi.Controllers
             {
                 return NotFound("El id ingresado no coincide con algun plato registrado.");
             }
-
-            
         }
     }
 }
