@@ -85,12 +85,12 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpGet("active/restaurant/{restaurantId}")]
-        public async Task<IActionResult> GetAllActive(int restaurantId)
+        [HttpGet("active/restaurant/{id}")]
+        public async Task<IActionResult> GetAllActive(int id)
         {
             try
             {
-                var activeDishes = await _dishService.GetActiveDishList(restaurantId);
+                var activeDishes = await _dishService.GetActiveDishList(id);
                 return Ok(activeDishes);
             }
             catch (EntityNotFoundException ex)
