@@ -69,8 +69,21 @@ namespace WebApi.Controllers
             }
             catch(Exception)
             {
-                return NotFound(new CodeErrorResponse(404, $"No existe el plato de id {id}"));
-            }            
+                return NotFound("El id ingresado no coincide con algun plato registrado.");
+            }
+        } 
+
+        [HttpGet("restaurants/{id}")]
+        public async Task<IActionResult> GetDishesByResutaurants(int id) {
+            try 
+            {
+                var response = await _dishService.GetListByIdRestaurant(id);
+                return Ok(response);
+            }
+            catch 
+            { 
+                return NotFound("No existe el restaurante de id {id} o platos asociados a ese restaurante");
+            }
         }
     }
 }
