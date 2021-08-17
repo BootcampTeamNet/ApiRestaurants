@@ -28,9 +28,8 @@ namespace WebApi.Controllers
                 return Ok(response);
             }
             catch {
-                return NotFound(new CodeErrorResponse(400, $"No existe el restaurante de id {id}"));
+                return NotFound(new CodeErrorResponse(404, $"No existe el restaurante de id {id}"));
             }
-
         }
 
         [HttpPost("Register")]
