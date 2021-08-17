@@ -1,10 +1,7 @@
 ﻿using DTOs.Dish;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace WebApi.Controllers
@@ -38,10 +35,11 @@ namespace WebApi.Controllers
             return Ok(await _dishService.Update(id, dishRequestDto));
         }
 
-        [HttpPut("status/{id}")]
-        public async Task<IActionResult> Status(int id, int restaurantId)
+        [HttpPut("ChangeStatus/{id}")]
+        public async Task<IActionResult> ChangeStatus(int id, UpdateStatusDishRequestDto updateStatusDishRequestDto)
         {
-            return Ok(await _dishService.Status(id, restaurantId));
+            int response = await _dishService.Status(id, updateStatusDishRequestDto.RestaurantId);
+            return Ok(response);
         }
 
         [HttpGet("id")]
