@@ -58,7 +58,7 @@ namespace Services.Implementations
             //1 milla - 1.609344 km
             //1 grado - 60 min
             //1 milla náutica =  1.1515 millas terrestres
-            int distanceKm = 10;
+            int distanceKm = 5;
             double gradeToRadian = (Math.PI / 180);
             double radianToGrade = (180 / Math.PI);
 

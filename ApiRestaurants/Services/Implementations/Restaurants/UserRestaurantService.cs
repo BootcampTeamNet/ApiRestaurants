@@ -1,10 +1,8 @@
 ﻿using DataAccess.Interfaces;
 using DTOs.Restaurant;
-using DTOs.Users;
 using Entities;
 using Services.Interfaces;
 using Services.Interfaces.Exceptions;
-using System;
 using System.Threading.Tasks;
 
 namespace Services.Implementations.Restaurants

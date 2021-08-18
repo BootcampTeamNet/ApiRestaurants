@@ -15,26 +15,29 @@ namespace Services.Implementations.Dishes
     {
         private readonly IGenericRepository<Dish> _genericRepository;
         private readonly IGenericRepository<Restaurant> _restaurantRepository;
+        private readonly IDishRepository _dishRepository;
+        private readonly IGenericRepository<DishCategory> _dishCategoryRepository;
         private readonly IFileService _fileService;
         private readonly IStringProcess _stringProcess;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
-        private readonly IDishRepository _dishRepository;
         public DishService(IGenericRepository<Dish> genericRepository, IGenericRepository<Restaurant> restaurantRepository,
-            IFileService fileService, IStringProcess stringProcess, IMapper mapper, IConfiguration configuration, IDishRepository dishRepository)
+             IDishRepository dishRepository, IGenericRepository<DishCategory> dishCategoryRepository,
+            IFileService fileService, IStringProcess stringProcess, IMapper mapper, IConfiguration configuration)
         {
             _genericRepository = genericRepository;
             _restaurantRepository = restaurantRepository;
+            _dishRepository = dishRepository;
+            _dishCategoryRepository = dishCategoryRepository;
             _fileService = fileService;
             _stringProcess = stringProcess;
             _mapper = mapper;
             _configuration = configuration;
-            _dishRepository = dishRepository;
         }
 
         public async Task<int> Create(DishRequestDto dishRequestDto)
         {
-            Validation(dishRequestDto);
+            await Validation(dishRequestDto);
             var data = _mapper.Map<Dish>(dishRequestDto);
             //guardar imagen
             if (dishRequestDto.Image != null)
@@ -53,7 +56,7 @@ namespace Services.Implementations.Dishes
 
         public async Task<int> Update(int id, DishRequestDto dishRequestDto)
         {
-            Validation(dishRequestDto);
+            await Validation(dishRequestDto);
 
             Dish dish = await _genericRepository.GetByIdAsync(id);
             if (dish == null)
@@ -132,7 +135,7 @@ namespace Services.Implementations.Dishes
             return response;
         }
 
-        private void Validation(DishRequestDto dishRequestDto)
+        private async Task Validation(DishRequestDto dishRequestDto)
         {
             if (string.IsNullOrEmpty(dishRequestDto.Name))
             {
@@ -142,11 +145,13 @@ namespace Services.Implementations.Dishes
             {
                 throw new EntityBadRequestException("Debe ingresar una descripción del plato");
             }
-            if (dishRequestDto.DishCategoryId <= 0)
+            bool existCategory = await _dishCategoryRepository.Exist(dishRequestDto.DishCategoryId);
+            if (!existCategory)
             {
                 throw new EntityNotFoundException("Seleccione un Id categoría restaurante que exista");
             }
-            if (dishRequestDto.RestaurantId <= 0)
+            bool existRestaurant = await _restaurantRepository.Exist(dishRequestDto.RestaurantId);
+            if (!existRestaurant)
             {
                 throw new EntityNotFoundException("Seleccione un Id de restaurante que exista");
             }
