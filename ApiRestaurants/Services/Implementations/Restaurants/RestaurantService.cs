@@ -67,18 +67,18 @@ namespace Services.Implementations
 
             foreach (var restaurant in listRestaurant)
             {
-                var distanceCalculated =
-                    (
-                        (
-                            Math.Acos(
-                                Math.Sin(customerLatitude * gradeToRadian) *
+                var result = Math.Sin(customerLatitude * gradeToRadian) *
                                 Math.Sin(Convert.ToDouble(restaurant.LocationLatitude) * gradeToRadian) +
                                 Math.Cos(customerLatitude * gradeToRadian) *
                                 Math.Cos(Convert.ToDouble(restaurant.LocationLatitude) * gradeToRadian) *
-                                Math.Cos((customerLongitude - Convert.ToDouble(restaurant.LocationLongitude)) * gradeToRadian)
-                            )
-                        ) * radianToGrade
-                    ) * 60 * 1.1515 * 1.609344;
+                                Math.Cos((customerLongitude - Convert.ToDouble(restaurant.LocationLongitude)) * gradeToRadian);
+                // range cos [-1,1]
+                if (result > 1)
+                    result = 1;
+                if (result <-1)
+                    result = -1;
+
+                var distanceCalculated = (Math.Acos(result) * radianToGrade) * 60 * 1.1515 * 1.609344;
                 if (distanceCalculated <= distanceKm)
                     lNearRestaurant.Add(restaurant);
             }
