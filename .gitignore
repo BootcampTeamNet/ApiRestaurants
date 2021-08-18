@@ -455,3 +455,4 @@ $RECYCLE.BIN/
 
 #migrations
 ApiRestaurants/DataAccess/Data/Migrations/
+ApiRestaurants/DataAccess/Migrations/
