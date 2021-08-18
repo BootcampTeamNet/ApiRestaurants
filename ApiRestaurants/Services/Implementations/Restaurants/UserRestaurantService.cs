@@ -26,8 +26,8 @@ namespace Services.Implementations.Restaurants
             {
                 Name = restaurantRequestDto.Name,
                 Address = restaurantRequestDto.Address,
-                LocationLatitude = restaurantRequestDto.LocationLatitude,
-                LocationLongitude = restaurantRequestDto.LocationLongitude
+                LocationLatitude = restaurantRequestDto.LocationLatitude.ToString(),
+                LocationLongitude = restaurantRequestDto.LocationLongitude.ToString()
             };
             //arma el objeto del usuario para el resturante
             _passwordService.CreatePasswordHash(restaurantRequestDto.User.Password, out byte[] passwordHash, out byte[] passwordSalt);
