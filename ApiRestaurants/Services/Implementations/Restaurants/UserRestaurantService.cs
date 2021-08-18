@@ -69,7 +69,7 @@ namespace Services.Implementations.Restaurants
             userRestaurant.Restaurant.Name = updateRestaurantUserRequestDto.Name;
             userRestaurant.Restaurant.Address = updateRestaurantUserRequestDto.Address;
             userRestaurant.Restaurant.LocationLatitude = updateRestaurantUserRequestDto.LocationLatitude;
-            userRestaurant.Restaurant.LocationLongitude = updateRestaurantUserRequestDto.LocationLatitude;
+            userRestaurant.Restaurant.LocationLongitude = updateRestaurantUserRequestDto.LocationLongitude;
             userRestaurant.Restaurant.ScheduleFrom = updateRestaurantUserRequestDto.ScheduleFrom;
             userRestaurant.Restaurant.ScheduleTo = updateRestaurantUserRequestDto.ScheduleTo;
             userRestaurant.Restaurant.RestaurantCategoryId = updateRestaurantUserRequestDto.RestaurantCategoryId;
