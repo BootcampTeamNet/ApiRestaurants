@@ -6,6 +6,7 @@ using Services.Interfaces;
 using Services.Interfaces.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace Services.Implementations
@@ -61,6 +62,8 @@ namespace Services.Implementations
             int distanceKm = 5;
             double gradeToRadian = (Math.PI / 180);
             double radianToGrade = (180 / Math.PI);
+            double nauticalMile = double.Parse("1.1515", CultureInfo.GetCultureInfo("es-US"));
+            double mile = double.Parse("1.609344", CultureInfo.GetCultureInfo("en-US"));
 
             List<Restaurant> lNearRestaurant = new List<Restaurant>();
             var listRestaurant = await _genericRepository.GetAllAsync();
@@ -78,7 +81,7 @@ namespace Services.Implementations
                 if (result <-1)
                     result = -1;
 
-                var distanceCalculated = (Math.Acos(result) * radianToGrade) * 60 * 1.1515 * 1.609344;
+                var distanceCalculated = (Math.Acos(result) * radianToGrade) * 60 * nauticalMile * mile;
                 if (distanceCalculated <= distanceKm)
                     lNearRestaurant.Add(restaurant);
             }
