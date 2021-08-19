@@ -1,16 +1,13 @@
 ﻿using DTOs.Restaurant;
-using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
-using System.Collections.Generic;
+using Services.Interfaces.Exceptions;
+using System;
 using System.Threading.Tasks;
-using WebApi.Errors;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/branches")]
     [ApiController]
     public class BranchOfficeController : ControllerBase
     {
@@ -20,39 +17,24 @@ namespace WebApi.Controllers
         {
             _branchOfficeService = branchOfficeService;
         }
-        // GET: api/<BranchOfficeController>
-        //[HttpGet]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
 
-        // GET api/<BranchOfficeController>/5
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
-
-        // POST api/<BranchOfficeController>
-        [HttpPost("Register")]
+        [HttpPost("register")]
         public async Task<IActionResult> Create(BranchOfficeRequestDto branchOfficeRequestDto)
         {
-            var response = await _branchOfficeService.Create(branchOfficeRequestDto);
+            try
+            {
+                var response = await _branchOfficeService.Create(branchOfficeRequestDto);
+                return Ok(response);
 
-            return Ok(response);
+            }
+            catch (EntityBadRequestException ex)
+            {
+                return StatusCode(400, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
-
-        // PUT api/<BranchOfficeController>/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
-        // DELETE api/<BranchOfficeController>/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
     }
 }

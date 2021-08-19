@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using DataAccess.Interfaces;
+﻿using DataAccess.Interfaces;
 using DTOs.Restaurant;
 using Entities;
 using Services.Interfaces;
-using System;
-using System.Collections.Generic;
+using Services.Interfaces.Exceptions;
 using System.Threading.Tasks;
 
 namespace Services.Implementations.Restaurants
@@ -14,20 +12,15 @@ namespace Services.Implementations.Restaurants
         private readonly IUserRestaurantRepository _userRestaurantRepository;
         private readonly IPasswordService _passwordService;
         private readonly IUserService _userService;
-        private readonly IUserRepository _userRepository;
 
         public BranchOfficeService(
             IUserRestaurantRepository userRestaurantRepository,
             IPasswordService passwordService,
-            IUserRepository userRepository, 
-            IUserService userService,
-            IGenericRepository<Restaurant> genericRepository,
-            IMapper mapper
+            IUserService userService
             )
         {
             _userRestaurantRepository = userRestaurantRepository;
             _passwordService = passwordService;
-            _userRepository = userRepository;
             _userService = userService;
         }
 
@@ -39,13 +32,13 @@ namespace Services.Implementations.Restaurants
                 int.Equals(null, branchOfficeRequestDto.MainBranchId)
                 )
             {
-                throw new Exception("Los campos no pueden ser nulos");
+                throw new EntityBadRequestException("Error, todos los campos son requeridos");
             }
             
             bool exist = await _userService.ExistsUser(branchOfficeRequestDto.User.Email);
             if (exist)
             {
-                throw new Exception($"Ya existe un usuario registrado con el email {branchOfficeRequestDto.User.Email}");
+                throw new EntityBadRequestException($"Ya existe un usuario registrado con el email {branchOfficeRequestDto.User.Email}");
             }
 
             UserRestaurant userRestaurant = new UserRestaurant();
