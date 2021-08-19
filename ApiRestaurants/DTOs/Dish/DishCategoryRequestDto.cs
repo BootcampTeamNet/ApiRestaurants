@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DTOs.Dish
+﻿namespace DTOs.Dish
 {
     public class DishCategoryRequestDto
     {

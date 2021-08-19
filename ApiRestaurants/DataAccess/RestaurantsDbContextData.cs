@@ -41,6 +41,18 @@ namespace DataAccess
 
                     await context.SaveChangesAsync();
                 }
+                if (!context.BookingStatus.Any())
+                {
+                    var bookingStatusData = File.ReadAllText("../DataAccess/LoadData/BookingStatus.json");
+                    var bookingStatus = JsonSerializer.Deserialize<List<BookingStatus>>(bookingStatusData);
+
+                    foreach (var status in bookingStatus)
+                    {
+                        context.BookingStatus.Add(status);
+                    }
+
+                    await context.SaveChangesAsync();
+                }
             }
             catch (Exception e)
             {
