@@ -27,6 +27,10 @@ namespace WebApi.Controllers
                 return Ok(response);
 
             }
+            catch (EntityNotFoundException ex)
+            {
+                return StatusCode(404, ex.Message);
+            }
             catch (EntityBadRequestException ex)
             {
                 return StatusCode(400, ex.Message);

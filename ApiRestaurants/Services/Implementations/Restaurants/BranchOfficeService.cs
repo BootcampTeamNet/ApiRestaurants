@@ -10,16 +10,19 @@ namespace Services.Implementations.Restaurants
     public class BranchOfficeService: IBranchOfficeService
     {
         private readonly IUserRestaurantRepository _userRestaurantRepository;
+        private readonly IGenericRepository<Restaurant> _genericRestaurantRepository;
         private readonly IPasswordService _passwordService;
         private readonly IUserService _userService;
 
         public BranchOfficeService(
             IUserRestaurantRepository userRestaurantRepository,
+            IGenericRepository<Restaurant> genericRestaurantRepository,
             IPasswordService passwordService,
             IUserService userService
             )
         {
             _userRestaurantRepository = userRestaurantRepository;
+            _genericRestaurantRepository = genericRestaurantRepository;
             _passwordService = passwordService;
             _userService = userService;
         }
@@ -39,6 +42,12 @@ namespace Services.Implementations.Restaurants
             if (exist)
             {
                 throw new EntityBadRequestException($"Ya existe un usuario registrado con el email {branchOfficeRequestDto.User.Email}");
+            }
+
+            bool existRestaurant = await _genericRestaurantRepository.Exist(branchOfficeRequestDto.MainBranchId);
+            if (!existRestaurant)
+            {
+                throw new EntityNotFoundException($"No existe un restaurante con el id {branchOfficeRequestDto.MainBranchId}");
             }
 
             UserRestaurant userRestaurant = new UserRestaurant();
