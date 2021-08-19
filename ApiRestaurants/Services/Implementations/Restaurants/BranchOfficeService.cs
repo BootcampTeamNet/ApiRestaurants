@@ -11,25 +11,24 @@ namespace Services.Implementations.Restaurants
 {
     public class BranchOfficeService: IBranchOfficeService
     {
-        //private readonly IRestaurantRepository _restaurantRepository;
-        //private readonly IUserService _userService;
-        //private readonly IPasswordService _passwordService;
-        private readonly IGenericRepository<Restaurant> _genericRepository;
-        private readonly IMapper _mapper;
+        private readonly IUserRestaurantRepository _userRestaurantRepository;
+        private readonly IPasswordService _passwordService;
+        private readonly IUserService _userService;
+        private readonly IUserRepository _userRepository;
 
         public BranchOfficeService(
-            //IRestaurantRepository restaurantRepository,
-            //IUserService userService,
-            //IPasswordService passwordService,
+            IUserRestaurantRepository userRestaurantRepository,
+            IPasswordService passwordService,
+            IUserRepository userRepository, 
+            IUserService userService,
             IGenericRepository<Restaurant> genericRepository,
             IMapper mapper
             )
         {
-            //_restaurantRepository = restaurantRepository;
-            //_userService = userService;
-            //_passwordService = passwordService;
-            _genericRepository = genericRepository;
-            _mapper = mapper;
+            _userRestaurantRepository = userRestaurantRepository;
+            _passwordService = passwordService;
+            _userRepository = userRepository;
+            _userService = userService;
         }
 
         public async Task<int> Create(BranchOfficeRequestDto branchOfficeRequestDto)
@@ -42,41 +41,35 @@ namespace Services.Implementations.Restaurants
             {
                 throw new Exception("Los campos no pueden ser nulos");
             }
-
-            /*
-            bool exist = await _userService.ExistsUser(restaurantRequestDto.User.Email);
+            
+            bool exist = await _userService.ExistsUser(branchOfficeRequestDto.User.Email);
             if (exist)
             {
-                throw new Exception($"Ya existe un usuario registrado con el email {restaurantRequestDto.User.Email}");
+                throw new Exception($"Ya existe un usuario registrado con el email {branchOfficeRequestDto.User.Email}");
             }
 
             UserRestaurant userRestaurant = new UserRestaurant();
             userRestaurant.Restaurant = new Restaurant
             {
-                Name = restaurantRequestDto.Name,
-                Address = restaurantRequestDto.Address,
-                LocationLatitude = restaurantRequestDto.LocationLatitude,
-                LocationLongitude = restaurantRequestDto.LocationLongitude
+                Name = branchOfficeRequestDto.Name,
+                Address = branchOfficeRequestDto.Address,
+                LocationLatitude = branchOfficeRequestDto.LocationLatitude.ToString(),
+                LocationLongitude = branchOfficeRequestDto.LocationLongitude.ToString(),
+                MainBranchId = branchOfficeRequestDto.MainBranchId
             };
-            //arma el objeto del usuario para el resturante
-            _passwordService.CreatePasswordHash(restaurantRequestDto.User.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
+            _passwordService.CreatePasswordHash(branchOfficeRequestDto.User.Password, out byte[] passwordHash, out byte[] passwordSalt);
             userRestaurant.User = new User
             {
-                FirstName = restaurantRequestDto.User.FirstName,
-                LastName = restaurantRequestDto.User.LastName,
-                Email = restaurantRequestDto.User.Email,
+                FirstName = branchOfficeRequestDto.User.FirstName,
+                LastName = branchOfficeRequestDto.User.LastName,
+                Email = branchOfficeRequestDto.User.Email,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt
             };
 
-            return await _restaurantRepository.Add(userRestaurant);
-            */        
+            return await _userRestaurantRepository.Add(userRestaurant);
 
-            var data = _mapper.Map<Restaurant>(branchOfficeRequestDto);
-            await _genericRepository.Add(data);
-            var restaurantId = data.Id;
-
-            return restaurantId;
         }
 
 

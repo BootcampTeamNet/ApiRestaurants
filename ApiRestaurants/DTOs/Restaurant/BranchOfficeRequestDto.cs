@@ -10,9 +10,9 @@ namespace DTOs.Restaurant
     {
         public string Name { get; set; }
         public string Address { get; set; }
-        public string LocationLatitude { get; set; }
-        public string LocationLongitude { get; set; }
-        public int? MainBranchId { get; set; }
-        public UserRestaurantRequestDto User { get; set; }
+        public double LocationLatitude { get; set; }
+        public double LocationLongitude { get; set; }
+        public int MainBranchId { get; set; }
+        public RegisterUserRequestDto User { get; set; }
     }
 }

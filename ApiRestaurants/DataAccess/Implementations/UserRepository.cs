@@ -15,9 +15,9 @@ namespace DataAccess.Implementations
 
         public async Task<bool> ExistsUser(string email)
         {
-            var response = false;
-            response = await _restaurantsDbContext.Set<User>().AnyAsync(x => x.Email == email);
-            return response;
+                var response = false;
+                response = await _restaurantsDbContext.Set<User>().AnyAsync(x => x.Email == email);
+                return response;            
         }
 
         public async Task<User> GetUserByEmail(string email)
