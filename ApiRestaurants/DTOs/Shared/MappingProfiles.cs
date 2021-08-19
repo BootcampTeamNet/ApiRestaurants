@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DTOs.Dish;
 using DTOs.Restaurant;
+using DTOs.Users;
 using Entities;
 
 namespace WebApi.Dtos
@@ -10,11 +11,15 @@ namespace WebApi.Dtos
        public MappingProfiles() 
         {
             CreateMap<Dish, DishRequestDto>().ReverseMap();
+            CreateMap<Dish, DishResponseDto>().ReverseMap();
             CreateMap<DishCategory, DishCategoryRequestDto>().ReverseMap();
             CreateMap<Restaurant, RestaurantResponseDto>().ReverseMap();
             CreateMap<RestaurantCategory, RestaurantCategoryRequestDto>().ReverseMap();
+            CreateMap<Restaurant, RestaurantMobileResponseDto>().ReverseMap();
+            CreateMap<Dish, DishesByRestaurantResponseDto>().ReverseMap();
             CreateMap<Restaurant, BranchOfficeRequestDto>().ReverseMap();
 
+            CreateMap<UserDto, User>().ReverseMap();
         }
     }
 }

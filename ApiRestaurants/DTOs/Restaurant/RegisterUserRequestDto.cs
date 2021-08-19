@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DTOs.Users
+namespace DTOs.Restaurant
 {
-    public class UserDto
+    public class RegisterUserRequestDto
     {
-        [Required(ErrorMessage ="El Nombre es requerido")]
-        public string Name { get; set; }
+        [Required(ErrorMessage = "El Nombre es requerido")]
+        public string FirstName { get; set; }
+        [Required(ErrorMessage = "El Apellido es requerido")]
+        public string LastName { get; set; }
         [EmailAddress(ErrorMessage = "Ingrese un correo electrónico válido")]
         public string Email { get; set; }
         [Required(ErrorMessage = "El Password es requerido")]
         public string Password { get; set; }
-        [Required(ErrorMessage = "El Mobile es requerido")]
-        public string Mobile { get; set; }
     }
 }

@@ -1,21 +1,68 @@
 ﻿using DTOs.Restaurant;
-using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
-using System.Collections.Generic;
+using Services.Interfaces.Exceptions;
+using System;
 using System.Threading.Tasks;
-using WebApi.Errors;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/restaurants")]
     [ApiController]
     public class RestaurantController : ControllerBase
     {
         private readonly IRestaurantService _restaurantService;
-        public RestaurantController(IRestaurantService restaurantService)
+        private readonly IUserRestaurantService _userRestaurantService;
+
+        public RestaurantController(IRestaurantService restaurantService, IUserRestaurantService userRestaurantService)
         {
             _restaurantService = restaurantService;
+            _userRestaurantService = userRestaurantService;
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Create(RegisterRestaurantRequestDto restaurantRequestDto)
+        {
+            try
+            {
+                var response = await _restaurantService.Create(restaurantRequestDto);
+                return Ok(response);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return StatusCode(404, ex.Message);
+            }
+            catch (EntityBadRequestException ex)
+            {
+                return StatusCode(400, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update(UpdateRestaurantUserRequestDto updateRestaurantUserRequestDto)
+        {
+            try
+            {
+                var response = await _userRestaurantService.Update(updateRestaurantUserRequestDto);
+
+                return Ok(response);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return StatusCode(404, ex.Message);
+            }
+            catch (EntityBadRequestException ex)
+            {
+                return StatusCode(400, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpGet("id")]
@@ -26,28 +73,23 @@ namespace WebApi.Controllers
                 var response = await _restaurantService.GetById(id);
                 return Ok(response);
             }
-            catch {
-                return NotFound(new CodeErrorResponse(400, $"No existe el restaurante de id {id}"));
+            catch (EntityNotFoundException ex)
+            {
+                return StatusCode(404, ex.Message);
             }
-
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
-        [HttpPost("Register")]
-        public async Task<IActionResult> Create(RestaurantRequestDto restaurantRequestDto)
+        [HttpGet("by-coordinates")]
+        public async Task<IActionResult> GetAllByCoordinates(double customerLatitude, double customerLongitude) 
         {
-            var response = await _restaurantService.Create(restaurantRequestDto);
-
+            var response = await _restaurantService.GetAllByCoordinates(customerLatitude, customerLongitude);
             return Ok(response);
         }
 
-        /*
-        [HttpGet("ListCategory")]
-        public async Task<IActionResult> GetList()
-        {
-            var responseRestaurantCategory = await _restaurantService.GetList();
-            return Ok(responseRestaurantCategory);
-        }
-        */
 
     }
 }

@@ -1,9 +1,5 @@
 [
   {
-    "Name": "Ninguna",
-    "PathImage": ""
-  },
-  {
     "Name": "Comida Italiana",
     "PathImage": ""
   },
@@ -12,7 +8,7 @@
     "PathImage": ""
   },
   {
-    "Name": "Cómida Mexicana",
+    "Name": "Comida Mexicana",
     "PathImage": ""
   },
   {
@@ -29,6 +25,10 @@
   },
   {
     "Name": "Comida Colombiana",
-    "PathImage": "Sopa"
+    "PathImage": ""
+  },
+  {
+    "Name": "Ninguna",
+    "PathImage": ""
   }
 ]

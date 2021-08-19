@@ -1,9 +1,11 @@
-﻿using DataAccess.Interfaces;
+﻿using DataAccess;
+using DataAccess.Interfaces;
 using DTOs.Users;
 using Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Services.Interfaces;
+using Services.Interfaces.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,82 +16,106 @@ namespace Services.Inplementations.Users
 {
     public class UserService : IUserService
     {
-        private readonly IGenericRepository<User> _userRepository;
-        private readonly IUserRepository _iUserRepository;
+        private readonly IGenericRepository<User> _genericRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IUserRestaurantRepository _userRestaurantRepository;
         private readonly IPasswordService _passwordService;
         private readonly IConfiguration _configuration;
-        public UserService(IGenericRepository<User> userRepository,
-            IUserRepository iUserRepository, IPasswordService passwordService, IConfiguration configuration)
+
+        public UserService(IGenericRepository<User> genericRepository, IUserRepository userRepository,
+            IUserRestaurantRepository userRestaurantRepository,  IPasswordService passwordService, IConfiguration configuration)
         {
+            _genericRepository = genericRepository;
             _userRepository = userRepository;
-            _iUserRepository = iUserRepository;
+            _userRestaurantRepository = userRestaurantRepository;
             _passwordService = passwordService;
             _configuration = configuration;
         }
 
         public async Task<bool> ExistsUser(string email)
         {
-            return await _iUserRepository.ExistsUser(email);
+            return await _userRepository.ExistsUser(email);
         }
 
-        public async Task<string> Login(string email, string password)
+        public async Task<User> GetUserByEmail(string email)
         {
+            return await _userRepository.GetUserByEmail(email);
+        }
+
+        public async Task<User> GetUserById(int id)
+        {
+            return await _genericRepository.GetByIdAsync(id);
+        }
+        public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
+        {
+            string email = loginRequestDto.Email.Trim();
+            string password = loginRequestDto.Password.Trim();
+
             if (string.IsNullOrEmpty(email))
             {
-                throw new Exception("Por favor ingresar el correo electrónico con que se registró");
+                throw new EntityBadRequestException("Error, debe ingresar un correo electrónico");
             }
 
             if (string.IsNullOrEmpty(password))
             {
-                throw new Exception("Por favor ingresar el password que registró");
+                throw new EntityBadRequestException("Error, debe ingresar una contraseña");
             }
 
-            var user = await _iUserRepository.GetUser(email);
-
+            var user = await _userRepository.GetUserByEmail(email);
             if (user == null)
             {
-                return "NoUser";
+                throw new EntityNotFoundException("Error, usuario no existe");
             }
-            else if (!_passwordService.VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+            if (!_passwordService.VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             {
-                return "WrongPassword";
+                throw new EntityBadRequestException("Error, contraseña incorrecta");
+            }
+
+            LoginResponseDto loginResponseDto = new LoginResponseDto();
+            UserRestaurant userRestaurant = await _userRestaurantRepository.GetByUserId(user.Id);
+            if (userRestaurant != null)
+            {
+                loginResponseDto.Restaurant = new LoginRestaurantResponseDto()
+                {
+                    Id = userRestaurant.Restaurant.Id,
+                    Name = userRestaurant.Restaurant.Name,
+                    User = new LoginUserResponseDto
+                    {
+                        Id = userRestaurant.User.Id,
+                        Name = userRestaurant.User.FirstName,
+                        Email = userRestaurant.User.Email
+                    }
+                };
             }
             else
             {
-                return CreateToken(user);
+                loginResponseDto.User = new LoginUserResponseDto
+                {
+                    Id = user.Id,
+                    Name = user.FirstName,
+                    Email = user.Email
+                };
             }
+
+            loginResponseDto.Token = CreateToken(user);
+            return loginResponseDto;
         }
 
         public async Task<int> Register(UserDto userDto)
         {
-            if (string.IsNullOrEmpty(userDto.Name))
+            if (string.IsNullOrEmpty(userDto.Name) || userDto.Name.Trim().Length == 0)
             {
-                throw new Exception("Por favor ingrese su nombre");
+                throw new EntityBadRequestException("Error, debe ingresar su nombre");
             }
 
-            if (userDto.Name.Trim().Length == 0)
+            if (string.IsNullOrEmpty(userDto.Mobile) || userDto.Mobile.Trim().Length == 0)
             {
-                throw new Exception("Por favor ingrese su nombre");
+                throw new EntityBadRequestException("Error, debe ingresar su número de dispositivo móvil");
             }
 
-            if (string.IsNullOrEmpty(userDto.Mobile))
+            if (string.IsNullOrEmpty(userDto.Password) || userDto.Password.Trim().Length == 0)
             {
-                throw new Exception("Por favor ingrese su número de dispositivo móvil");
-            }
-
-            if (userDto.Mobile.Trim().Length == 0)
-            {
-                throw new Exception("Por favor ingrese su número de dispositivo móvil");
-            }
-
-            if (string.IsNullOrEmpty(userDto.Password))
-            {
-                throw new Exception("Por favor asigne una contraseña");
-            }
-
-            if (userDto.Password.Trim().Length == 0)
-            {
-                throw new Exception("Por favor asigne una contraseña");
+                throw new EntityBadRequestException("Error, debe  asignar una contraseña");
             }
 
             User user = new User
@@ -101,14 +127,13 @@ namespace Services.Inplementations.Users
 
             if (await ExistsUser(userDto.Email.ToLower()))
             {
-                return -1;
+                throw new EntityBadRequestException($"Ya existe un usuario registrado con el email {user.Email}");
             }
-
             _passwordService.CreatePasswordHash(userDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
-            var result = await _userRepository.Add(user);
+            var result = await _genericRepository.Add(user);
 
             return user.Id;
         }
@@ -139,6 +164,27 @@ namespace Services.Inplementations.Users
             
             return  tokenHandler.WriteToken(token);
 
+        }
+
+        public async Task UpdatePassword(PasswordUserDto passwordDto)
+        {
+            var user =await _userRepository.GetUserByEmail(passwordDto.Email);
+            if (!await ExistsUser(passwordDto.Email)) 
+            {
+                throw new EntityNotFoundException("Error, no existe el usuario");
+            }
+            if (!string.IsNullOrEmpty(passwordDto.Password))
+            {
+                var verifyPassword = _passwordService.VerifyPasswordHash(passwordDto.Password, user.PasswordHash, user.PasswordSalt);
+                if (!verifyPassword)
+                {
+                    _passwordService.CreatePasswordHash(passwordDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
+                    user.PasswordHash = passwordHash;
+                    user.PasswordSalt = passwordSalt;
+                }
+            }
+
+            await _genericRepository.Update(user);
         }
     }
 }

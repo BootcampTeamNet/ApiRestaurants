@@ -1,15 +1,13 @@
 ﻿using DTOs.Dish;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
+using Services.Interfaces.Exceptions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/dishes")]
     [ApiController]
     public class DishController : ControllerBase
     {
@@ -20,22 +18,88 @@ namespace WebApi.Controllers
             _dishService = dishService;
         }
 
-        [HttpGet]
-        public Task<List<DishRequestDto>> GetAll()
-        {
-            throw new System.NotImplementedException();
-        }
-
         [HttpPost]
-        public Task<int> Create(DishRequestDto dishRequestDto)
+        public async Task<IActionResult> Create([FromForm] DishRequestDto dishRequestDto)
         {
-            return _dishService.Create(dishRequestDto);
+            try
+            {
+                int response = await _dishService.Create(dishRequestDto);
+                return Ok(response);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return StatusCode(404, ex.Message);
+            }
+            catch (InaccessibleResourceException ex)
+            {
+                return StatusCode(401,ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500,ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
-        public Task<int> Update(DishRequestDto dishRequestDto, int id)
+        public async Task<IActionResult> Update(int id, [FromForm] DishRequestDto dishRequestDto)
         {
-            return _dishService.Update(dishRequestDto, id);
+            try
+            {
+                int response = await _dishService.Update(id, dishRequestDto);
+                return Ok(response);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return StatusCode(404,ex.Message);
+            }
+            catch (InaccessibleResourceException ex)
+            {
+                return StatusCode(401,ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500,ex.Message);
+            }
+        }
+
+        [HttpPut("{id}/change-status")]
+        public async Task<IActionResult> ChangeStatus(int id, UpdateStatusDishRequestDto updateStatusDishRequestDto)
+        {
+            try
+            {
+                int response = await _dishService.Status(id, updateStatusDishRequestDto.RestaurantId);
+                return Ok(response);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return StatusCode(404,ex.Message);
+            }
+            catch (InaccessibleResourceException ex)
+            {
+                return StatusCode(401,ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500,ex.Message);
+            }
+        }
+
+        [HttpGet("active/restaurants/{id}")]
+        public async Task<IActionResult> GetAllActive(int id)
+        {
+            try
+            {
+                var activeDishes = await _dishService.GetActiveDishList(id);
+                return Ok(activeDishes);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return StatusCode(404, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpGet("id")]
@@ -46,12 +110,31 @@ namespace WebApi.Controllers
                 var responseDish = await _dishService.GetById(id);
                 return Ok(responseDish);
             }
-            catch
+            catch (EntityNotFoundException ex)
             {
-                return NotFound("El id ingresado no coincide con algun plato registrado.");
+                return StatusCode(404, ex.Message);
             }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        } 
 
-            
+        [HttpGet("restaurants/{id}")]
+        public async Task<IActionResult> GetAllByRestaurantId(int id) {
+            try
+            {
+                var response = await _dishService.GetAllByRestaurantId(id);
+                return Ok(response);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return StatusCode(404,ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500,ex.Message);
+            }
         }
     }
 }

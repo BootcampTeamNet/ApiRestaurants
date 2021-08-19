@@ -1,4 +1,5 @@
 ﻿using DTOs.Dish;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using WebApi.Errors;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/dish-categories")]
     [ApiController]
     public class DishCategoryController : ControllerBase
     {
@@ -19,16 +20,11 @@ namespace WebApi.Controllers
             _dishCategoryService = dishCategoryService;
         }
 
-        [HttpGet]        
+        [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IReadOnlyList<DishCategoryRequestDto>>> GetCategoryaAll()
         {
             var categories = await _dishCategoryService.GetAll();
-
-            if (categories == null)
-            {
-                return BadRequest(new CodeErrorResponse(404, $"Aún no hay categorias registrados"));
-            }
-
             return Ok(categories);
         }
 

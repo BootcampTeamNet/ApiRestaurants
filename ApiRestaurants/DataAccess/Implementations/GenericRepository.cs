@@ -48,6 +48,11 @@ namespace DataAccess.Implementations
             return await ApplySpecification(spec).CountAsync();
         }
 
+        public async Task<bool> Exist(int id)
+        {
+            return await _context.Set<T>().AnyAsync(x => x.Id == id);
+        }
+
         public async Task<int> Add(T entity)
         {
             _context.Set<T>().Add(entity);

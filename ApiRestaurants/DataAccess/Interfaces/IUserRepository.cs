@@ -6,6 +6,6 @@ namespace DataAccess.Interfaces
     public interface IUserRepository
     {
         Task<bool> ExistsUser(string email);
-        Task<User> GetUser(string email);
+        Task<User> GetUserByEmail(string email);
     }
 }

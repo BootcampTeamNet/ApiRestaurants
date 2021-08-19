@@ -7,8 +7,9 @@ namespace Services.Interfaces
 {
     public interface IRestaurantService
     {
-        Task<int> Create(RestaurantRequestDto restaurantRequestDto);
+        Task<int> Create(RegisterRestaurantRequestDto restaurantRequestDto);
         Task<RestaurantResponseDto> GetById(int id);
+        Task<List<RestaurantMobileResponseDto>> GetAllByCoordinates(double customerLatitude, double customerLongitude);
     }
 
 }
