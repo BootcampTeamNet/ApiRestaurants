@@ -5,7 +5,7 @@ using Services.Implementations.Restaurants;
 using Services.Implementations.Shared;
 using Services.Inplementations.Users;
 using Services.Interfaces;
-using Services.Implementations.Restaurants;
+using Services.Implementations.Bookings;
 
 namespace WebApi.Configuration
 {
@@ -23,6 +23,7 @@ namespace WebApi.Configuration
             services.AddScoped<IUserRestaurantService, UserRestaurantService>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IStringProcess, StringProcess>();
+            services.AddScoped<IBookingService, BookingService>();
         }
     }
 }
