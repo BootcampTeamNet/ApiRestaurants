@@ -14,12 +14,19 @@ namespace Services.Implementations
     public class RestaurantService : IRestaurantService
     {
         private readonly IGenericRepository<Restaurant> _genericRepository;
+        private readonly IRestaurantRepository _restaurantRepository;
         private readonly IUserService _userService;
         private readonly IUserRestaurantService _userRestaurantService;
         private readonly IMapper _mapper;
-        public RestaurantService(IGenericRepository<Restaurant> genericRepository, IUserService userService, IUserRestaurantService userRestaurantService,  IMapper mapper)
+        public RestaurantService(
+            IGenericRepository<Restaurant> genericRepository
+            , IRestaurantRepository restaurantRepository
+            , IUserService userService
+            , IUserRestaurantService userRestaurantService
+            , IMapper mapper)
         {
             _genericRepository = genericRepository;
+            _restaurantRepository = restaurantRepository;
             _userService = userService;
             _userRestaurantService = userRestaurantService;
             _mapper = mapper;
@@ -42,7 +49,6 @@ namespace Services.Implementations
             return await _userRestaurantService.Add(restaurantRequestDto);
         }
 
-
         public async Task<RestaurantResponseDto> GetById(int id)
         {
             var restaurant = await _genericRepository.GetByIdAsync(id);
@@ -56,37 +62,8 @@ namespace Services.Implementations
         }
         public async Task<List<RestaurantMobileResponseDto>> GetAllByCoordinates(double customerLatitude, double customerLongitude)
         {
-            //1 milla - 1.609344 km
-            //1 grado - 60 min
-            //1 milla náutica =  1.1515 millas terrestres
-            int distanceKm = 5;
-            double gradeToRadian = (Math.PI / 180);
-            double radianToGrade = (180 / Math.PI);
-            double nauticalMile = double.Parse("1.1515", CultureInfo.GetCultureInfo("es-US"));
-            double mile = double.Parse("1.609344", CultureInfo.GetCultureInfo("en-US"));
-
-            List<Restaurant> lNearRestaurant = new List<Restaurant>();
-            var listRestaurant = await _genericRepository.GetAllAsync();
-
-            foreach (var restaurant in listRestaurant)
-            {
-                var result = Math.Sin(customerLatitude * gradeToRadian) *
-                                Math.Sin(Convert.ToDouble(restaurant.LocationLatitude) * gradeToRadian) +
-                                Math.Cos(customerLatitude * gradeToRadian) *
-                                Math.Cos(Convert.ToDouble(restaurant.LocationLatitude) * gradeToRadian) *
-                                Math.Cos((customerLongitude - Convert.ToDouble(restaurant.LocationLongitude)) * gradeToRadian);
-                // range cos [-1,1]
-                if (result > 1)
-                    result = 1;
-                if (result <-1)
-                    result = -1;
-
-                var distanceCalculated = (Math.Acos(result) * radianToGrade) * 60 * nauticalMile * mile;
-                if (distanceCalculated <= distanceKm)
-                    lNearRestaurant.Add(restaurant);
-            }
-
-            var lrestaurantResponseDto = _mapper.Map<List<RestaurantMobileResponseDto>>(lNearRestaurant);
+            List<Restaurant> closestRestaurant = await _restaurantRepository.RestaurantsByCoordinates(customerLatitude, customerLongitude);
+            List<RestaurantMobileResponseDto> lrestaurantResponseDto = _mapper.Map<List<RestaurantMobileResponseDto>>(closestRestaurant);
             return lrestaurantResponseDto;
         }
     }
