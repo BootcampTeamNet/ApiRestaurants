@@ -66,5 +66,15 @@ namespace Services.Implementations
             List<RestaurantMobileResponseDto> lrestaurantResponseDto = _mapper.Map<List<RestaurantMobileResponseDto>>(closestRestaurant);
             return lrestaurantResponseDto;
         }
+        public async Task<List<RestaurantMobileResponseDto>> GetAllByKeyWord(FilterRestaurantRequestDto filterRequestDto)
+        {
+            if (string.IsNullOrEmpty(filterRequestDto.KeyWord) || filterRequestDto.KeyWord.Length<3) {
+                throw new EntityBadRequestException("Debe ingresar al menos 3 caracteres para la búsqueda");
+            }
+
+            List<Restaurant> closestRestaurant = await _restaurantRepository.RestaurantsByKeyWord(filterRequestDto.CustomerLatitude, filterRequestDto.CustomerLongitude,filterRequestDto.KeyWord);
+            List<RestaurantMobileResponseDto> lrestaurantResponseDto = _mapper.Map<List<RestaurantMobileResponseDto>>(closestRestaurant);
+            return lrestaurantResponseDto;
+        }
     }
 }
