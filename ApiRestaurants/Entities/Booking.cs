@@ -10,7 +10,7 @@ namespace Entities
         }
 
         public DateTime OrderDate { get; set; }
-        public int PersonNumber { get; set; }
+        public int NumberPeople { get; set; }
         public string BookingNumber { get; set; }
         public DateTime CreationDate { get; set; }
         public int BookingStatusId { get; set; }
