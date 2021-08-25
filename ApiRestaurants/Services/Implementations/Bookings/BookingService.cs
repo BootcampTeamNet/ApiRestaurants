@@ -112,5 +112,13 @@ namespace Services.Implementations.Bookings
 
             return await _bookingGenericRepository.Update(booking);
         }
+        public async Task<int> CancelByRestaurant(int id)
+        {
+            Booking booking = await GetById(id);
+            BookingStatus bookingStatus = await _bookingStatusService.GetByName(Constant.BookingStatus.CANCELADA_RESTAURANT);
+            booking.BookingStatusId = bookingStatus.Id;
+
+            return await _genericRepository.Update(booking);
+        }
     }
 }

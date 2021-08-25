@@ -10,6 +10,8 @@ namespace Services.Interfaces
         Task<MakeBookingResponseDto> MakeBooking(MakeBookingRequestDto makeBooking);
         Task<Booking> GetById(int id);
         Task<int> ConfirmById(int id);
+        Task<int> CancelByRestaurant(int id);
+
         Task<List<BookingListResponseDto>> ListById(int id);
     }
 }
