@@ -56,13 +56,6 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpGet("restaurants/{id}")]
-        public async Task<ActionResult> ListById(int id)
-        {
-            var response = await _bookingService.ListById(id);
-            return Ok(response);
-        }
-
         [HttpPatch("{id}/cancel-byrestaurant")]
         public async Task<IActionResult> CancelBookingByRest(int id)
         {
@@ -83,6 +76,13 @@ namespace WebApi.Controllers
             {
                 return StatusCode(500, ex.Message);
             }
+        }
+
+        [HttpGet("restaurants/{id}")]
+        public async Task<ActionResult> ListById(int id)
+        {
+            var response = await _bookingService.ListById(id);
+            return Ok(response);
         }
     }
 }
