@@ -118,7 +118,7 @@ namespace Services.Implementations.Bookings
             BookingStatus bookingStatus = await _bookingStatusService.GetByName(Constant.BookingStatus.CANCELADA_RESTAURANT);
             booking.BookingStatusId = bookingStatus.Id;
 
-            return await _genericRepository.Update(booking);
+            return await _bookingGenericRepository.Update(booking);
         }
     }
 }
