@@ -1,4 +1,5 @@
-﻿using DTOs.Restaurant;
+﻿using DTOs.Bookings;
+using Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

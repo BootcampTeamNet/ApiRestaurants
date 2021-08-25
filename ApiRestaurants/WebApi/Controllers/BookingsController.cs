@@ -20,7 +20,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> MakeBooking(MakeBookingRequestDto makeBooking)
         {
             try
@@ -56,7 +56,7 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpGet("id")]
+        [HttpGet("restaurants/{id}")]
         public async Task<ActionResult> ListById(int id)
         {
             var response = await _bookingService.ListById(id);

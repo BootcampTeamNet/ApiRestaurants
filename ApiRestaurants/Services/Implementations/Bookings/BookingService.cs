@@ -1,34 +1,42 @@
 ﻿using AutoMapper;
 using DataAccess.Interfaces;
-using DTOs.Booking;
+using DTOs.Bookings;
+using DTOs.Constants;
 using Entities;
 using Services.Interfaces;
-using System;
+using Services.Interfaces.Exceptions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Services.Implementations.Bookings
 {
     public class BookingService : IBookingService
     {
         private readonly IGenericRepository<Booking> _bookingGenericRepository;
+        private readonly IBookingRepository _bookingRepository;
         private readonly IGenericRepository<BookingDetail> _bookingDetailGenericRepository;
         private readonly IGenericRepository<Restaurant> _restaurantGenericRepository;
         private readonly IGenericRepository<User> _userGenericRepository;
         private readonly IBookingStatusService _bookingStatusService;
+        private readonly IMapper _mapper;
 
         public BookingService(IGenericRepository<Booking> bookingGenericRepository,
+                              IBookingRepository bookingRepository,
                               IGenericRepository<BookingDetail> bookingDetailGenericRepository,
                               IGenericRepository<Restaurant> restaurantGenericRepository,
                               IGenericRepository<User> userGenericRepository,
-                              IBookingStatusService bookingStatusService)
+                              IBookingStatusService bookingStatusService,
+                              IMapper mapper)
         {
             _bookingGenericRepository = bookingGenericRepository;
+            _bookingRepository = bookingRepository;
             _bookingDetailGenericRepository = bookingDetailGenericRepository;
             _restaurantGenericRepository = restaurantGenericRepository;
             _userGenericRepository = userGenericRepository;
             _bookingStatusService = bookingStatusService;
+            _mapper = mapper;
         }
 
         public async Task<MakeBookingResponseDto> MakeBooking(MakeBookingRequestDto makeBooking)

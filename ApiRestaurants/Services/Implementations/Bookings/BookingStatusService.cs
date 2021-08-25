@@ -8,23 +8,11 @@ namespace Services.Implementations.Bookings
 {
     public class BookingStatusService: IBookingStatusService
     {
-        private readonly IGenericRepository<BookingStatus> _genericRepository;
         private readonly IBookingStatusRepository _bookingStatusRepository;
 
-        public BookingStatusService(IGenericRepository<BookingStatus> genericRepository,
-            IBookingStatusRepository bookingStatusRepository)
+        public BookingStatusService(IBookingStatusRepository bookingStatusRepository)
         {
-            _genericRepository = genericRepository;
             _bookingStatusRepository = bookingStatusRepository;
-        }
-
-        public async Task<BookingStatus> GetById(int id) 
-        {
-            BookingStatus bookingStatus = await _genericRepository.GetByIdAsync(id);
-            if (bookingStatus == null) {
-                throw new EntityNotFoundException($"El status con el id {id} no existe");
-            }
-            return bookingStatus;
         }
 
         public async Task<BookingStatus> GetByName(string name)

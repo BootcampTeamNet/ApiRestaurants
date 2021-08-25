@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DTOs.Booking
+namespace DTOs.Bookings
 {
     public class BookingListResponseDto
     {
