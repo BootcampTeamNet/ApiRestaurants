@@ -1,4 +1,5 @@
-﻿using DTOs.Bookings;
+﻿using Microsoft.AspNetCore.Authorization;
+using DTOs.Bookings;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using Services.Interfaces.Exceptions;
@@ -53,6 +54,13 @@ namespace WebApi.Controllers
             {
                 return StatusCode(500, ex.Message);
             }
+        }
+
+        [HttpGet("id")]
+        public async Task<ActionResult> ListById(int id)
+        {
+            var response = await _bookingService.ListById(id);
+            return Ok(response);
         }
     }
 }

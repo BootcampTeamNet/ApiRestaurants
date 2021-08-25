@@ -7,5 +7,6 @@ namespace DataAccess.Interfaces
     public interface IBookingRepository
     {
         Task<List<BestSellingDishes>> GetBestBookingList(int restaurantId);
+        Task<List<BookingCustomer>> ListByRestaurantId(int id);
     }
 }

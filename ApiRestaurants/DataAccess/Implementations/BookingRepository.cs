@@ -34,5 +34,22 @@ namespace DataAccess.Implementations
             bestBooking.OrderByDescending(o => o.QuantitySum).ThenByDescending(p => p.Price);
             return bestBooking;
         }
+
+        public async Task<List<BookingCustomer>> ListByRestaurantId(int id) {
+            var listBooking = await (from booking in _context.Bookings
+                                     join user in _context.Users on booking.UserId equals user.Id
+                                     join bookingStatus in _context.BookingStatus on booking.BookingStatusId equals bookingStatus.Id
+                                     where booking.RestaurantId == id
+                                     select new BookingCustomer
+                                     {
+                                         Id = booking.Id,
+                                         OrderDate = booking.OrderDate,
+                                         NumberPeople = booking.NumberPeople,
+                                         Status = bookingStatus.Name,
+                                         FirstName = user.FirstName,
+                                         Mobile = user.Mobile
+                                     }).ToListAsync();
+            return listBooking;
+        }
     }
 }
