@@ -24,6 +24,7 @@ namespace WebApi.Configuration
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IStringProcess, StringProcess>();
             services.AddScoped<IBookingService, BookingService>();
+            services.AddScoped<IBookingStatusService, BookingStatusService>();
         }
     }
 }
