@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DTOs.Restaurant
+namespace DTOs.Bookings
 {
     public class MakeBookingRequestDto
     {

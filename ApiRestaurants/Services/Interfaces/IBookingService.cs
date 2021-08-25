@@ -1,4 +1,5 @@
-﻿using Entities;
+﻿using DTOs.Bookings;
+using Entities;
 using System.Threading.Tasks;
 
 namespace Services.Interfaces

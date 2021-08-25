@@ -1,16 +1,13 @@
 ﻿using DataAccess.Interfaces;
-using DTOs.Restaurant;
-using Entities;
-using DataAccess.Interfaces;
+using DTOs.Bookings;
 using DTOs.Constants;
 using Entities;
 using Services.Interfaces;
+using Services.Interfaces.Exceptions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
-using Services.Interfaces.Exceptions;
-using System.Threading.Tasks;
 
 namespace Services.Implementations.Bookings
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DTOs.Restaurant
+namespace DTOs.Bookings
 {
     public class MakeBookingResponseDto
     {

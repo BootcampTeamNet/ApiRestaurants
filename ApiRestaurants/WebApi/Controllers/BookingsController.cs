@@ -1,5 +1,4 @@
-﻿using DTOs.Restaurant;
-using Microsoft.AspNetCore.Authorization;
+﻿using DTOs.Bookings;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using Services.Interfaces.Exceptions;
