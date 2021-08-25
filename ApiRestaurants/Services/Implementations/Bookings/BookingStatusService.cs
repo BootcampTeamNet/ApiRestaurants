@@ -2,7 +2,6 @@
 using Entities;
 using Services.Interfaces;
 using Services.Interfaces.Exceptions;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Services.Implementations.Bookings
@@ -11,17 +10,12 @@ namespace Services.Implementations.Bookings
     {
         private readonly IGenericRepository<BookingStatus> _genericRepository;
         private readonly IBookingStatusRepository _bookingStatusRepository;
-        public BookingStatusService(IGenericRepository<BookingStatus> genericRepository
-            ,IBookingStatusRepository bookingStatusRepository)
+
+        public BookingStatusService(IGenericRepository<BookingStatus> genericRepository,
+            IBookingStatusRepository bookingStatusRepository)
         {
             _genericRepository = genericRepository;
             _bookingStatusRepository = bookingStatusRepository;
-        }
-
-        public async Task<List<BookingStatus>> GetAll()
-        {
-            var bookingStatuses = await _genericRepository.GetAllAsync();
-            return new List<BookingStatus>();
         }
 
         public async Task<BookingStatus> GetById(int id) 
