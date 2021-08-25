@@ -7,5 +7,7 @@ namespace Services.Interfaces
     {
         Task<Booking> GetById(int id);
         Task<int> ConfirmById(int id);
+        Task<int> CancelByRestaurant(int id);
+
     }
 }

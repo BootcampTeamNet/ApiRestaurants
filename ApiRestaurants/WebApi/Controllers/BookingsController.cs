@@ -37,5 +37,27 @@ namespace WebApi.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpPatch("{id}/cancel-byrestaurant")]
+        public async Task<IActionResult> CancelBookingByRest(int id)
+        {
+            try
+            {
+                int response = await _bookingService.CancelByRestaurant(id);
+                return Ok(response);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return StatusCode(404, ex.Message);
+            }
+            catch (EntityBadRequestException ex)
+            {
+                return StatusCode(400, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
