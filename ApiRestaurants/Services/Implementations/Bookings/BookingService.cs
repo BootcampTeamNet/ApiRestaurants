@@ -34,13 +34,14 @@ namespace Services.Implementations.Bookings
 
         public async Task<MakeBookingResponseDto> MakeBooking(MakeBookingRequestDto makeBooking)
         {
+            BookingStatus bookingStatus = await _bookingStatusService.GetByName(Constant.BookingStatus.PENDIENTE);
             //Hacer mapeo front - DTO
             Booking booking = new Booking
             {
                 NumberPeople = makeBooking.NumberPeople,
                 OrderDate = makeBooking.OrderDate,
                 UserId = makeBooking.UserId,
-                BookingStatusId = 1,
+                BookingStatusId = bookingStatus.Id,
                 RestaurantId = makeBooking.RestaurantId
             };
 
