@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Services.Interfaces;
+using System;
 
 namespace WebApi.Controllers
 {
@@ -18,11 +19,18 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        [Authorize]
-        public async Task<ActionResult> MakeBooking(MakeBookingRequestDto makeBooking)
+        //[Authorize]
+        public async Task<IActionResult> MakeBooking(MakeBookingRequestDto makeBooking)
         {
-            var response = await _bookingService.MakeBooking(makeBooking);
-            return Ok(response);
+            try
+            {
+                var response = await _bookingService.MakeBooking(makeBooking);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }
