@@ -16,9 +16,10 @@ namespace DataAccess.Implementations
             _context = context;
         }
 
+        /*
         public async Task<int> AddDetail(List<BookingDetail> detail) {
             await _context.AddRangeAsync(detail);
             return await _context.SaveChangesAsync();
-        }
+        }*/
     }
 }

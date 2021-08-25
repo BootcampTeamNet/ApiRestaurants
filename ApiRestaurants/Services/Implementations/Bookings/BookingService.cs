@@ -6,6 +6,8 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
 using Entities;
+using AutoMapper;
+using System;
 
 namespace Services.Implementations.Bookings
 {
@@ -13,16 +15,24 @@ namespace Services.Implementations.Bookings
     {
         private readonly IBookingRepository _bookingRepository;
         private readonly IGenericRepository<Booking> _bookingGenericRepository;
+        private readonly IGenericRepository<BookingDetail> _bookingDetailGenericRepository;
+        private readonly IGenericRepository<Restaurant> _restaurantGenericRepository;
+        private readonly IMapper _mapper;
 
         public BookingService(IBookingRepository bookingRepository,
                               IGenericRepository<Booking> bookingGenericRepository,
-                              IGenericRepository<BookingDetail> bookingDetailGenericRepository)
+                              IGenericRepository<BookingDetail> bookingDetailGenericRepository,
+                              IGenericRepository<Restaurant> restaurantGenericRepository,
+                              IMapper mapper)
         {
             _bookingRepository = bookingRepository;
             _bookingGenericRepository = bookingGenericRepository;
+            _bookingDetailGenericRepository = bookingDetailGenericRepository;
+            _restaurantGenericRepository = restaurantGenericRepository;
+            _mapper = mapper;
         }
 
-        public async Task<Booking> MakeBooking(MakeBookingRequestDto makeBooking)
+        public async Task<MakeBookingResponseDto> MakeBooking(MakeBookingRequestDto makeBooking)
         {
             //Hacer mapeo front - DTO
             Booking booking = new Booking {
@@ -35,25 +45,42 @@ namespace Services.Implementations.Bookings
 
             int idBooking = await _bookingGenericRepository.Add(booking);
 
-            if (idBooking != 0)
+            if (idBooking == 0)
             {
-                List<BookingDetail> dishes = (from dish in makeBooking.DishesList
-                                              select new BookingDetail
-                                              {
-                                                  DishId = dish.DishId,
-                                                  Quantity = dish.Quantity,
-                                                  Notes = dish.Notes,
-                                                  BookingId = idBooking
-                                              }).ToList();
-
-                //await _bookingDetailGenericRepository.AddRange(dishes);
-                await _bookingRepository.AddDetail(dishes);
+                //Falta manejar esta excepción
+                throw new Exception("Excepción por error en inserción");
             }
 
-            //booking.Details = dishes;
-            //Booking response = await _bookingRepository.MakeBooking(booking, dishes);
-            //Hacer mapeo DB(IQueryable)-front(MBResponseDTO)
-            return booking;
+            List<BookingDetail> dishes = (from dish in makeBooking.DishesList
+                                          select new BookingDetail
+                                          {
+                                              DishId = dish.DishId,
+                                              Quantity = dish.Quantity,
+                                              Notes = dish.Notes,
+                                              BookingId = booking.Id
+                                          }).ToList();
+
+            int idDishes = await _bookingDetailGenericRepository.AddRange(dishes);
+
+            if (idDishes == 0)
+            {
+                //Falta manejar esta excepción
+                throw new Exception("Excepción por error en inserción");
+            }
+
+            //Hacer una busqueda y mapear a DTO
+            
+            Booking bookingResponse = await _bookingGenericRepository.GetByIdAsync(booking.Id);
+            Restaurant restaurant = await _restaurantGenericRepository.GetByIdAsync(booking.RestaurantId);
+
+            MakeBookingResponseDto response = new MakeBookingResponseDto(
+                bookingResponse.Id,
+                bookingResponse.OrderDate,
+                bookingResponse.NumberPeople,
+                restaurant.TimeMaxCancelBooking
+                );
+
+            return response;
         }
     }
 }

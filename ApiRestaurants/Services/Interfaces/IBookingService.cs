@@ -6,6 +6,6 @@ namespace Services.Interfaces
 {
     public interface IBookingService
     {
-        Task<Booking> MakeBooking(MakeBookingRequestDto makeBooking);
+        Task<MakeBookingResponseDto> MakeBooking(MakeBookingRequestDto makeBooking);
     }
 }

@@ -65,5 +65,11 @@ namespace DataAccess.Implementations
             _context.Entry(entity).State = EntityState.Modified;
             return await _context.SaveChangesAsync();
         }
+
+        public async Task<int> AddRange(List<T> entity)
+        {
+            await _context.Set<T>().AddRangeAsync(entity);
+            return await _context.SaveChangesAsync();
+        }
     }
 }

@@ -8,6 +8,6 @@ namespace DataAccess.Interfaces
 {
     public interface IBookingRepository
     {
-        Task<int> AddDetail(List<BookingDetail> detail);
+        //Task<int> AddDetail(List<BookingDetail> detail);
     }
 }

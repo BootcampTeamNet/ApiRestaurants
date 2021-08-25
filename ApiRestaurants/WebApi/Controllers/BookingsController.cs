@@ -18,7 +18,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult> MakeBooking(MakeBookingRequestDto makeBooking)
         {
             var response = await _bookingService.MakeBooking(makeBooking);
