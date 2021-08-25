@@ -1,10 +1,8 @@
 ﻿using DTOs.Dish;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using WebApi.Errors;
 
 
 namespace WebApi.Controllers
@@ -21,7 +19,6 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<ActionResult<IReadOnlyList<DishCategoryRequestDto>>> GetCategoryaAll()
         {
             var categories = await _dishCategoryService.GetAll();
