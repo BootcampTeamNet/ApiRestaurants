@@ -1,13 +1,12 @@
-﻿using Services.Interfaces;
+﻿using AutoMapper;
 using DataAccess.Interfaces;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Collections.Generic;
-using System.Collections;
-using Entities;
-using AutoMapper;
-using System;
 using DTOs.Booking;
+using Entities;
+using Services.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Services.Implementations.Bookings
 {
@@ -84,17 +83,8 @@ namespace Services.Implementations.Bookings
         }
 
         public async Task<List<BookingListResponseDto>> ListById(int id) {
-            var list = await _bookingRepository.ListById(id);
-            List<BookingListResponseDto> response = (from booking in list
-                                                     select new BookingListResponseDto { 
-                                                        Id = booking.Id,
-                                                        OrderDate = booking.OrderDate,
-                                                        NumberPeople = booking.NumberPeople,
-                                                        IsActive = booking.IsActive,
-                                                        FirstName = booking.FirstName,
-                                                        LastName = booking.LastName,
-                                                        Mobile = booking.Mobile
-                                                     }).ToList();
+            var list = await _bookingRepository.ListByRestaurantId(id);
+            List<BookingListResponseDto> response = _mapper.Map<List<BookingListResponseDto>>(list);
             return response;
         }
     }

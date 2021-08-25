@@ -1,16 +1,13 @@
 ﻿using System;
 
-namespace DTOs.Booking
+namespace Entities
 {
-    public class BookingListResponseDto
+    public class BookingCustomer
     {
-        //Booking
         public int Id { get; set; }
         public DateTime OrderDate { get; set; }
         public int NumberPeople { get; set; }
-        //Booking status
-        public string Status  { get; set; }
-        //User
+        public string Status { get; set; }
         public string FirstName { get; set; }
         public string Mobile { get; set; }
     }
