@@ -1,6 +1,5 @@
 ﻿using Services.Interfaces;
 using DataAccess.Interfaces;
-using DTOs.Restaurant;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
@@ -8,6 +7,7 @@ using System.Collections;
 using Entities;
 using AutoMapper;
 using System;
+using DTOs.Booking;
 
 namespace Services.Implementations.Bookings
 {
@@ -80,6 +80,21 @@ namespace Services.Implementations.Bookings
                 restaurant.TimeMaxCancelBooking
                 );
 
+            return response;
+        }
+
+        public async Task<List<BookingListResponseDto>> ListById(int id) {
+            var list = await _bookingRepository.ListById(id);
+            List<BookingListResponseDto> response = (from booking in list
+                                                     select new BookingListResponseDto { 
+                                                        Id = booking.Id,
+                                                        OrderDate = booking.OrderDate,
+                                                        NumberPeople = booking.NumberPeople,
+                                                        IsActive = booking.IsActive,
+                                                        FirstName = booking.FirstName,
+                                                        LastName = booking.LastName,
+                                                        Mobile = booking.Mobile
+                                                     }).ToList();
             return response;
         }
     }
