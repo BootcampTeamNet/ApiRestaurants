@@ -16,7 +16,7 @@ namespace WebApi.Controllers
             _dashboardService = dashboardService;
         }
 
-        [HttpGet("bestselling-dishes/restaurant/{id}")]
+        [HttpGet("bestselling-dishes/restaurants/{id}")]
         public async Task<IActionResult> GetBestBookingList(int id)
         {
             List<BestSellingDishesResponseDto> bestSellingDishes = await _dashboardService.GetBestBookingList(id);
