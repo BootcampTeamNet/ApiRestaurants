@@ -31,6 +31,7 @@ namespace DataAccess.Implementations
                                    QuantitySum = g.Sum(detail => detail.Quantity),
                                    RestaurantId = g.Key.RestaurantId
                                }).Take(3).ToListAsync();
+            bestBooking.OrderByDescending(o => o.QuantitySum).ThenByDescending(p => p.Price);
             return bestBooking;
         }
     }
