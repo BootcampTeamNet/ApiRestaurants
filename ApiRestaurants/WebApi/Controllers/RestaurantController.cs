@@ -90,6 +90,23 @@ namespace WebApi.Controllers
             return Ok(response);
         }
 
+        [HttpPost("by-keyword")]
+        public async Task<IActionResult> GetAllByKeyWord(FilterRestaurantRequestDto filterRequestDto)
+        {
+            try
+            {
+                var response = await _restaurantService.GetAllByKeyWord(filterRequestDto);
+                return Ok(response);
+            }
+            catch (EntityBadRequestException ex)
+            {
+                return StatusCode(400, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
 
     }
 }
