@@ -1,0 +1,14 @@
+[
+  {
+    "Name": "Pendiente"
+  },
+  {
+    "Name": "Confirmado"
+  },
+  {
+    "Name": "Cancelado por Restaurante"
+  },
+  {
+    "Name": "Cancelado por Comensal"
+  }
+]
