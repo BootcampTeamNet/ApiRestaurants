@@ -2,6 +2,7 @@
 using Services.Implementations;
 using Services.Implementations.Bookings;
 using Services.Implementations.Dishes;
+using Services.Implementations.Favourites;
 using Services.Implementations.Restaurants;
 using Services.Implementations.Shared;
 using Services.Inplementations.Users;
@@ -26,6 +27,7 @@ namespace WebApi.Configuration
             services.AddScoped<IBookingService, BookingService>();
             services.AddScoped<IBookingStatusService, BookingStatusService>();
             services.AddScoped<IDashboardService, DashboardService>();
+            services.AddScoped<IFavouriteService, FavouriteService>();
         }
     }
 }

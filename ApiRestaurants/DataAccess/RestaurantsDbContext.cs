@@ -7,6 +7,7 @@ namespace DataAccess
     public class RestaurantsDbContext : DbContext
     {
         public RestaurantsDbContext(DbContextOptions<RestaurantsDbContext> options) : base(options) { }
+        public DbSet<Favourite> Favourites { get; set; }
         public DbSet<BookingStatus> BookingStatus { get; set; }
         public DbSet<BookingDetail> BookingDetails { get; set; }
         public DbSet<Booking> Bookings { get; set; }
