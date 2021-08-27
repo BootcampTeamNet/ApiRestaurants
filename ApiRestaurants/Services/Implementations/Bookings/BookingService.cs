@@ -88,8 +88,11 @@ namespace Services.Implementations.Bookings
             return response;
         }
 
-        public async Task<List<BookingListResponseDto>> ListById(int id) {
-            var list = await _bookingRepository.ListByRestaurantId(id);
+        public async Task<List<BookingListResponseDto>> ListByRestaurantId(int id, FilterBookingRequestDto filterBookingRequestDto) {
+            var list = await _bookingRepository.ListByRestaurantId(id,
+                                                                   filterBookingRequestDto.DateFrom,
+                                                                   filterBookingRequestDto.DateTo,
+                                                                   filterBookingRequestDto.BookingStatusId);
             List<BookingListResponseDto> response = _mapper.Map<List<BookingListResponseDto>>(list);
             return response;
         }
