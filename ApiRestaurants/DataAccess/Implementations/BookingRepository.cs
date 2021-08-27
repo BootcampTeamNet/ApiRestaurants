@@ -36,7 +36,7 @@ namespace DataAccess.Implementations
             return bestBooking;
         }
 
-        public async Task<List<BookingCustomer>> ListByRestaurantId(int id, DateTime dateFrom, DateTime dateTo, List<int> bookingStatusId)
+        public async Task<List<BookingOwner>> ListByRestaurantId(int id, DateTime dateFrom, DateTime dateTo, List<int> bookingStatusId)
         {
             IQueryable<BookingStatus> lBookingStatus = _context.BookingStatus;
 
@@ -50,13 +50,13 @@ namespace DataAccess.Implementations
                                      join user in _context.Users on booking.UserId equals user.Id
                                      where booking.RestaurantId == id
                                      && (booking.OrderDate.Date >= dateFrom.Date && booking.OrderDate.Date <= dateTo.Date)
-                                     select new BookingCustomer
+                                     select new BookingOwner
                                      {
                                          Id = booking.Id,
                                          OrderDate = booking.OrderDate,
                                          NumberPeople = booking.NumberPeople,
                                          Status = bookingStatus.Name,
-                                         FirstName = user.FirstName,
+                                         Name = user.FirstName,
                                          Mobile = user.Mobile
                                      }).ToListAsync();
             return listBooking;
