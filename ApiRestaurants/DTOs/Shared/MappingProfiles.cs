@@ -22,6 +22,7 @@ namespace WebApi.Dtos
             CreateMap<UserDto, User>().ReverseMap();
             CreateMap<BestSellingDishes, BestSellingDishesResponseDto>().ReverseMap();
             CreateMap<BookingListResponseDto, BookingCustomer>().ReverseMap();
+            CreateMap<BookingStatusResponseDto, BookingStatus>().ReverseMap();
         }
     }
 }
