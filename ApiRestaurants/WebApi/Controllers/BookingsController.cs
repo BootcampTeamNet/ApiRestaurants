@@ -10,6 +10,7 @@ namespace WebApi.Controllers
 {
     [Route("api/bookings")]
     [ApiController]
+    [Authorize]
     public class BookingsController : ControllerBase
     {
         private readonly IBookingService _bookingService;
@@ -25,7 +26,6 @@ namespace WebApi.Controllers
         /// <param name="makeBooking"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> MakeBooking(MakeBookingRequestDto makeBooking)
         {
             try
@@ -40,7 +40,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// WEB - Confirm Booking by BookingId
+        /// Confirm Booking by BookingId
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -67,7 +67,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// WEB - Cancel Booking by BookingId
+        /// Cancel Booking by BookingId
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -94,7 +94,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// WEB - Get Bookings by RestaurantId and filter for dates and bookingStatusId
+        /// Get Bookings by RestaurantId and filter for dates and bookingStatusId
         /// </summary>
         /// <param name="id"></param>
         /// <param name="filterBookingRequestDto"></param>

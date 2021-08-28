@@ -13,24 +13,75 @@
         </member>
         <member name="M:WebApi.Controllers.BookingsController.ConfirmBooking(System.Int32)">
             <summary>
-            WEB - Confirm Booking by BookingId
+            Confirm Booking by BookingId
             </summary>
             <param name="id"></param>
             <returns></returns>
         </member>
         <member name="M:WebApi.Controllers.BookingsController.CancelBookingByRest(System.Int32)">
             <summary>
-            WEB - Cancel Booking by BookingId
+            Cancel Booking by BookingId
             </summary>
             <param name="id"></param>
             <returns></returns>
         </member>
         <member name="M:WebApi.Controllers.BookingsController.ListByRestaurantId(System.Int32,DTOs.Bookings.FilterBookingRequestDto)">
             <summary>
-            WEB - Get Bookings by RestaurantId and filter for dates and bookingStatusId
+            Get Bookings by RestaurantId and filter for dates and bookingStatusId
             </summary>
             <param name="id"></param>
             <param name="filterBookingRequestDto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApi.Controllers.DishController.Create(DTOs.Dish.DishRequestDto)">
+            <summary>
+            Create a new dish
+            </summary>
+            <param name="dishRequestDto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApi.Controllers.DishController.Update(System.Int32,DTOs.Dish.DishRequestDto)">
+            <summary>
+            Update data dish by dishId
+            </summary>
+            <param name="id"></param>
+            <param name="dishRequestDto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApi.Controllers.DishController.ChangeStatus(System.Int32,DTOs.Dish.UpdateStatusDishRequestDto)">
+            <summary>
+            Active or inactive dish by dishId
+            </summary>
+            <param name="id"></param>
+            <param name="updateStatusDishRequestDto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApi.Controllers.DishController.GetById(System.Int32)">
+            <summary>
+            Get dish by dishId
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApi.Controllers.DishController.GetAllByRestaurantId(System.Int32)">
+            <summary>
+            Get active and inactive dishes by restaurantId
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApi.Controllers.DishController.GetAllActive(System.Int32)">
+            <summary>
+            MOBILE - Get active dishes by restaurantId and group by dishCategoryId
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApi.Controllers.UserController.Register(DTOs.Users.UserDto)">
+            <summary>
+            Register Commensal
+            </summary>
+            <param name="user"></param>
             <returns></returns>
         </member>
     </members>

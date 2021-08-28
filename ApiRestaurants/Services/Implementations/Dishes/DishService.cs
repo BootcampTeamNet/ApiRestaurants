@@ -5,9 +5,9 @@ using Entities;
 using Microsoft.Extensions.Configuration;
 using Services.Interfaces;
 using Services.Interfaces.Exceptions;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Services.Implementations.Dishes
 {
@@ -122,7 +122,7 @@ namespace Services.Implementations.Dishes
             return dish.Id;
         }
 
-        public async Task<List<DishResponseDto>> GetActiveDishList(int restaurantId)
+        public async Task<List<DishByCategoryResponseDto>> GetActiveDishList(int restaurantId)
         {
             Restaurant restaurant = await _restaurantRepository.GetByIdAsync(restaurantId);
 
@@ -130,9 +130,17 @@ namespace Services.Implementations.Dishes
             {
                 throw new EntityNotFoundException($"Error, no se encuentra el restaurante con {restaurantId}");
             }
-            var dishes = await _dishRepository.GetActiveDishList(restaurantId);
-            var response = _mapper.Map<List<DishResponseDto>>(dishes);
-            return response;
+            List<Dish> dishes = await _dishRepository.GetActiveDishList(restaurantId);
+            var dishesGroupByCategory = dishes.GroupBy(g => new { g.DishCategory.Id, g.DishCategory.Name })
+                                        .Select(s => new DishByCategoryResponseDto{ 
+                                            Id= s.Key.Id,
+                                            Name = s.Key.Name,
+                                            Dishes = _mapper.Map <List<DishDto>>(s.ToList())
+                                        })     
+                                        .ToList();
+
+            //var response = _mapper.Map<List<DishResponseDto>>(dishes);
+            return dishesGroupByCategory;
         }
 
         private async Task Validation(DishRequestDto dishRequestDto)
