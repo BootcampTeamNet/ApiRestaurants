@@ -3,6 +3,7 @@ using DataAccess.Interfaces;
 using DTOs.Favourites;
 using Entities;
 using Services.Interfaces;
+using Services.Interfaces.Exceptions;
 using System.Threading.Tasks;
 
 namespace Services.Implementations.Favourites
@@ -18,17 +19,21 @@ namespace Services.Implementations.Favourites
         {
             _favouriteGenericRepository = favouriteGenericRepository;
             _favouriteRepository = favouriteRepository;
+            _mapper = mapper;
         }
 
         public async Task<int> Create(FavouriteRequestDto favouriteRequestDto)
         {
-            Favourite favourite = new Favourite
+            Favourite favouriteNew = _mapper.Map<Favourite>(favouriteRequestDto);
+            Favourite favourite = await _favouriteRepository.FindFavorite(favouriteNew);
+            if (favourite != null) 
             {
-                UserId = favouriteRequestDto.UserId,
-                RestaurantId = favouriteRequestDto.RestaurantId
-            };
-
-            return await _favouriteGenericRepository.Add(favourite);
+                throw new EntityBadRequestException("El restaurante ya esta entre sus favoritos");
+            }
+            
+            await _favouriteGenericRepository.Add(favouriteNew);
+            
+            return favouriteNew.Id;
         }
     }
 }

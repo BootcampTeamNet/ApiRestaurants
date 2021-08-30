@@ -1,6 +1,7 @@
 ﻿using DTOs.Favourites;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
+using Services.Interfaces.Exceptions;
 using System;
 using System.Threading.Tasks;
 
@@ -28,6 +29,10 @@ namespace WebApi.Controllers
             {
                 int response = await _favouriteService.Create(favouriteRequestDto);
                 return Ok(response);
+            }
+            catch (EntityBadRequestException ex)
+            {
+                return StatusCode(400, ex.Message);
             }
             catch (Exception ex)
             {
