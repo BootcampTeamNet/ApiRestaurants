@@ -33,6 +33,20 @@
             <param name="filterBookingRequestDto"></param>
             <returns></returns>
         </member>
+        <member name="M:WebApi.Controllers.BranchOfficeController.Create(DTOs.Restaurant.BranchOfficeRequestDto)">
+            <summary>
+            Create a new branch for RestaurantId. Name e.g South, North 
+            </summary>
+            <param name="branchOfficeRequestDto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApi.Controllers.BranchOfficeController.GetByRestaurantId(System.Int32)">
+            <summary>
+            Get branches by principal RestaurantId
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="M:WebApi.Controllers.DishController.Create(DTOs.Dish.DishRequestDto)">
             <summary>
             Create a new dish
