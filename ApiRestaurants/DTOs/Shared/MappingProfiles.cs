@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DTOs.Bookings;
 using DTOs.Dish;
+using DTOs.Favourites;
 using DTOs.Restaurant;
 using DTOs.Users;
 using Entities;

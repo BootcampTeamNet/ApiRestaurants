@@ -91,6 +91,13 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="M:WebApi.Controllers.FavouritesController.Create(DTOs.Favourites.FavouriteRequestDto)">
+            <summary>
+            Add Resturant Favorite by UserId
+            </summary>
+            <param name="favouriteRequestDto"></param>
+            <returns></returns>
+        </member>
         <member name="M:WebApi.Controllers.UserController.Register(DTOs.Users.UserDto)">
             <summary>
             Register Commensal
