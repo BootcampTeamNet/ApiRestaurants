@@ -18,6 +18,11 @@ namespace WebApi.Controllers
             _branchOfficeService = branchOfficeService;
         }
 
+        /// <summary>
+        /// Create a new branch for RestaurantId. Name e.g South, North 
+        /// </summary>
+        /// <param name="branchOfficeRequestDto"></param>
+        /// <returns></returns>
         [HttpPost("register")]
         public async Task<IActionResult> Create(BranchOfficeRequestDto branchOfficeRequestDto)
         {
@@ -40,5 +45,18 @@ namespace WebApi.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        /// <summary>
+        /// Get branches by principal RestaurantId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("restaurants/id")]
+        public async Task<IActionResult> GetByRestaurantId(int id)
+        {
+            var response = await _branchOfficeService.GetByRestaurantId(id);
+            return Ok(response);
+        }
+
     }
 }

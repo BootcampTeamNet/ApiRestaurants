@@ -10,6 +10,7 @@ namespace WebApi.Controllers
 {
     [Route("api/bookings")]
     [ApiController]
+    [Authorize]
     public class BookingsController : ControllerBase
     {
         private readonly IBookingService _bookingService;
@@ -19,8 +20,12 @@ namespace WebApi.Controllers
             _bookingService = bookingService;
         }
 
+        /// <summary>
+        /// MOBILE - Create a booking
+        /// </summary>
+        /// <param name="makeBooking"></param>
+        /// <returns></returns>
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> MakeBooking(MakeBookingRequestDto makeBooking)
         {
             try
@@ -34,6 +39,11 @@ namespace WebApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Confirm Booking by BookingId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPatch("{id}/confirm")]
         public async Task<IActionResult> ConfirmBooking(int id) 
         {
@@ -56,6 +66,11 @@ namespace WebApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Cancel Booking by BookingId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPatch("{id}/cancel-byrestaurant")]
         public async Task<IActionResult> CancelBookingByRest(int id)
         {
@@ -78,10 +93,16 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpGet("restaurants/{id}")]
-        public async Task<ActionResult> ListById(int id)
+        /// <summary>
+        /// Get Bookings by RestaurantId and filter for dates and bookingStatusId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="filterBookingRequestDto"></param>
+        /// <returns></returns>
+        [HttpPost("restaurants/{id}")]
+        public async Task<ActionResult> ListByRestaurantId(int id, FilterBookingRequestDto filterBookingRequestDto)
         {
-            var response = await _bookingService.ListById(id);
+            var response = await _bookingService.ListByRestaurantId(id, filterBookingRequestDto);
             return Ok(response);
         }
     }

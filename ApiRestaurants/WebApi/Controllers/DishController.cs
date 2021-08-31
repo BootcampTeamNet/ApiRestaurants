@@ -18,6 +18,11 @@ namespace WebApi.Controllers
             _dishService = dishService;
         }
 
+        /// <summary>
+        /// Create a new dish
+        /// </summary>
+        /// <param name="dishRequestDto"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] DishRequestDto dishRequestDto)
         {
@@ -40,6 +45,12 @@ namespace WebApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Update data dish by dishId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="dishRequestDto"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromForm] DishRequestDto dishRequestDto)
         {
@@ -62,6 +73,12 @@ namespace WebApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Active or inactive dish by dishId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="updateStatusDishRequestDto"></param>
+        /// <returns></returns>
         [HttpPut("{id}/change-status")]
         public async Task<IActionResult> ChangeStatus(int id, UpdateStatusDishRequestDto updateStatusDishRequestDto)
         {
@@ -84,24 +101,12 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpGet("active/restaurants/{id}")]
-        public async Task<IActionResult> GetAllActive(int id)
-        {
-            try
-            {
-                var activeDishes = await _dishService.GetActiveDishList(id);
-                return Ok(activeDishes);
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return StatusCode(404, ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
 
+        /// <summary>
+        /// Get dish by dishId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("id")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -120,8 +125,14 @@ namespace WebApi.Controllers
             }
         } 
 
+        /// <summary>
+        /// Get active and inactive dishes by restaurantId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("restaurants/{id}")]
-        public async Task<IActionResult> GetAllByRestaurantId(int id) {
+        public async Task<IActionResult> GetAllByRestaurantId(int id) 
+        {
             try
             {
                 var response = await _dishService.GetAllByRestaurantId(id);
@@ -134,6 +145,29 @@ namespace WebApi.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500,ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// MOBILE - Get active dishes by restaurantId and group by dishCategoryId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("by-categories/restaurants/{id}")]
+        public async Task<IActionResult> GetAllActive(int id)
+        {
+            try
+            {
+                var activeDishes = await _dishService.GetActiveDishList(id);
+                return Ok(activeDishes);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return StatusCode(404, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
         }
     }

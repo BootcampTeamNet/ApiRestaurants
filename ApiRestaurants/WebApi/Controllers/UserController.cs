@@ -18,6 +18,11 @@ namespace WebApi.Controllers
             _userService = userService;
         }
 
+        /// <summary>
+        /// Register Commensal
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserDto user)
         {
