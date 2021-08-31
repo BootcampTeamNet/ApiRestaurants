@@ -28,6 +28,7 @@ namespace WebApi.Configuration
             services.AddScoped<IBookingStatusService, BookingStatusService>();
             services.AddScoped<IDashboardService, DashboardService>();
             services.AddScoped<IFavouriteService, FavouriteService>();
+            services.AddScoped<IToStockAFile, ToStockAFile>();
         }
     }
 }

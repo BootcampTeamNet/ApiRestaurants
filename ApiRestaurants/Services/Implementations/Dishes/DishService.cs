@@ -7,6 +7,7 @@ using Services.Interfaces;
 using Services.Interfaces.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Services.Implementations.Dishes
@@ -21,9 +22,13 @@ namespace Services.Implementations.Dishes
         private readonly IStringProcess _stringProcess;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
+        private readonly IToStockAFile _toStockAFile;
+        //private readonly string _container = "dishes";
         public DishService(IGenericRepository<Dish> genericRepository, IGenericRepository<Restaurant> restaurantRepository,
              IDishRepository dishRepository, IGenericRepository<DishCategory> dishCategoryRepository,
-            IFileService fileService, IStringProcess stringProcess, IMapper mapper, IConfiguration configuration)
+            IFileService fileService, IStringProcess stringProcess, IMapper mapper, IConfiguration configuration,
+            IToStockAFile toStockAFile
+            )
         {
             _genericRepository = genericRepository;
             _restaurantRepository = restaurantRepository;
@@ -33,6 +38,8 @@ namespace Services.Implementations.Dishes
             _stringProcess = stringProcess;
             _mapper = mapper;
             _configuration = configuration;
+            _toStockAFile = toStockAFile;
+            
         }
 
         public async Task<int> Create(DishRequestDto dishRequestDto)
@@ -42,11 +49,26 @@ namespace Services.Implementations.Dishes
             //guardar imagen
             if (dishRequestDto.Image != null)
             {
+                using (var memoryStream = new MemoryStream())
+                {
+                    string container = "dish";
+                    await dishRequestDto.Image.CopyToAsync(memoryStream);
+                    var content = memoryStream.ToArray();
+                    var extention = Path.GetExtension(dishRequestDto.Image.FileName);
+                    data.PathImage = await _toStockAFile.SaveFile(
+                        content,
+                        extention,
+                        container,
+                        dishRequestDto.Image.ContentType
+                        );
+                }
+                /*
                 Restaurant restaurant = await _restaurantRepository.GetByIdAsync(dishRequestDto.RestaurantId);
                 string filePath = restaurant.Id + _stringProcess.removeSpecialCharacter(restaurant.Name);
                 string imageFullPath = $"{_configuration.GetSection("FileServer:path").Value}{filePath}\\{dishRequestDto.Image.FileName}";
                 await _fileService.SaveFile(dishRequestDto.Image, filePath);
                 data.PathImage = imageFullPath;
+                */
             }
 
             await _genericRepository.Add(data);
