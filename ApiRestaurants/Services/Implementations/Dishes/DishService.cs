@@ -98,11 +98,28 @@ namespace Services.Implementations.Dishes
             //guardar imagen
             if (dishRequestDto.Image != null)
             {
+                using (var memoryStream = new MemoryStream())
+                {
+                    Restaurant restaurant = await _restaurantRepository.GetByIdAsync(dishRequestDto.RestaurantId);
+                    string filePath = _stringProcess.removeSpecialCharacter(restaurant.Name) + restaurant.Id;
+                    string container = filePath.ToLower();
+                    await dishRequestDto.Image.CopyToAsync(memoryStream);
+                    var content = memoryStream.ToArray();
+                    var extention = Path.GetExtension(dishRequestDto.Image.FileName);
+                    dish.PathImage = await _toStockAFile.SaveFile(
+                        content,
+                        extention,
+                        container,
+                        dishRequestDto.Image.ContentType
+                        );
+                }
+
+                /*
                 Restaurant restaurant = await _restaurantRepository.GetByIdAsync(dish.RestaurantId);
                 string filePath = restaurant.Id + _stringProcess.removeSpecialCharacter(restaurant.Name);
                 string imageFullPath = $"{_configuration.GetSection("FileServer:path").Value}{filePath}\\{dishRequestDto.Image.FileName}";
                 await _fileService.SaveFile(dishRequestDto.Image, filePath);
-                dish.PathImage = imageFullPath;
+                dish.PathImage = imageFullPath;*/
             }
             else {
                 dish.PathImage = null;
