@@ -43,6 +43,7 @@ namespace WebApi.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> Update(UpdateRestaurantUserRequestDto updateRestaurantUserRequestDto)
         {
@@ -66,6 +67,7 @@ namespace WebApi.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("id")]
         public async Task<IActionResult> GetById(int id)
         {
