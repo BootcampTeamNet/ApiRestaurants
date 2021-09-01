@@ -1,8 +1,10 @@
-﻿using DataAccess.Interfaces;
+﻿using AutoMapper;
+using DataAccess.Interfaces;
 using DTOs.Restaurant;
 using Entities;
 using Services.Interfaces;
 using Services.Interfaces.Exceptions;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Services.Implementations.Restaurants
@@ -10,21 +12,27 @@ namespace Services.Implementations.Restaurants
     public class BranchOfficeService: IBranchOfficeService
     {
         private readonly IUserRestaurantRepository _userRestaurantRepository;
-        private readonly IGenericRepository<Restaurant> _genericRestaurantRepository;
+        private readonly IGenericRepository<Restaurant> _restaurantGenericRepository;
         private readonly IPasswordService _passwordService;
         private readonly IUserService _userService;
+        private readonly IBranchRepository _branchRepository;
+        private readonly IMapper _mapper;
 
         public BranchOfficeService(
             IUserRestaurantRepository userRestaurantRepository,
-            IGenericRepository<Restaurant> genericRestaurantRepository,
+            IGenericRepository<Restaurant> restaurantGenericRepository,
             IPasswordService passwordService,
-            IUserService userService
+            IUserService userService,
+            IBranchRepository branchRepository,
+            IMapper mapper
             )
         {
             _userRestaurantRepository = userRestaurantRepository;
-            _genericRestaurantRepository = genericRestaurantRepository;
+            _restaurantGenericRepository = restaurantGenericRepository;
             _passwordService = passwordService;
             _userService = userService;
+            _branchRepository = branchRepository;
+            _mapper = mapper;
         }
 
         public async Task<int> Create(BranchOfficeRequestDto branchOfficeRequestDto)
@@ -44,8 +52,8 @@ namespace Services.Implementations.Restaurants
                 throw new EntityBadRequestException($"Ya existe un usuario registrado con el email {branchOfficeRequestDto.User.Email}");
             }
 
-            bool existRestaurant = await _genericRestaurantRepository.Exist(branchOfficeRequestDto.MainBranchId);
-            if (!existRestaurant)
+            Restaurant restaurant  = await _restaurantGenericRepository.GetByIdAsync(branchOfficeRequestDto.MainBranchId);
+            if (restaurant==null)
             {
                 throw new EntityNotFoundException($"No existe un restaurante con el id {branchOfficeRequestDto.MainBranchId}");
             }
@@ -53,7 +61,7 @@ namespace Services.Implementations.Restaurants
             UserRestaurant userRestaurant = new UserRestaurant();
             userRestaurant.Restaurant = new Restaurant
             {
-                Name = branchOfficeRequestDto.Name,
+                Name = restaurant.Name + " - " + branchOfficeRequestDto.Name,
                 Address = branchOfficeRequestDto.Address,
                 LocationLatitude = branchOfficeRequestDto.LocationLatitude.ToString(),
                 LocationLongitude = branchOfficeRequestDto.LocationLongitude.ToString(),
@@ -74,6 +82,12 @@ namespace Services.Implementations.Restaurants
 
         }
 
+        public async Task<List<RestaurantResponseDto>> GetByRestaurantId(int id) 
+        {
+            List<Restaurant> restaurants = await _branchRepository.GetByRestaurantId(id);
+            List<RestaurantResponseDto> response = _mapper.Map<List<RestaurantResponseDto>>(restaurants);
+            return response;
+        }
 
     }
 }

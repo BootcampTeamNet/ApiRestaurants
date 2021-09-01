@@ -5,9 +5,10 @@ using Entities;
 using Microsoft.Extensions.Configuration;
 using Services.Interfaces;
 using Services.Interfaces.Exceptions;
-using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Services.Implementations.Dishes
 {
@@ -21,9 +22,13 @@ namespace Services.Implementations.Dishes
         private readonly IStringProcess _stringProcess;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
+        private readonly IToStockAFile _toStockAFile;
+        //private readonly string _container = "dishes";
         public DishService(IGenericRepository<Dish> genericRepository, IGenericRepository<Restaurant> restaurantRepository,
              IDishRepository dishRepository, IGenericRepository<DishCategory> dishCategoryRepository,
-            IFileService fileService, IStringProcess stringProcess, IMapper mapper, IConfiguration configuration)
+            IFileService fileService, IStringProcess stringProcess, IMapper mapper, IConfiguration configuration,
+            IToStockAFile toStockAFile
+            )
         {
             _genericRepository = genericRepository;
             _restaurantRepository = restaurantRepository;
@@ -33,6 +38,8 @@ namespace Services.Implementations.Dishes
             _stringProcess = stringProcess;
             _mapper = mapper;
             _configuration = configuration;
+            _toStockAFile = toStockAFile;
+            
         }
 
         public async Task<int> Create(DishRequestDto dishRequestDto)
@@ -42,11 +49,28 @@ namespace Services.Implementations.Dishes
             //guardar imagen
             if (dishRequestDto.Image != null)
             {
+                using (var memoryStream = new MemoryStream())
+                {
+                    Restaurant restaurant = await _restaurantRepository.GetByIdAsync(dishRequestDto.RestaurantId);
+                    string filePath = _stringProcess.removeSpecialCharacter(restaurant.Name) + restaurant.Id;
+                    string container = filePath.ToLower();
+                    await dishRequestDto.Image.CopyToAsync(memoryStream);
+                    var content = memoryStream.ToArray();
+                    var extention = Path.GetExtension(dishRequestDto.Image.FileName);
+                    data.PathImage = await _toStockAFile.SaveFile(
+                        content,
+                        extention,
+                        container,
+                        dishRequestDto.Image.ContentType
+                        );
+                }
+                /*
                 Restaurant restaurant = await _restaurantRepository.GetByIdAsync(dishRequestDto.RestaurantId);
                 string filePath = restaurant.Id + _stringProcess.removeSpecialCharacter(restaurant.Name);
                 string imageFullPath = $"{_configuration.GetSection("FileServer:path").Value}{filePath}\\{dishRequestDto.Image.FileName}";
                 await _fileService.SaveFile(dishRequestDto.Image, filePath);
                 data.PathImage = imageFullPath;
+                */
             }
 
             await _genericRepository.Add(data);
@@ -74,11 +98,28 @@ namespace Services.Implementations.Dishes
             //guardar imagen
             if (dishRequestDto.Image != null)
             {
+                using (var memoryStream = new MemoryStream())
+                {
+                    Restaurant restaurant = await _restaurantRepository.GetByIdAsync(dishRequestDto.RestaurantId);
+                    string filePath = _stringProcess.removeSpecialCharacter(restaurant.Name) + restaurant.Id;
+                    string container = filePath.ToLower();
+                    await dishRequestDto.Image.CopyToAsync(memoryStream);
+                    var content = memoryStream.ToArray();
+                    var extention = Path.GetExtension(dishRequestDto.Image.FileName);
+                    dish.PathImage = await _toStockAFile.SaveFile(
+                        content,
+                        extention,
+                        container,
+                        dishRequestDto.Image.ContentType
+                        );
+                }
+
+                /*
                 Restaurant restaurant = await _restaurantRepository.GetByIdAsync(dish.RestaurantId);
                 string filePath = restaurant.Id + _stringProcess.removeSpecialCharacter(restaurant.Name);
                 string imageFullPath = $"{_configuration.GetSection("FileServer:path").Value}{filePath}\\{dishRequestDto.Image.FileName}";
                 await _fileService.SaveFile(dishRequestDto.Image, filePath);
-                dish.PathImage = imageFullPath;
+                dish.PathImage = imageFullPath;*/
             }
             else {
                 dish.PathImage = null;
@@ -122,17 +163,23 @@ namespace Services.Implementations.Dishes
             return dish.Id;
         }
 
-        public async Task<List<DishResponseDto>> GetActiveDishList(int restaurantId)
+        public async Task<List<DishByCategoryResponseDto>> GetActiveDishList(int restaurantId)
         {
             Restaurant restaurant = await _restaurantRepository.GetByIdAsync(restaurantId);
-
             if (restaurant == null)
             {
                 throw new EntityNotFoundException($"Error, no se encuentra el restaurante con {restaurantId}");
             }
-            var dishes = await _dishRepository.GetActiveDishList(restaurantId);
-            var response = _mapper.Map<List<DishResponseDto>>(dishes);
-            return response;
+            List<Dish> dishes = await _dishRepository.GetActiveDishList(restaurantId);
+            var dishesGroupByCategory = dishes.GroupBy(g => new { g.DishCategory.Id, g.DishCategory.Name })
+                                        .Select(s => new DishByCategoryResponseDto{ 
+                                            Id= s.Key.Id,
+                                            Name = s.Key.Name,
+                                            Dishes = _mapper.Map <List<DishDto>>(s.ToList())
+                                        })     
+                                        .ToList();
+            //var response = _mapper.Map<List<DishResponseDto>>(dishes);
+            return dishesGroupByCategory;
         }
 
         private async Task Validation(DishRequestDto dishRequestDto)

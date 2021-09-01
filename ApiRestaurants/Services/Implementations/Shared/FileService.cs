@@ -8,19 +8,18 @@ namespace Services.Implementations.Shared
 {
     public class FileService : IFileService
     {
-        private readonly IConfiguration _configuration;
-        public FileService(IConfiguration configuration)
+        private readonly IConfiguration _configuration;        
+        public FileService(
+            IConfiguration configuration
+            )
         {
             _configuration = configuration;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="file"></param>
-        /// <param name="subDirectory"></param>
-        /// <returns></returns>
-        public async Task SaveFile(IFormFile file, string subDirectory)
+        public async Task SaveFile(
+            IFormFile file, 
+            string subDirectory
+            )
         {
             subDirectory = subDirectory ?? string.Empty;
             var target = Path.Combine($"{_configuration.GetSection("FileServer:path").Value}", subDirectory);

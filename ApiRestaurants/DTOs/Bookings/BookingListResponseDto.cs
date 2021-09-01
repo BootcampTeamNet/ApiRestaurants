@@ -11,7 +11,7 @@ namespace DTOs.Bookings
         //Booking status
         public string Status  { get; set; }
         //User
-        public string FirstName { get; set; }
+        public string Name { get; set; }
         public string Mobile { get; set; }
     }
 }

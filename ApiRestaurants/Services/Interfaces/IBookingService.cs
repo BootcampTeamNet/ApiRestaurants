@@ -11,7 +11,7 @@ namespace Services.Interfaces
         Task<Booking> GetById(int id);
         Task<int> ConfirmById(int id);
         Task<int> CancelByRestaurant(int id);
-
-        Task<List<BookingListResponseDto>> ListById(int id);
+        Task<int> CancelByDinner(int id);
+        Task<List<BookingListResponseDto>> ListByRestaurantId(int id, FilterBookingRequestDto filterBookingRequestDto);
     }
 }

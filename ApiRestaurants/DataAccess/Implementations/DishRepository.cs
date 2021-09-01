@@ -31,7 +31,9 @@ namespace DataAccess.Implementations
 
         public async Task<List<Dish>> GetActiveDishList(int id)
         {
-            var activeDishes = await _restaurantsDbContext.Dishes.Where(i => i.RestaurantId == id && i.IsActive).ToListAsync();
+            var activeDishes = await _restaurantsDbContext.Dishes.Include(i => i.DishCategory)
+                                                                 .Where(w => w.RestaurantId == id && w.IsActive)
+                                                                 .ToListAsync();
             return activeDishes;
         }
     }

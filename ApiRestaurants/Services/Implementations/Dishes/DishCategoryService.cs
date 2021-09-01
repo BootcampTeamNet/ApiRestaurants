@@ -19,11 +19,11 @@ namespace Services.Implementations.Dishes
             _mapper = mapper;
         }
 
-        public async Task<List<DishCategoryRequestDto>> GetAll()
+        public async Task<List<DishCategoryResponseDto>> GetAll()
         {
             var dishesCategories = await _dishCategoryRepository.GetAllAsync();
            
-            var dishCategoryResponseDto = _mapper.Map<List<DishCategoryRequestDto>>(dishesCategories);
+            var dishCategoryResponseDto = _mapper.Map<List<DishCategoryResponseDto>>(dishesCategories);
           
             return dishCategoryResponseDto;
         }

@@ -22,10 +22,10 @@ namespace Services.Implementations
 
         }
 
-        public async Task<List<RestaurantCategoryRequestDto>> GetAll()
+        public async Task<List<RestaurantCategoryResponseDto>> GetAll()
         {
             var responseRestaurantCategory = await _genericRepository.GetAllAsync();
-            var response = _mapper.Map<List<RestaurantCategoryRequestDto>>(responseRestaurantCategory);
+            var response = _mapper.Map<List<RestaurantCategoryResponseDto>>(responseRestaurantCategory);
             return response;
         }
     }

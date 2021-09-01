@@ -15,6 +15,8 @@ namespace WebApi.Configuration
             services.AddScoped<IUserRestaurantRepository, UserRestaurantRepository>();
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IBookingStatusRepository, BookingStatusRepository>();
+            services.AddScoped<IFavouriteRepository, FavouriteRepository>();
+            services.AddScoped<IBranchRepository, BranchRepository>();
         }
     }
 }
