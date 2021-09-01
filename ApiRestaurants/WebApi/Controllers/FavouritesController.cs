@@ -1,4 +1,5 @@
 ﻿using DTOs.Favourites;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using Services.Interfaces.Exceptions;
@@ -7,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/favourites")]
     [ApiController]
+    [Authorize]
     public class FavouritesController : ControllerBase
     {
         private readonly IFavouriteService _favouriteService;
@@ -18,7 +20,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Add Resturant Favorite by UserId
+        /// Add favorite restaurants by UserId
         /// </summary>
         /// <param name="favouriteRequestDto"></param>
         /// <returns></returns>
@@ -33,6 +35,25 @@ namespace WebApi.Controllers
             catch (EntityBadRequestException ex)
             {
                 return StatusCode(400, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get favourite restaurants by userId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("users/{id}")]
+        public async Task<ActionResult> GetByUserId(int id)
+        {
+            try
+            {
+                var response = await _favouriteService.GetFavouriteList(id);
+                return Ok(response);
             }
             catch (Exception ex)
             {

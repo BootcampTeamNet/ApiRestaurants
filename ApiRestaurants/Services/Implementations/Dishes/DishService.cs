@@ -147,7 +147,6 @@ namespace Services.Implementations.Dishes
         public async Task<List<DishByCategoryResponseDto>> GetActiveDishList(int restaurantId)
         {
             Restaurant restaurant = await _restaurantRepository.GetByIdAsync(restaurantId);
-
             if (restaurant == null)
             {
                 throw new EntityNotFoundException($"Error, no se encuentra el restaurante con {restaurantId}");
@@ -160,7 +159,6 @@ namespace Services.Implementations.Dishes
                                             Dishes = _mapper.Map <List<DishDto>>(s.ToList())
                                         })     
                                         .ToList();
-
             //var response = _mapper.Map<List<DishResponseDto>>(dishes);
             return dishesGroupByCategory;
         }
