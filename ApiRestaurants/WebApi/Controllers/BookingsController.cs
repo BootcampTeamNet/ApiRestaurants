@@ -94,6 +94,33 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
+        /// Mobile - Cancel Booking by BookingId 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPatch("{id}/cancel-bydinner")]
+        public async Task<IActionResult> CancelBookingByDinner(int id)
+        {
+            try
+            {
+                int response = await _bookingService.CancelByDinner(id);
+                return Ok(response);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return StatusCode(404, ex.Message);
+            }
+            catch (EntityBadRequestException ex)
+            {
+                return StatusCode(400, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        /// <summary>
         /// Get Bookings by RestaurantId and filter for dates and bookingStatusId
         /// </summary>
         /// <param name="id"></param>
