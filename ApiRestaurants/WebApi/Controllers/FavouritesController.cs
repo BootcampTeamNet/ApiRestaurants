@@ -34,13 +34,18 @@ namespace WebApi.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        
-        [HttpPost("restaurantslist/{userId}")]
-        public async Task<ActionResult> GetFavouriteList(int userId)
+
+        /// <summary>
+        /// Get restaurants favourite by userId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("users/{id}")]
+        public async Task<ActionResult> GetByUserId(int id)
         {
             try
             {
-                var response = await _favouriteService.GetFavouriteList(userId);
+                var response = await _favouriteService.GetFavouriteList(id);
                 return Ok(response);
             }
             catch (Exception ex)
