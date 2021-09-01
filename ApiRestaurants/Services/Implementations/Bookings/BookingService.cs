@@ -5,6 +5,7 @@ using DTOs.Constants;
 using Entities;
 using Services.Interfaces;
 using Services.Interfaces.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -123,5 +124,24 @@ namespace Services.Implementations.Bookings
 
             return await _bookingGenericRepository.Update(booking);
         }
+        public async Task<int> CancelByDinner(int id)
+        {
+            Booking booking = await GetById(id);
+            Restaurant restaurant = await _restaurantGenericRepository.GetByIdAsync(booking.RestaurantId);
+            int timeMax = restaurant.TimeMaxCancelBooking == null ? 0 : (int) restaurant.TimeMaxCancelBooking;
+            DateTime maxTimeCancel = booking.OrderDate.AddHours(-timeMax);
+            var dateTimeNow = DateTime.Now;
+            if (dateTimeNow <= maxTimeCancel)
+            {
+                BookingStatus bookingStatus = await _bookingStatusService.GetByName(Constant.BookingStatus.CANCELADA_COMENSAL);
+                booking.BookingStatusId = bookingStatus.Id;
+                return await _bookingGenericRepository.Update(booking);
+            }
+            else
+            {
+                throw new EntityBadRequestException("No es posible realizar la cancelación, tiempo excedido");
+            }
+        }
     }
 }
+
