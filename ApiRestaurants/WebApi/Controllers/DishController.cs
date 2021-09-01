@@ -1,4 +1,5 @@
 ﻿using DTOs.Dish;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using Services.Interfaces.Exceptions;
@@ -9,6 +10,7 @@ namespace WebApi.Controllers
 {
     [Route("api/dishes")]
     [ApiController]
+    [Authorize]
     public class DishController : ControllerBase
     {
         private readonly IDishService _dishService;
@@ -103,7 +105,7 @@ namespace WebApi.Controllers
 
 
         /// <summary>
-        /// Get dish by dishId
+        /// Get data about dish by dishId
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -153,6 +155,7 @@ namespace WebApi.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpGet("by-categories/restaurants/{id}")]
         public async Task<IActionResult> GetAllActive(int id)
         {

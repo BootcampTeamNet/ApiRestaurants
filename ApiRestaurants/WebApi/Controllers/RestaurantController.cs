@@ -21,6 +21,11 @@ namespace WebApi.Controllers
             _userRestaurantService = userRestaurantService;
         }
 
+        /// <summary>
+        /// Register restaurant and manager user
+        /// </summary>
+        /// <param name="restaurantRequestDto"></param>
+        /// <returns></returns>
         [HttpPost("register")]
         public async Task<IActionResult> Create([FromForm] RegisterRestaurantRequestDto restaurantRequestDto)
         {
@@ -43,6 +48,11 @@ namespace WebApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Update data about restaurant and manager user
+        /// </summary>
+        /// <param name="updateRestaurantUserRequestDto"></param>
+        /// <returns></returns>
         [Authorize]
         [HttpPut]
         public async Task<IActionResult> Update(UpdateRestaurantUserRequestDto updateRestaurantUserRequestDto)
@@ -67,6 +77,11 @@ namespace WebApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Get data about restaurant by restaurantId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize]
         [HttpGet("id")]
         public async Task<IActionResult> GetById(int id)
@@ -86,6 +101,12 @@ namespace WebApi.Controllers
             }
         }
 
+        /// <summary>
+        /// MOBILE - List restaurant by customer coordinates
+        /// </summary>
+        /// <param name="customerLatitude"></param>
+        /// <param name="customerLongitude"></param>
+        /// <returns></returns>
         [HttpGet("by-coordinates")]
         public async Task<IActionResult> GetAllByCoordinates(double customerLatitude, double customerLongitude) 
         {
@@ -93,6 +114,11 @@ namespace WebApi.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// MOBILE - List restaurant by coordinates and word at least 3 character
+        /// </summary>
+        /// <param name="filterRequestDto"></param>
+        /// <returns></returns>
         [HttpPost("by-keyword")]
         public async Task<IActionResult> GetAllByKeyWord(FilterRestaurantRequestDto filterRequestDto)
         {

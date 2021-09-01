@@ -1,4 +1,5 @@
 ﻿using DTOs.Restaurant;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using Services.Interfaces.Exceptions;
@@ -9,6 +10,7 @@ namespace WebApi.Controllers
 {
     [Route("api/branches")]
     [ApiController]
+    [Authorize]
     public class BranchOfficeController : ControllerBase
     {
         private readonly IBranchOfficeService _branchOfficeService;

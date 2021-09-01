@@ -94,7 +94,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Mobile - Cancel Booking by BookingId 
+        /// MOBILE - Cancel Booking by BookingId 
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
