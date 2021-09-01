@@ -3,6 +3,7 @@ using DataAccess.Interfaces;
 using DTOs.Favourites;
 using Entities;
 using Services.Interfaces;
+using Services.Interfaces.Exceptions;
 using DTOs.Restaurant;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -25,13 +26,16 @@ namespace Services.Implementations.Favourites
 
         public async Task<int> Create(FavouriteRequestDto favouriteRequestDto)
         {
-            Favourite favourite = new Favourite
+            Favourite favouriteNew = _mapper.Map<Favourite>(favouriteRequestDto);
+            Favourite favourite = await _favouriteRepository.FindFavorite(favouriteNew);
+            if (favourite != null) 
             {
-                UserId = favouriteRequestDto.UserId,
-                RestaurantId = favouriteRequestDto.RestaurantId
-            };
-
-            return await _favouriteGenericRepository.Add(favourite);
+                throw new EntityBadRequestException("El restaurante ya esta entre sus favoritos");
+            }
+            
+            await _favouriteGenericRepository.Add(favouriteNew);
+            
+            return favouriteNew.Id;
         }
         public async Task<List<RestaurantMobileResponseDto>> GetFavouriteList(int userId)
         {
