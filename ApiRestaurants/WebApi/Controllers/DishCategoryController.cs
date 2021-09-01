@@ -19,7 +19,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<DishCategoryRequestDto>>> GetCategoryaAll()
+        public async Task<ActionResult<IReadOnlyList<DishCategoryResponseDto>>> GetCategoryaAll()
         {
             var categories = await _dishCategoryService.GetAll();
             return Ok(categories);

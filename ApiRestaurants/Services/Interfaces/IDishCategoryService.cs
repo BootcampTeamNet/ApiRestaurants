@@ -7,6 +7,6 @@ namespace Services.Interfaces
 {
     public interface IDishCategoryService
     {
-        Task<List<DishCategoryRequestDto>> GetAll();
+        Task<List<DishCategoryResponseDto>> GetAll();
     }
 }
