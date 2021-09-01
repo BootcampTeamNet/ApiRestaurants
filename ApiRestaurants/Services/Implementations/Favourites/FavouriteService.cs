@@ -3,6 +3,8 @@ using DataAccess.Interfaces;
 using DTOs.Favourites;
 using Entities;
 using Services.Interfaces;
+using DTOs.Restaurant;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Services.Implementations.Favourites
@@ -18,6 +20,7 @@ namespace Services.Implementations.Favourites
         {
             _favouriteGenericRepository = favouriteGenericRepository;
             _favouriteRepository = favouriteRepository;
+            _mapper = mapper;
         }
 
         public async Task<int> Create(FavouriteRequestDto favouriteRequestDto)
@@ -29,6 +32,12 @@ namespace Services.Implementations.Favourites
             };
 
             return await _favouriteGenericRepository.Add(favourite);
+        }
+        public async Task<List<RestaurantMobileResponseDto>> GetFavouriteList(int userId)
+        {
+            List<Restaurant> listFavRestaurants = await _favouriteRepository.GetFavouriteList(userId);
+            List< RestaurantMobileResponseDto> favResponseDto = _mapper.Map<List<RestaurantMobileResponseDto>>(listFavRestaurants);
+            return favResponseDto;
         }
     }
 }

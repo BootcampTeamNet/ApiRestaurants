@@ -34,5 +34,19 @@ namespace WebApi.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        
+        [HttpPost("restaurantslist/{userId}")]
+        public async Task<ActionResult> GetFavouriteList(int userId)
+        {
+            try
+            {
+                var response = await _favouriteService.GetFavouriteList(userId);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
