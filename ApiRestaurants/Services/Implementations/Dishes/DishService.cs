@@ -51,7 +51,9 @@ namespace Services.Implementations.Dishes
             {
                 using (var memoryStream = new MemoryStream())
                 {
-                    string container = "dish";
+                    Restaurant restaurant = await _restaurantRepository.GetByIdAsync(dishRequestDto.RestaurantId);
+                    string filePath = _stringProcess.removeSpecialCharacter(restaurant.Name) + restaurant.Id;
+                    string container = filePath.ToLower();
                     await dishRequestDto.Image.CopyToAsync(memoryStream);
                     var content = memoryStream.ToArray();
                     var extention = Path.GetExtension(dishRequestDto.Image.FileName);
