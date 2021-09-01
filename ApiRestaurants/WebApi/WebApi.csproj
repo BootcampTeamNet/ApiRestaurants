@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\Proyectos\ApiRestaurant\ApiRestaurants\WebApi\WebApi.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\net5.0\WebApi.xml</DocumentationFile>
+    <OutputPath></OutputPath>
+    <NoWarn>1701;1702; 1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
