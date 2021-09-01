@@ -14,6 +14,12 @@ namespace Services.Implementations.Shared
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="subDirectory"></param>
+        /// <returns></returns>
         public async Task SaveFile(IFormFile file, string subDirectory)
         {
             subDirectory = subDirectory ?? string.Empty;
