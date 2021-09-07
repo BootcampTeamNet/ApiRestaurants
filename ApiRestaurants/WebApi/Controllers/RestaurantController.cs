@@ -136,5 +136,29 @@ namespace WebApi.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        /// <summary>
+        /// MOBILE - Get Restaurants nearest a specific location and filter it by list of dishes 
+        /// <param name="filterRequestDto"></param>
+        /// <returns></returns>
+        [HttpPost("order-filter")]
+        public async Task<IActionResult> GetByDishesFilter(FilterByDishesRequestDto filterRequestDto)
+        {
+            try
+            {
+                var response = await _restaurantService.GetByDishesFilter(filterRequestDto);
+                return Ok(response);
+            }
+            catch (EntityBadRequestException ex)
+            {
+                return StatusCode(400, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
     }
 }
