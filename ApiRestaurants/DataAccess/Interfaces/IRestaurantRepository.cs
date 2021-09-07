@@ -8,6 +8,8 @@ namespace DataAccess.Interfaces
     {
         Task<List<Restaurant>> RestaurantsByCoordinates(double customerLatitude, double customerLongitude);
         Task<List<Restaurant>> RestaurantsByKeyWord(double customerLatitude, double customerLongitude, string keyWord);
+
+        Task<List<Restaurant>> RestauranstByDishCategory(double customerLatitude, double customerLongitude, List<int> dishCategoriesIdList, bool withLocation);
     }
 
 }
