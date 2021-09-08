@@ -103,13 +103,15 @@ namespace Services.Implementations.Dishes
                     Restaurant restaurant = await _restaurantRepository.GetByIdAsync(dishRequestDto.RestaurantId);
                     string filePath = _stringProcess.removeSpecialCharacter(restaurant.Name) + restaurant.Id;
                     string container = filePath.ToLower();
+                    string route = dish.PathImage;
                     await dishRequestDto.Image.CopyToAsync(memoryStream);
                     var content = memoryStream.ToArray();
                     var extention = Path.GetExtension(dishRequestDto.Image.FileName);
-                    dish.PathImage = await _toStockAFile.SaveFile(
+                    dish.PathImage = await _toStockAFile.EditFile(
                         content,
                         extention,
                         container,
+                        route,
                         dishRequestDto.Image.ContentType
                         );
                 }
