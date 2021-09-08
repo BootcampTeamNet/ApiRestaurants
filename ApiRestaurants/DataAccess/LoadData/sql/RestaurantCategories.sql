@@ -1,4 +1,4 @@
-USE [DBRestaurants]
+USE [dbcomensales]
 GO
 
 INSERT INTO [dbo].[RestaurantCategories]
