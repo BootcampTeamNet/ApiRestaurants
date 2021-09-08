@@ -49,10 +49,10 @@ namespace DataAccess.Implementations
 
             _context.Favourites.Remove(IdDelete);
 
-             _context.SaveChangesAsync();
+            _context.SaveChangesAsync();
 
 
-            return 1;
+            return restaurantId;
         }
         
     }
