@@ -170,7 +170,16 @@ namespace Services.Implementations.Dishes
             {
                 throw new EntityNotFoundException($"Error, no se encuentra el restaurante con {restaurantId}");
             }
+
             List<Dish> dishes = await _dishRepository.GetActiveDishList(restaurantId);
+
+            //en las sucursales, se listan los platos del restaurante principal + sus propios platos
+            if (restaurant.MainBranchId != null)
+            {
+                List<Dish> listDishesbyMainRestaurant = await _dishRepository.GetActiveDishList((int)restaurant.MainBranchId);
+                dishes.AddRange(listDishesbyMainRestaurant);
+            }
+
             var dishesGroupByCategory = dishes.GroupBy(g => new { g.DishCategory.Id, g.DishCategory.Name })
                                         .Select(s => new DishByCategoryResponseDto{ 
                                             Id= s.Key.Id,
@@ -178,7 +187,6 @@ namespace Services.Implementations.Dishes
                                             Dishes = _mapper.Map <List<DishDto>>(s.ToList())
                                         })     
                                         .ToList();
-            //var response = _mapper.Map<List<DishResponseDto>>(dishes);
             return dishesGroupByCategory;
         }
 
