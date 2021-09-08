@@ -60,5 +60,25 @@ namespace WebApi.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+
+        /// <summary>
+        /// Remove favourite restaurants by userId
+        /// </summary>
+        /// <param name="favouriteRequestDto"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        public async Task<ActionResult> DeleteFavourite(FavouriteRequestDto favouriteRequestDto)
+        {
+            try
+            {
+                var response = await _favouriteService.DeleteFavouriteList(favouriteRequestDto);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

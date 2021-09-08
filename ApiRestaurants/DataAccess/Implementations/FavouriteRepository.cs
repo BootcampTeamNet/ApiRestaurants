@@ -39,5 +39,21 @@ namespace DataAccess.Implementations
             listFavourite.OrderByDescending(o => o.Name);
             return listFavourite;
         }
+
+        public async Task<int> DeleteFavouriteList(int restaurantId, int userId)
+        {
+            var IdDelete = await (from favourite in _context.Favourites
+                                  where (favourite.RestaurantId == restaurantId &&
+                                         favourite.UserId == userId)
+                                  select favourite).FirstAsync();
+
+            _context.Favourites.Remove(IdDelete);
+
+             _context.SaveChangesAsync();
+
+
+            return 1;
+        }
+        
     }
 }

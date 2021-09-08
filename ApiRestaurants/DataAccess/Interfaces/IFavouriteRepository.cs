@@ -8,5 +8,7 @@ namespace DataAccess.Interfaces
     {
         Task<Favourite> FindFavorite(Favourite favourite);
         Task<List<Restaurant>> GetFavouriteList(int userId);
+        Task<int> DeleteFavouriteList(int restaurantId, int userId);
+        
     }
 }

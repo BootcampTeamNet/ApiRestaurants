@@ -43,5 +43,12 @@ namespace Services.Implementations.Favourites
             List< RestaurantMobileResponseDto> favResponseDto = _mapper.Map<List<RestaurantMobileResponseDto>>(listFavRestaurants);
             return favResponseDto;
         }
+
+        public async Task<int> DeleteFavouriteList(FavouriteRequestDto favouriteRequestDto)
+        {
+            int responseDelete = await _favouriteRepository.DeleteFavouriteList(favouriteRequestDto.RestaurantId, favouriteRequestDto.UserId);
+            return responseDelete;
+        }
+        
     }
 }

@@ -9,5 +9,6 @@ namespace Services.Interfaces
     {
         Task<int> Create(FavouriteRequestDto favouriteRequestDto);
         Task<List<RestaurantMobileResponseDto>> GetFavouriteList(int userId);
+        Task<int> DeleteFavouriteList(FavouriteRequestDto favouriteRequestDto);
     }
 }
