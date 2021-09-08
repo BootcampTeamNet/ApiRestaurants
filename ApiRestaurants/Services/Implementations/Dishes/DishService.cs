@@ -220,8 +220,15 @@ namespace Services.Implementations.Dishes
             if (restaurant == null) {
                 throw new EntityNotFoundException($"No existe el restaurante de id {id}");
             }
-            var responseListByIdRestaurant = await _dishRepository.GetListByIdRestaurant(id);
-            var response = _mapper.Map<List<DishesByRestaurantResponseDto>>(responseListByIdRestaurant);
+            List<Dish> listDishes = await _dishRepository.GetListByIdRestaurant(id);
+
+            //en las sucursales, se listan los platos del restaurante principal + sus propios platos
+            if (restaurant.MainBranchId != null) {
+                List<Dish> listDishesbyMainRestaurant = await _dishRepository.GetListByIdRestaurant((int)restaurant.MainBranchId);
+
+                listDishes.AddRange(listDishesbyMainRestaurant);
+            }
+            var response = _mapper.Map<List<DishesByRestaurantResponseDto>>(listDishes);
             return response;
         }
     }
