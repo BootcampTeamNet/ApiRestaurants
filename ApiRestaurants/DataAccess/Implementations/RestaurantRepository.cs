@@ -86,19 +86,36 @@ namespace DataAccess.Implementations
         }
 
         public async Task<List<Restaurant>> RestauranstByDishCategory(double customerLatitude, double customerLongitude, List<int> dishCategoriesIdList, bool withLocation) {
-            IQueryable<Restaurant> restaurants = FindByCoordinates(customerLatitude, customerLongitude);
+            
+            if (withLocation)
+            {
+                IQueryable<Restaurant> restaurants = FindByCoordinates(customerLatitude, customerLongitude);
 
-            List<Restaurant> closestRestaurant = await (from restaurant in restaurants.AsQueryable()
-                                                        join dish in _context.Dishes on restaurant.Id equals dish.RestaurantId
-                                                        join dishCategory in _context.DishCategories on dish.DishCategoryId equals dishCategory.Id
-                                                        where (
-                                                                  dishCategory.Id.Equals(dishCategoriesIdList.Any())
-                                                              // dishCategoriesIdList.Contains(dishCategory.Id)
-                                                              )
-                                                        select restaurant
+                List<Restaurant> closestRestaurant = await (from restaurant in restaurants.AsQueryable()
+                                                            join dish in _context.Dishes on restaurant.Id equals dish.RestaurantId
+                                                            join dishCategory in _context.DishCategories on dish.DishCategoryId equals dishCategory.Id
+                                                            where (
+                                                                      dishCategory.Id.Equals(dishCategoriesIdList)
+                                                                  // dishCategoriesIdList.Contains(dishCategory.Id)
+                                                                  )
+                                                            select restaurant
                                                         ).ToListAsync();
+                return closestRestaurant;
+            }
+            else { 
+                List<Restaurant> closestRestaurant = await (from restaurant in _context.Restaurants
+                                                            join dish in _context.Dishes on restaurant.Id equals dish.RestaurantId
+                                                            join dishCategory in _context.DishCategories on dish.DishCategoryId equals dishCategory.Id
+                                                            where (
+                                                                      dishCategory.Id.Equals(dishCategoriesIdList)
+                                                                  // dishCategoriesIdList.Contains(dishCategory.Id)
+                                                                  )
+                                                            select restaurant
+                                                           ).ToListAsync();
+                return closestRestaurant;
+            }
+ 
 
-            return closestRestaurant;
         }
     }
 }
