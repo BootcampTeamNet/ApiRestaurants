@@ -8,6 +8,7 @@ namespace DTOs.Restaurant
         public string FirstName { get; set; }
         [Required(ErrorMessage = "El Apellido es requerido")]
         public string LastName { get; set; }
+        [Required(ErrorMessage = "El Email es requerido")]
         [EmailAddress(ErrorMessage = "Ingrese un correo electrónico válido")]
         public string Email { get; set; }
         [Required(ErrorMessage = "El Password es requerido")]

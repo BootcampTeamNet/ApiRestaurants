@@ -19,7 +19,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Register Commensal
+        /// MOBILE - Register Commensal
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
@@ -62,6 +62,7 @@ namespace WebApi.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
         [HttpPut("modify-password")]
         public async Task<ActionResult> UpdatePassword(PasswordUserDto passwordUserDto)
         {

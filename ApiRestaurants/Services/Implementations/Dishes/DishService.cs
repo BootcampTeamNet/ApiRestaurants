@@ -2,7 +2,6 @@
 using DataAccess.Interfaces;
 using DTOs.Dish;
 using Entities;
-using Microsoft.Extensions.Configuration;
 using Services.Interfaces;
 using Services.Interfaces.Exceptions;
 using System.Collections.Generic;
@@ -18,26 +17,22 @@ namespace Services.Implementations.Dishes
         private readonly IGenericRepository<Restaurant> _restaurantRepository;
         private readonly IDishRepository _dishRepository;
         private readonly IGenericRepository<DishCategory> _dishCategoryRepository;
-        private readonly IFileService _fileService;
         private readonly IStringProcess _stringProcess;
         private readonly IMapper _mapper;
-        private readonly IConfiguration _configuration;
         private readonly IToStockAFile _toStockAFile;
-        //private readonly string _container = "dishes";
+
         public DishService(IGenericRepository<Dish> genericRepository, IGenericRepository<Restaurant> restaurantRepository,
              IDishRepository dishRepository, IGenericRepository<DishCategory> dishCategoryRepository,
-            IFileService fileService, IStringProcess stringProcess, IMapper mapper, IConfiguration configuration,
-            IToStockAFile toStockAFile
+             IStringProcess stringProcess, IMapper mapper,
+             IToStockAFile toStockAFile
             )
         {
             _genericRepository = genericRepository;
             _restaurantRepository = restaurantRepository;
             _dishRepository = dishRepository;
             _dishCategoryRepository = dishCategoryRepository;
-            _fileService = fileService;
             _stringProcess = stringProcess;
             _mapper = mapper;
-            _configuration = configuration;
             _toStockAFile = toStockAFile;
             
         }
@@ -64,13 +59,6 @@ namespace Services.Implementations.Dishes
                         dishRequestDto.Image.ContentType
                         );
                 }
-                /*
-                Restaurant restaurant = await _restaurantRepository.GetByIdAsync(dishRequestDto.RestaurantId);
-                string filePath = restaurant.Id + _stringProcess.removeSpecialCharacter(restaurant.Name);
-                string imageFullPath = $"{_configuration.GetSection("FileServer:path").Value}{filePath}\\{dishRequestDto.Image.FileName}";
-                await _fileService.SaveFile(dishRequestDto.Image, filePath);
-                data.PathImage = imageFullPath;
-                */
             }
 
             await _genericRepository.Add(data);
@@ -81,8 +69,9 @@ namespace Services.Implementations.Dishes
         public async Task<int> Update(int id, DishRequestDto dishRequestDto)
         {
             await Validation(dishRequestDto);
-
+            
             Dish dish = await _genericRepository.GetByIdAsync(id);
+            string route = dish.PathImage;
             if (dish == null)
             {
                 throw new EntityNotFoundException($"El plato con el id {id} no existe");
@@ -91,18 +80,16 @@ namespace Services.Implementations.Dishes
             if (dishRequestDto.RestaurantId != dish.RestaurantId) {
                 throw new InaccessibleResourceException($"Error, no puede modificar platos de la sucursal principal");
             }
-            if (!string.IsNullOrEmpty(dish.PathImage))
-            {
-                _fileService.DeleteFile(dish.PathImage);
-            }
+
             //guardar imagen
             if (dishRequestDto.Image != null)
             {
                 using (var memoryStream = new MemoryStream())
-                {
+                {                    
                     Restaurant restaurant = await _restaurantRepository.GetByIdAsync(dishRequestDto.RestaurantId);
                     string filePath = _stringProcess.removeSpecialCharacter(restaurant.Name) + restaurant.Id;
                     string container = filePath.ToLower();
+
                     await dishRequestDto.Image.CopyToAsync(memoryStream);
                     var content = memoryStream.ToArray();
                     var extention = Path.GetExtension(dishRequestDto.Image.FileName);
@@ -113,16 +100,6 @@ namespace Services.Implementations.Dishes
                         dishRequestDto.Image.ContentType
                         );
                 }
-
-                /*
-                Restaurant restaurant = await _restaurantRepository.GetByIdAsync(dish.RestaurantId);
-                string filePath = restaurant.Id + _stringProcess.removeSpecialCharacter(restaurant.Name);
-                string imageFullPath = $"{_configuration.GetSection("FileServer:path").Value}{filePath}\\{dishRequestDto.Image.FileName}";
-                await _fileService.SaveFile(dishRequestDto.Image, filePath);
-                dish.PathImage = imageFullPath;*/
-            }
-            else {
-                dish.PathImage = null;
             }
 
             dish.Name = dishRequestDto.Name;
@@ -170,7 +147,16 @@ namespace Services.Implementations.Dishes
             {
                 throw new EntityNotFoundException($"Error, no se encuentra el restaurante con {restaurantId}");
             }
+
             List<Dish> dishes = await _dishRepository.GetActiveDishList(restaurantId);
+
+            //en las sucursales, se listan los platos del restaurante principal + sus propios platos
+            if (restaurant.MainBranchId != null)
+            {
+                List<Dish> listDishesbyMainRestaurant = await _dishRepository.GetActiveDishList((int)restaurant.MainBranchId);
+                dishes.AddRange(listDishesbyMainRestaurant);
+            }
+
             var dishesGroupByCategory = dishes.GroupBy(g => new { g.DishCategory.Id, g.DishCategory.Name })
                                         .Select(s => new DishByCategoryResponseDto{ 
                                             Id= s.Key.Id,
@@ -178,7 +164,6 @@ namespace Services.Implementations.Dishes
                                             Dishes = _mapper.Map <List<DishDto>>(s.ToList())
                                         })     
                                         .ToList();
-            //var response = _mapper.Map<List<DishResponseDto>>(dishes);
             return dishesGroupByCategory;
         }
 
@@ -220,8 +205,15 @@ namespace Services.Implementations.Dishes
             if (restaurant == null) {
                 throw new EntityNotFoundException($"No existe el restaurante de id {id}");
             }
-            var responseListByIdRestaurant = await _dishRepository.GetListByIdRestaurant(id);
-            var response = _mapper.Map<List<DishesByRestaurantResponseDto>>(responseListByIdRestaurant);
+            List<Dish> listDishes = await _dishRepository.GetListByIdRestaurant(id);
+
+            //en las sucursales, se listan los platos del restaurante principal + sus propios platos
+            if (restaurant.MainBranchId != null) {
+                List<Dish> listDishesbyMainRestaurant = await _dishRepository.GetListByIdRestaurant((int)restaurant.MainBranchId);
+
+                listDishes.AddRange(listDishesbyMainRestaurant);
+            }
+            var response = _mapper.Map<List<DishesByRestaurantResponseDto>>(listDishes);
             return response;
         }
     }

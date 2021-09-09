@@ -7,6 +7,6 @@ namespace Services.Interfaces
     public interface IBranchOfficeService
     {
         Task<int> Create(BranchOfficeRequestDto branchOfficeRequestDto);
-        Task<List<RestaurantResponseDto>> GetByRestaurantId(int id);
+        Task<List<BranchResponseDto>> GetByRestaurantId(int id);
     }
 }

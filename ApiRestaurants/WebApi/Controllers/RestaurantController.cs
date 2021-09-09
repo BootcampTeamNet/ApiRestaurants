@@ -27,7 +27,7 @@ namespace WebApi.Controllers
         /// <param name="restaurantRequestDto"></param>
         /// <returns></returns>
         [HttpPost("register")]
-        public async Task<IActionResult> Create(RegisterRestaurantRequestDto restaurantRequestDto)
+        public async Task<IActionResult> Create([FromForm] RegisterRestaurantRequestDto restaurantRequestDto)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpPut]
-        public async Task<IActionResult> Update(UpdateRestaurantUserRequestDto updateRestaurantUserRequestDto)
+        public async Task<IActionResult> Update([FromForm] UpdateRestaurantUserRequestDto updateRestaurantUserRequestDto)
         {
             try
             {
