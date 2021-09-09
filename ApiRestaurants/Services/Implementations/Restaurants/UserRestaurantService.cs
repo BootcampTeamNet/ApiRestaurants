@@ -112,5 +112,9 @@ namespace Services.Implementations.Restaurants
 
         }
 
+        public async Task<UserRestaurant> GetByRestaurantId(int id) {
+
+            return await _userRestaurantRepository.GetByRestaurantId(id);
+        }
     }
 }

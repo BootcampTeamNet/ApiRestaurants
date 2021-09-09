@@ -47,5 +47,21 @@ namespace DataAccess.Implementations
                                              }).FirstOrDefaultAsync();
             return response;
         }
+
+        public async Task<UserRestaurant> GetByRestaurantId(int id)
+        {
+            UserRestaurant response = await (from restaurant in _context.Restaurants
+                                             join userRestaurant in _context.UserRestaurants on restaurant.Id equals userRestaurant.RestaurantId
+                                             join user in _context.Users on userRestaurant.UserId equals user.Id
+                                             where userRestaurant.RestaurantId == id
+                                             select new UserRestaurant
+                                             {
+                                                 UserId = userRestaurant.Id,
+                                                 User = user,
+                                                 RestaurantId = userRestaurant.RestaurantId,
+                                                 Restaurant = restaurant,
+                                             }).FirstOrDefaultAsync();
+            return response;
+        }
     }
 }
