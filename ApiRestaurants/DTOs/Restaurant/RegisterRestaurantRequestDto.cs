@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace DTOs.Restaurant
 {
@@ -12,6 +13,7 @@ namespace DTOs.Restaurant
         public double LocationLatitude { get; set; }
         [Required(ErrorMessage = "La Longitud es requerido")]
         public double LocationLongitude { get; set; }
+        public IFormFile Image { get; set; }
         public RegisterUserRequestDto User { get; set; }
     }
 }

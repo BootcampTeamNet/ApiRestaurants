@@ -7,6 +7,7 @@ using Services.Interfaces.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Services.Implementations
@@ -17,18 +18,24 @@ namespace Services.Implementations
         private readonly IRestaurantRepository _restaurantRepository;
         private readonly IUserService _userService;
         private readonly IUserRestaurantService _userRestaurantService;
+        private readonly IStringProcess _stringProcess;
+        private readonly IToStockAFile _toStockAFile;
         private readonly IMapper _mapper;
         public RestaurantService(
             IGenericRepository<Restaurant> genericRepository
             , IRestaurantRepository restaurantRepository
             , IUserService userService
             , IUserRestaurantService userRestaurantService
+            , IStringProcess stringProcess
+            , IToStockAFile toStockAFile
             , IMapper mapper)
         {
             _genericRepository = genericRepository;
             _restaurantRepository = restaurantRepository;
             _userService = userService;
             _userRestaurantService = userRestaurantService;
+            _stringProcess = stringProcess;
+            _toStockAFile = toStockAFile;
             _mapper = mapper;
 
         }
@@ -46,7 +53,29 @@ namespace Services.Implementations
                 throw new EntityBadRequestException($"Ya existe un usuario registrado con el email {restaurantRequestDto.User.Email}");
             }
 
-            return await _userRestaurantService.Add(restaurantRequestDto);
+            int restaurantId = await _userRestaurantService.Add(restaurantRequestDto);
+
+            if (restaurantRequestDto.Image != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    Restaurant restaurant = await _genericRepository.GetByIdAsync(restaurantId);
+                    string filePath = _stringProcess.removeSpecialCharacter(restaurant.Name) + restaurant.Id;
+                    string container = filePath.ToLower();
+                    await restaurantRequestDto.Image.CopyToAsync(memoryStream);
+                    var content = memoryStream.ToArray();
+                    var extention = Path.GetExtension(restaurantRequestDto.Image.FileName);
+                    restaurant.PathImage = await _toStockAFile.SaveFile(
+                        content,
+                        extention,
+                        container,
+                        restaurantRequestDto.Image.ContentType
+                        );
+                    await _genericRepository.Update(restaurant);
+                }
+            }
+
+            return restaurantId;
         }
 
         public async Task<RestaurantResponseDto> GetById(int id)
