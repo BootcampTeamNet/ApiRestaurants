@@ -9,5 +9,6 @@ namespace Services.Interfaces
     {
         Task<int> Add(RegisterRestaurantRequestDto restaurantRequestDto);
         Task<int> Update(UpdateRestaurantUserRequestDto updateRestaurantUserRequestDto);
+        Task<UserRestaurant> GetByRestaurantId(int id);
     }
 }

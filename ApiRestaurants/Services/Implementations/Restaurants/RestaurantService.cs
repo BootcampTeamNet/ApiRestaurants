@@ -56,9 +56,10 @@ namespace Services.Implementations
             {
                 throw new EntityNotFoundException($"No existe el restaurante de id { id }");
             }
-
-            var restaurantResponseDto = _mapper.Map<RestaurantResponseDto>(restaurant);
-            return restaurantResponseDto;
+            UserRestaurant userRestaurant = await _userRestaurantService.GetByRestaurantId(id);
+            RestaurantResponseDto response = _mapper.Map<RestaurantResponseDto>(userRestaurant.Restaurant);
+            response.User = _mapper.Map<UserResponseDto>(userRestaurant.User);
+            return response;
         }
         public async Task<List<RestaurantMobileResponseDto>> GetAllByCoordinates(double customerLatitude, double customerLongitude)
         {
