@@ -55,7 +55,7 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpPut]
-        public async Task<IActionResult> Update(UpdateRestaurantUserRequestDto updateRestaurantUserRequestDto)
+        public async Task<IActionResult> Update([FromForm] UpdateRestaurantUserRequestDto updateRestaurantUserRequestDto)
         {
             try
             {

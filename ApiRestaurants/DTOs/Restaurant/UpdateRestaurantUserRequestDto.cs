@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 
 namespace DTOs.Restaurant
 {
@@ -12,6 +13,7 @@ namespace DTOs.Restaurant
         public DateTime ScheduleFrom { get; set; }
         public DateTime ScheduleTo { get; set; }
         public int RestaurantCategoryId { get; set; }
+        public IFormFile Image { get; set; }
         public UpdateUserRequestDto User { get; set; }
     }
 }

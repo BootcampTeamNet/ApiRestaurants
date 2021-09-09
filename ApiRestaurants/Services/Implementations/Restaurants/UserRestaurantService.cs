@@ -3,6 +3,7 @@ using DTOs.Restaurant;
 using Entities;
 using Services.Interfaces;
 using Services.Interfaces.Exceptions;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Services.Implementations.Restaurants
@@ -12,12 +13,20 @@ namespace Services.Implementations.Restaurants
         private readonly IUserRestaurantRepository _userRestaurantRepository;
         private readonly IPasswordService _passwordService;
         private readonly IUserRepository _userRepository;
-        public UserRestaurantService(IUserRestaurantRepository userRestaurantRepository, IUserRepository userRepository, IPasswordService passwordService, IUserService userService)
+        private readonly IToStockAFile _toStockAFile;
+        private readonly IStringProcess _stringProcess;
+        public UserRestaurantService(IUserRestaurantRepository userRestaurantRepository, 
+            IUserRepository userRepository, 
+            IPasswordService passwordService,
+            IToStockAFile toStockAFile,
+            IStringProcess stringProcess)
         {
             _userRestaurantRepository = userRestaurantRepository;
             _passwordService = passwordService;
             _userRepository = userRepository;
-        }
+            _toStockAFile = toStockAFile;
+            _stringProcess = stringProcess;;
+    }
         
         public async Task<int> Add(RegisterRestaurantRequestDto restaurantRequestDto)
         {
@@ -63,6 +72,30 @@ namespace Services.Implementations.Restaurants
                     userRestaurant.User.PasswordSalt = passwordSalt;
                 }
             }
+
+            //guardar imagen
+            if (updateRestaurantUserRequestDto.Image != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    
+                    string filePath = _stringProcess.removeSpecialCharacter(userRestaurant.Restaurant.Name) + userRestaurant.Restaurant.Id;
+                    string container = filePath.ToLower();
+                    string route = userRestaurant.Restaurant.PathImage;
+                    await updateRestaurantUserRequestDto.Image.CopyToAsync(memoryStream);
+
+                    var content = memoryStream.ToArray();
+                    var extention = Path.GetExtension(updateRestaurantUserRequestDto.Image.FileName);
+                    userRestaurant.Restaurant.PathImage = await _toStockAFile.EditFile(
+                        content,
+                        extention,
+                        container,
+                        route,
+                        updateRestaurantUserRequestDto.Image.ContentType
+                        );
+                }
+            }
+            
             userRestaurant.User.FirstName = updateRestaurantUserRequestDto.User.FirstName;
             userRestaurant.User.LastName = updateRestaurantUserRequestDto.User.LastName;
 
