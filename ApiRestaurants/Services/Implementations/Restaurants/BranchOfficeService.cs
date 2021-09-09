@@ -82,10 +82,10 @@ namespace Services.Implementations.Restaurants
 
         }
 
-        public async Task<List<RestaurantResponseDto>> GetByRestaurantId(int id) 
+        public async Task<List<BranchResponseDto>> GetByRestaurantId(int id) 
         {
             List<Restaurant> restaurants = await _branchRepository.GetByRestaurantId(id);
-            List<RestaurantResponseDto> response = _mapper.Map<List<RestaurantResponseDto>>(restaurants);
+            List<BranchResponseDto> response = _mapper.Map<List<BranchResponseDto>>(restaurants);
             return response;
         }
 
