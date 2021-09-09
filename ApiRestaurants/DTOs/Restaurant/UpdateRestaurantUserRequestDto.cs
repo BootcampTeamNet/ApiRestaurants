@@ -5,7 +5,6 @@ namespace DTOs.Restaurant
 {
     public class UpdateRestaurantUserRequestDto
     {
-        public string Name { get; set; }
         public string Address { get; set; }
         public string LocationLatitude { get; set; }
         public string LocationLongitude { get; set; }

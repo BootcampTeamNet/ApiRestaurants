@@ -54,14 +54,6 @@ namespace Services.Implementations.Restaurants
         public async Task<int> Update(UpdateRestaurantUserRequestDto updateRestaurantUserRequestDto)
         {
             var userRestaurant = await _userRestaurantRepository.GetByUserId(updateRestaurantUserRequestDto.User.Id);
-            if(userRestaurant.User.Email != updateRestaurantUserRequestDto.User.Email)
-            {
-                if (await _userRepository.ExistsUser(updateRestaurantUserRequestDto.User.Email))
-                {
-                    throw new EntityBadRequestException($"Error, ya existe un usuario con el correo electrónico {updateRestaurantUserRequestDto.User.Email}");
-                }
-                userRestaurant.User.Email = updateRestaurantUserRequestDto.User.Email;
-            }
             if (!string.IsNullOrEmpty(updateRestaurantUserRequestDto.User.Password))
             {
                 var verifyPassword = _passwordService.VerifyPasswordHash(updateRestaurantUserRequestDto.User.Password, userRestaurant.User.PasswordHash, userRestaurant.User.PasswordSalt);
@@ -99,7 +91,6 @@ namespace Services.Implementations.Restaurants
             userRestaurant.User.FirstName = updateRestaurantUserRequestDto.User.FirstName;
             userRestaurant.User.LastName = updateRestaurantUserRequestDto.User.LastName;
 
-            userRestaurant.Restaurant.Name = updateRestaurantUserRequestDto.Name;
             userRestaurant.Restaurant.Address = updateRestaurantUserRequestDto.Address;
             userRestaurant.Restaurant.LocationLatitude = updateRestaurantUserRequestDto.LocationLatitude;
             userRestaurant.Restaurant.LocationLongitude = updateRestaurantUserRequestDto.LocationLongitude;
