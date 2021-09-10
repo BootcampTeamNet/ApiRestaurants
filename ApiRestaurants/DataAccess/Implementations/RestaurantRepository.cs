@@ -28,13 +28,16 @@ namespace DataAccess.Implementations
             IQueryable<Restaurant> restaurants = FindByCoordinates(customerLatitude, customerLongitude);
 
             List<Restaurant> closestRestaurant = await (from restaurant in restaurants.AsQueryable()
-                                                        join dish in _context.Dishes on restaurant.Id equals dish.RestaurantId
-                                                        join dishcategory in _context.DishCategories on dish.DishCategoryId equals dishcategory.Id
+                                                        //se hace left join porque pueden existir restaurantes que aún no tienen platos
+                                                        join dish in _context.Dishes on restaurant.Id equals dish.RestaurantId into lfdish
+                                                        from leftdish in lfdish.DefaultIfEmpty()
+                                                        join dishcategory in _context.DishCategories on leftdish.DishCategoryId equals dishcategory.Id into lfdishcategory
+                                                        from leftdishcategory in lfdishcategory.DefaultIfEmpty()
                                                         where (
                                                                   restaurant.Name.Contains(keyWord)
-                                                                  || dish.Name.Contains(keyWord)
-                                                                  || dish.Description.Contains(keyWord)
-                                                                  || dishcategory.Name.Contains(keyWord)
+                                                                  || leftdish.Name.Contains(keyWord)
+                                                                  || leftdish.Description.Contains(keyWord)
+                                                                  || leftdishcategory.Name.Contains(keyWord)
                                                               )
                                                         select restaurant
                                                         ).Distinct().ToListAsync();
