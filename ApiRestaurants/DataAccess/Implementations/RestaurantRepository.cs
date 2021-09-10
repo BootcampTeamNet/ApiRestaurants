@@ -37,7 +37,7 @@ namespace DataAccess.Implementations
                                                                   || dishcategory.Name.Contains(keyWord)
                                                               )
                                                         select restaurant
-                                                        ).ToListAsync();
+                                                        ).Distinct().ToListAsync();
 
             return closestRestaurant;
         }
