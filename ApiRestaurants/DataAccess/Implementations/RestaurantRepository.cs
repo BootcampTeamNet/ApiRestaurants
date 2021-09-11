@@ -95,8 +95,8 @@ namespace DataAccess.Implementations
                                                             join dish in _context.Dishes on restaurant.Id equals dish.RestaurantId
                                                             join dishCategory in _context.DishCategories on dish.DishCategoryId equals dishCategory.Id
                                                             where (
-                                                                      dishCategory.Id.Equals(dishCategoriesIdList)
-                                                                  // dishCategoriesIdList.Contains(dishCategory.Id)
+                                                                  //dishCategory.Id.Equals(dishCategoriesIdList)
+                                                                  dishCategoriesIdList.Contains(dishCategory.Id)
                                                                   )
                                                             select restaurant
                                                         ).ToListAsync();
@@ -107,8 +107,8 @@ namespace DataAccess.Implementations
                                                             join dish in _context.Dishes on restaurant.Id equals dish.RestaurantId
                                                             join dishCategory in _context.DishCategories on dish.DishCategoryId equals dishCategory.Id
                                                             where (
-                                                                      dishCategory.Id.Equals(dishCategoriesIdList)
-                                                                  // dishCategoriesIdList.Contains(dishCategory.Id)
+                                                                  //dishCategory.Id.Equals(dishCategoriesIdList)
+                                                                  dishCategoriesIdList.Contains(dishCategory.Id)
                                                                   )
                                                             select restaurant
                                                            ).ToListAsync();
