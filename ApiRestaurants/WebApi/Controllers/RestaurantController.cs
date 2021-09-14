@@ -139,6 +139,7 @@ namespace WebApi.Controllers
 
         /// <summary>
         /// MOBILE - Get Restaurants nearest a specific location and filter it by list of dishes 
+        /// </summary>
         /// <param name="filterRequestDto"></param>
         /// <returns></returns>
         [HttpPost("order-filter")]
