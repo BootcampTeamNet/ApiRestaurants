@@ -11,6 +11,7 @@ namespace Services.Interfaces
         Task<RestaurantResponseDto> GetById(int id);
         Task<List<RestaurantMobileResponseDto>> GetAllByCoordinates(double customerLatitude, double customerLongitude);
         Task<List<RestaurantMobileResponseDto>> GetAllByKeyWord(FilterRestaurantRequestDto filterRequestDto);
+        Task<List<RestaurantMobileResponseDto>> GetByDishesFilter(FilterByDishesRequestDto filterRequestDto);
     }
 
 }

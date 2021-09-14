@@ -106,5 +106,19 @@ namespace Services.Implementations
             List<RestaurantMobileResponseDto> lrestaurantResponseDto = _mapper.Map<List<RestaurantMobileResponseDto>>(closestRestaurant);
             return lrestaurantResponseDto;
         }
+
+        public async Task<List<RestaurantMobileResponseDto>> GetByDishesFilter(FilterByDishesRequestDto filterRequestDto) {
+            if (filterRequestDto.DishCategoriesIdList == null)
+            {
+                throw new EntityBadRequestException("Debe ingresar al menos 1 id para la búsqueda");
+            }
+            List<Restaurant> closestRestaurants = await _restaurantRepository.RestauranstByDishCategory(
+                filterRequestDto.CustomerLatitude,
+                filterRequestDto.CustomerLongitude,
+                filterRequestDto.DishCategoriesIdList,
+                filterRequestDto.WithLocation);
+            List<RestaurantMobileResponseDto> response = _mapper.Map<List<RestaurantMobileResponseDto>>(closestRestaurants);
+            return response;
+        }
     }
 }
